@@ -38,7 +38,7 @@
 
 | 嚴重度 | 問題 | 影響 | 修正 |
 | --- | --- | --- | --- |
-| P2 | 手機寬度下左側導覽變成單欄，主工作區進入視野前需要過多捲動。 | 管理員在手機或窄視窗操作時，主要內容呈現延遲。 | 手機導覽改成雙欄，並隱藏 sidebar note，保留 44px touch target。 |
+| P2 | 窄視窗下左側導覽攤平成大型頂部區塊，主工作區進入視野前需要過多捲動。 | 管理員在手機、平板或窄桌面操作時，主要內容呈現延遲。 | 窄版改為 sticky top bar + hamburger drawer，保留 44px touch target，關閉時不進入 accessibility tree。 |
 | P1 | 每頁缺少 compact page intent header。 | 管理員切頁後需要自行推論本頁決策目的。 | Shell 層加入 page intent，標示本頁支援的決策。 |
 | P2 | Release Center 缺少明確 CTA。 | 管理員只能看 gate，無法留下發布決策。 | 加入 Promote / Block / Request review，並寫入 Ops Log。 |
 | P2 | CSV export 沒有 preview。 | 管理員下載前無法確認欄位與是否含敏感資訊。 | 加入 CSV preview modal，確認後才下載。 |
@@ -59,7 +59,8 @@
 - 桌面 Evaluation：`/tmp/botops-usability/03-evaluation.png`
 - 桌面 Ops Log：`/tmp/botops-usability/04-ops-log.png`
 - 手機 Overview 修正前：`/tmp/botops-usability/05-mobile-overview.png`
-- 手機 Overview 修正後：`/tmp/botops-usability/06-mobile-overview-after-nav-fix.png`
+- 窄版 Overview 漢堡導覽：`/tmp/botops-rwd-closed.png`
+- 窄版 Overview 抽屜開啟：`/tmp/botops-rwd-open-final.png`
 
 ## 結論
 

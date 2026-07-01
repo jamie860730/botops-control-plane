@@ -7,12 +7,14 @@ import {
   Database,
   GitBranch,
   LayoutDashboard,
+  Menu,
   Tickets,
   RadioTower,
   ShieldCheck,
+  X,
   Workflow
 } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
 
@@ -136,9 +138,16 @@ interface ShellProps {
 }
 
 export function Shell({ activeView, children, locale, onLocaleChange, onViewChange }: ShellProps) {
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
+  function handleViewChange(view: ViewKey) {
+    onViewChange(view);
+    setIsNavOpen(false);
+  }
+
   return (
     <div className="console-shell">
-      <aside className="sidebar" aria-label="Primary navigation">
+      <header className="mobile-topbar">
         <div className="brand-block">
           <div className="brand-mark">BO</div>
           <div>
@@ -146,6 +155,40 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
             <h1>BotOps Control Plane</h1>
           </div>
         </div>
+        <button
+          aria-expanded={isNavOpen}
+          aria-label={text(locale, 'Open navigation menu', '開啟導覽選單')}
+          className="mobile-menu-button"
+          onClick={() => setIsNavOpen(true)}
+          type="button"
+        >
+          <Menu size={20} aria-hidden="true" />
+        </button>
+      </header>
+      {isNavOpen && (
+        <button
+          aria-label={text(locale, 'Close navigation menu', '關閉導覽選單')}
+          className="sidebar-backdrop"
+          onClick={() => setIsNavOpen(false)}
+          type="button"
+        />
+      )}
+      <aside className={isNavOpen ? 'sidebar open' : 'sidebar'} aria-label="Primary navigation">
+        <div className="brand-block">
+          <div className="brand-mark">BO</div>
+          <div>
+            <p className="eyebrow">{text(locale, 'Bot management platform', '機器人治理平台')}</p>
+            <h1>BotOps Control Plane</h1>
+          </div>
+        </div>
+        <button
+          aria-label={text(locale, 'Close navigation menu', '關閉導覽選單')}
+          className="drawer-close-button"
+          onClick={() => setIsNavOpen(false)}
+          type="button"
+        >
+          <X size={17} aria-hidden="true" />
+        </button>
         <nav className="nav-list">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -153,7 +196,7 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
               <button
                 key={item.key}
                 className={activeView === item.key ? 'nav-button active' : 'nav-button'}
-                onClick={() => onViewChange(item.key)}
+                onClick={() => handleViewChange(item.key)}
                 type="button"
               >
                 <Icon aria-hidden="true" size={17} />

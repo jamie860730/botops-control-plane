@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 
 test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.goto('/');
@@ -8,16 +8,16 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
 
   await page.getByRole('button', { name: '切換語言為繁體中文' }).click();
   await expect(page.getByRole('heading', { name: '客服機器人營運品質控管' })).toBeVisible();
-  await expect(page.getByRole('button', { name: '訊號受理' })).toBeVisible();
+  await expectLocalizedNav(page);
   await expect(page.getByRole('button', { name: /檢視 FR cross-border payment policy hold 的回覆與 trace/i })).toBeVisible();
   await page.getByRole('button', { name: 'Switch language to English' }).click();
 
-  await page.getByRole('button', { name: 'Overview' }).click();
+  await navigateTo(page, 'Overview');
   await expect(page.getByText('Review quality gates and coverage before entering case-level work.')).toBeVisible();
   await expect(page.getByText('Functional coverage across the bot governance loop')).toBeVisible();
   await expect(page.getByText('Supports governance and backend audit logging readiness')).toBeVisible();
 
-  await page.getByRole('button', { name: 'Signal Intake' }).click();
+  await navigateTo(page, 'Signal Intake');
   await page.getByRole('button', { name: 'Telegram' }).click();
   await expect(page.getByTestId('scenario-list')).toContainText('FR cross-border payment policy hold');
 
@@ -36,7 +36,7 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: /Save trace as eval case/i }).click();
   await expect(page.getByTestId('eval-save-status')).toContainText('eval_saved_scn_cross_border_payment_fr');
 
-  await page.getByRole('button', { name: 'Evaluation' }).click();
+  await navigateTo(page, 'Evaluation');
   await expect(page.getByTestId('evaluation-center')).toContainText('v19 candidate');
   await expect(page.getByTestId('evaluation-center')).toContainText('Handoff Safety Recall');
   await page.getByRole('button', { name: /Run offline eval/i }).click();
@@ -51,16 +51,16 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   const download = await downloadPromise;
   expect(download.suggestedFilename()).toBe('botops-eval-summary.csv');
 
-  await page.getByRole('button', { name: 'Error Analysis' }).click();
+  await navigateTo(page, 'Error Analysis');
   await expect(page.getByTestId('error-analysis')).toContainText('Account takeover case auto-answered');
 
-  await page.getByRole('button', { name: 'Ticket Center' }).click();
+  await navigateTo(page, 'Ticket Center');
   await expect(page.getByTestId('ticket-center')).toContainText('Security-L2');
   await expect(page.getByTestId('ticket-center')).toContainText('Possible account takeover with transfer on hold');
   await expect(page.getByTestId('ticket-center')).toContainText('Next action');
   await expect(page.getByTestId('ticket-center')).toContainText('SLA watch');
 
-  await page.getByRole('button', { name: 'Release Center' }).click();
+  await navigateTo(page, 'Release Center');
   await expect(page.getByText('Promote, block, or request review based on visible release gates.')).toBeVisible();
   await expect(page.getByTestId('release-center')).toContainText('v18 baseline unsafe bundle');
   await expect(page.getByTestId('release-center')).toContainText('High-risk auto-answer rate must be 0');
@@ -71,13 +71,13 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: /Block release/i }).nth(1).click();
   await expect(page.getByTestId('release-decision-rel_mvp_018_blocked')).toContainText('Release blocked');
 
-  await page.getByRole('button', { name: 'Signal Intake' }).click();
+  await navigateTo(page, 'Signal Intake');
   await page.getByRole('button', { name: /Review live reply and trace for Account takeover with transfer on hold/i }).click();
-  await page.getByRole('button', { name: 'Handoff', exact: true }).click();
+  await navigateTo(page, 'Handoff', true);
   await expect(page.getByTestId('handoff-preview')).toContainText('Security-L2');
   await expect(page.getByTestId('handoff-preview')).toContainText('Do not approve or override');
 
-  await page.getByRole('button', { name: 'Audit Log' }).click();
+  await navigateTo(page, 'Audit Log');
   await expect(page.getByTestId('ops-log')).toContainText('Completed offline eval run');
   await expect(page.getByTestId('ops-log')).toContainText('Exported eval summary CSV');
   await expect(page.getByTestId('ops-log')).toContainText('Promoted release bundle');
@@ -89,3 +89,22 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: 'CSV export' }).click();
   await expect(page.getByTestId('ops-log')).toContainText('Exported eval summary CSV');
 });
+
+async function navigateTo(page: Page, name: string | RegExp, exact = false) {
+  const menuButton = page.getByRole('button', { name: /Open navigation menu|開啟導覽選單/ });
+  if (await menuButton.isVisible().catch(() => false)) {
+    await menuButton.click();
+  }
+  await page.getByRole('button', { name, exact }).click();
+}
+
+async function expectLocalizedNav(page: Page) {
+  const menuButton = page.getByRole('button', { name: /Open navigation menu|開啟導覽選單/ });
+  if (await menuButton.isVisible().catch(() => false)) {
+    await menuButton.click();
+    await expect(page.getByRole('button', { name: '訊號受理' })).toBeVisible();
+    await page.getByRole('button', { name: /Close navigation menu|關閉導覽選單/ }).first().click();
+    return;
+  }
+  await expect(page.getByRole('button', { name: '訊號受理' })).toBeVisible();
+}
