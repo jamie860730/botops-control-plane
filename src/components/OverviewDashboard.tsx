@@ -67,19 +67,19 @@ export function OverviewDashboard({ data }: OverviewDashboardProps) {
 const pagePurposes = [
   {
     name: 'Intake',
-    purpose: 'Normalize customer signals from Web/App Chat, X, LINE, Telegram, Discord, and internal reports before bot execution.'
+    purpose: 'Monitor live support signals from Web/App Chat, X, LINE, Telegram, Discord, and internal reports after the bot has replied.'
   },
   {
     name: 'Chat + Trace',
-    purpose: 'Run a support scenario, inspect the bot answer, and expose every source, retrieval, citation, safety, and handoff decision.'
+    purpose: 'Review the live bot answer and retained trace: source, retrieval, citation, safety, verification, and handoff decisions.'
   },
   {
     name: 'Knowledge',
-    purpose: 'Show the policy documents and chunks that the bot is allowed to cite, including highlighted evidence from the trace.'
+    purpose: 'Manage RAG documents, chunks, KB snapshots, index status, retrieval config, and highlighted evidence from the trace.'
   },
   {
     name: 'Evaluation',
-    purpose: 'Compare candidate and baseline flows with the same dataset, then export summary metrics for product review.'
+    purpose: 'Replay saved interactions against candidate and baseline flows, then export summary metrics for product review.'
   },
   {
     name: 'Error Analysis',

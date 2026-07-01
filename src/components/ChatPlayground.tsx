@@ -1,11 +1,11 @@
 import { BookmarkPlus, ExternalLink } from 'lucide-react';
 import type { KnowledgeDocument } from '../types';
-import type { ScenarioRun } from '../services/seedBackendAdapter';
+import type { InteractionReview } from '../services/seedBackendAdapter';
 
 interface ChatPlaygroundProps {
   documents: KnowledgeDocument[];
   highlightedChunkId: string;
-  run: ScenarioRun;
+  review: InteractionReview;
   savedEvalCaseId: string | null;
   onHighlightChunk: (chunkId: string) => void;
   onSaveEvalCase: () => void;
@@ -14,7 +14,7 @@ interface ChatPlaygroundProps {
 export function ChatPlayground({
   documents,
   highlightedChunkId,
-  run,
+  review,
   savedEvalCaseId,
   onHighlightChunk,
   onSaveEvalCase
@@ -24,25 +24,25 @@ export function ChatPlayground({
 
   return (
     <section className="screen-grid chat-grid">
-      <div className="panel" data-testid="chat-playground">
+      <div className="panel" data-testid="live-reply-review">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">{run.scenario.sourceChannel} scenario</p>
-            <h3>{run.scenario.title}</h3>
+            <p className="eyebrow">{review.scenario.sourceChannel} live interaction</p>
+            <h3>{review.scenario.title}</h3>
           </div>
           <button className="secondary-action" onClick={onSaveEvalCase} type="button">
             <BookmarkPlus size={15} aria-hidden="true" />
-            Save as eval case
+            Save trace as eval case
           </button>
         </div>
         <div className="profile-strip">
-          <span>{run.scenario.region}</span>
-          <span>{run.scenario.language}</span>
-          <span>{run.scenario.product}</span>
-          <span>{run.scenario.riskTag}</span>
+          <span>{review.scenario.region}</span>
+          <span>{review.scenario.language}</span>
+          <span>{review.scenario.product}</span>
+          <span>{review.scenario.riskTag}</span>
         </div>
         <div className="conversation">
-          {run.messages.map((message) => (
+          {review.messages.map((message) => (
             <article className={`message ${message.role}`} key={message.id}>
               <div className="message-role">{message.role}</div>
               <p>{message.content}</p>
@@ -65,7 +65,7 @@ export function ChatPlayground({
           ))}
         </div>
         <div className="eval-save-status" data-testid="eval-save-status">
-          {savedEvalCaseId ? `Saved ${savedEvalCaseId}` : 'No eval case saved from this session yet.'}
+          {savedEvalCaseId ? `Saved ${savedEvalCaseId}` : 'This live interaction has not been saved as an eval case yet.'}
         </div>
       </div>
 
@@ -73,11 +73,11 @@ export function ChatPlayground({
         <div className="section-heading">
           <div>
             <p className="eyebrow">Trace Panel</p>
-            <h3>Runtime decisions behind the answer</h3>
+            <h3>Retained runtime decisions behind the live answer</h3>
           </div>
         </div>
         <div className="trace-list">
-          {run.traceEvents.map((event) => (
+          {review.traceEvents.map((event) => (
             <article className={`trace-row ${event.status}`} key={event.id}>
               <div>
                 <strong>{event.nodeName}</strong>

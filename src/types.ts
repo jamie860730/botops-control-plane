@@ -25,11 +25,12 @@ export type ReleaseStatus =
   | 'Rolled back';
 
 export type AuditEventType =
-  | 'scenario_run'
+  | 'live_trace_review'
   | 'eval_case_saved'
   | 'eval_runner_started'
   | 'eval_runner_completed'
-  | 'csv_exported';
+  | 'csv_exported'
+  | 'release_decision';
 
 export interface SupportSignal {
   id: string;
@@ -114,6 +115,10 @@ export interface KnowledgeDocument {
   effectiveTo?: string;
   owner: string;
   citationUsage: number;
+  indexStatus: 'Indexed' | 'Needs re-index' | 'Excluded';
+  vectorIndex: string;
+  lastIndexedAt: string;
+  retrievalConfig: string;
   chunks: KnowledgeChunk[];
 }
 

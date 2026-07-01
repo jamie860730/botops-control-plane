@@ -315,6 +315,10 @@ const knowledgeDocuments: KnowledgeDocument[] = [
     effectiveTo: '2026-12-31',
     owner: 'Compliance Support',
     citationUsage: 42,
+    indexStatus: 'Indexed',
+    vectorIndex: 'vector_policy_support_prod',
+    lastIndexedAt: '2026-07-01T08:30:00.000Z',
+    retrievalConfig: 'retriever_cfg_05',
     chunks: [
       {
         id: 'chunk_payment_policy_eu_001',
@@ -338,6 +342,10 @@ const knowledgeDocuments: KnowledgeDocument[] = [
     effectiveFrom: '2026-02-01',
     owner: 'Security-L2',
     citationUsage: 27,
+    indexStatus: 'Indexed',
+    vectorIndex: 'vector_policy_support_prod',
+    lastIndexedAt: '2026-07-01T08:32:00.000Z',
+    retrievalConfig: 'retriever_cfg_05',
     chunks: [
       {
         id: 'chunk_security_handoff_001',
@@ -361,6 +369,10 @@ const knowledgeDocuments: KnowledgeDocument[] = [
     effectiveFrom: '2026-03-01',
     owner: 'KYC Review',
     citationUsage: 18,
+    indexStatus: 'Indexed',
+    vectorIndex: 'vector_policy_support_prod',
+    lastIndexedAt: '2026-07-01T08:35:00.000Z',
+    retrievalConfig: 'retriever_cfg_05',
     chunks: [
       {
         id: 'chunk_kyc_tw_001',
@@ -383,6 +395,10 @@ const knowledgeDocuments: KnowledgeDocument[] = [
     effectiveFrom: '2026-01-01',
     owner: 'Knowledge Ops',
     citationUsage: 63,
+    indexStatus: 'Needs re-index',
+    vectorIndex: 'vector_policy_support_prod',
+    lastIndexedAt: '2026-06-28T12:10:00.000Z',
+    retrievalConfig: 'retriever_cfg_04',
     chunks: [
       {
         id: 'chunk_global_transfer_001',
@@ -406,6 +422,10 @@ const knowledgeDocuments: KnowledgeDocument[] = [
     effectiveFrom: '2026-04-01',
     owner: 'Knowledge Ops',
     citationUsage: 12,
+    indexStatus: 'Indexed',
+    vectorIndex: 'vector_policy_support_prod',
+    lastIndexedAt: '2026-07-01T08:41:00.000Z',
+    retrievalConfig: 'retriever_cfg_05',
     chunks: [
       {
         id: 'chunk_missing_kb_001',
@@ -425,7 +445,7 @@ const evalRuns: EvalRun[] = [
     id: 'run_v18_baseline',
     label: 'v18 baseline',
     versionConfig: {
-      flowVersion: 'withdraw_support_v11',
+      flowVersion: 'support_automation_v11',
       promptVersion: 'answer_generation_v18',
       kbSnapshot: 'kb_2026_06_seed',
       retrievalConfig: 'retriever_cfg_04',
@@ -439,7 +459,7 @@ const evalRuns: EvalRun[] = [
     id: 'run_v19_candidate',
     label: 'v19 candidate',
     versionConfig: {
-      flowVersion: 'withdraw_support_v12',
+      flowVersion: 'support_automation_v12',
       promptVersion: 'answer_generation_v19',
       kbSnapshot: 'kb_2026_07_seed',
       retrievalConfig: 'retriever_cfg_05',
@@ -572,7 +592,7 @@ const releaseBundles: ReleaseBundle[] = [
   {
     id: 'rel_mvp_019',
     label: 'v19 candidate safe bundle',
-    flowVersion: 'withdraw_support_v12',
+    flowVersion: 'support_automation_v12',
     promptVersion: 'answer_generation_v19',
     kbSnapshot: 'kb_2026_07_seed',
     retrievalConfig: 'retriever_cfg_05',
@@ -584,7 +604,7 @@ const releaseBundles: ReleaseBundle[] = [
   {
     id: 'rel_mvp_018_blocked',
     label: 'v18 baseline unsafe bundle',
-    flowVersion: 'withdraw_support_v11',
+    flowVersion: 'support_automation_v11',
     promptVersion: 'answer_generation_v18',
     kbSnapshot: 'kb_2026_06_seed',
     retrievalConfig: 'retriever_cfg_04',

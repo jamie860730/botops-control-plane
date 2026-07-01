@@ -1,4 +1,4 @@
-import { Play, SignalHigh } from 'lucide-react';
+import { Eye, SignalHigh } from 'lucide-react';
 import type { SourceChannel, SupportScenario, SupportSignal } from '../types';
 
 const sourceChannels: (SourceChannel | 'All')[] = [
@@ -16,7 +16,7 @@ interface IntakeProps {
   signals: SupportSignal[];
   scenarios: SupportScenario[];
   onSourceChange: (source: SourceChannel | 'All') => void;
-  onRunScenario: (id: string) => void;
+  onReviewInteraction: (id: string) => void;
 }
 
 export function Intake({
@@ -24,7 +24,7 @@ export function Intake({
   signals,
   scenarios,
   onSourceChange,
-  onRunScenario
+  onReviewInteraction
 }: IntakeProps) {
   return (
     <section className="screen-grid intake-grid">
@@ -72,7 +72,7 @@ export function Intake({
         <div className="section-heading">
           <div>
             <p className="eyebrow">Scenario Launcher</p>
-            <h3>Run a traceable support workflow</h3>
+            <h3>Open live bot replies and retained traces</h3>
           </div>
         </div>
         <div className="scenario-list" data-testid="scenario-list">
@@ -97,12 +97,13 @@ export function Intake({
                 </div>
               </dl>
               <button
+                aria-label={`Review live reply and trace for ${scenario.title}`}
                 className="primary-action"
-                onClick={() => onRunScenario(scenario.id)}
+                onClick={() => onReviewInteraction(scenario.id)}
                 type="button"
               >
-                <Play size={15} aria-hidden="true" />
-                Run {scenario.title}
+                <Eye size={15} aria-hidden="true" />
+                Review live reply + trace
               </button>
             </article>
           ))}

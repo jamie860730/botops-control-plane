@@ -3,6 +3,7 @@ import { seedData } from './data/seedData';
 import { SeedBackendAdapter } from './services/seedBackendAdapter';
 import type { AuditEvent, SourceChannel } from './types';
 import { ChatPlayground } from './components/ChatPlayground';
+import { DemoGuide } from './components/DemoGuide';
 import { ErrorAnalysis } from './components/ErrorAnalysis';
 import { EvaluationCenter } from './components/EvaluationCenter';
 import { HandoffPreview } from './components/HandoffPreview';
@@ -42,7 +43,7 @@ export function App() {
   const [auditEvents, setAuditEvents] = useState<AuditEvent[]>(() => readPersistedAuditEvents());
   const [evalRunnerStatus, setEvalRunnerStatus] = useState('Idle');
 
-  const scenarioRun = backend.runScenario(selectedScenarioId);
+  const interactionReview = backend.getInteractionReview(selectedScenarioId);
   const sourceChannel = sourceFilter === 'All' ? undefined : sourceFilter;
 
   useEffect(() => {
@@ -55,20 +56,20 @@ export function App() {
     window.localStorage.setItem(auditEventsStorageKey, JSON.stringify(auditEvents));
   }, [auditEvents]);
 
-  function runScenario(id: string) {
+  function reviewLiveInteraction(id: string) {
     setSelectedScenarioId(id);
     setActiveView('chat');
-    const run = backend.runScenario(id);
-    const retrievalEvent = run.traceEvents.find((event) => event.eventType === 'retrieval');
+    const review = backend.getInteractionReview(id);
+    const retrievalEvent = review.traceEvents.find((event) => event.eventType === 'retrieval');
     if (retrievalEvent) {
       setHighlightedChunkId(retrievalEvent.outputRef);
     }
     appendAuditEvent({
-      eventType: 'scenario_run',
+      eventType: 'live_trace_review',
       actor: 'PM',
-      title: `Ran ${run.scenario.title}`,
-      detail: `Source ${run.scenario.sourceChannel}, risk ${run.scenario.riskTag}, region ${run.scenario.region}.`,
-      entityRef: run.scenario.id
+      title: `Reviewed live bot trace for ${review.scenario.title}`,
+      detail: `Opened the already-answered customer interaction with source ${review.scenario.sourceChannel}, risk ${review.scenario.riskTag}, region ${review.scenario.region}.`,
+      entityRef: review.scenario.id
     });
   }
 
@@ -135,7 +136,7 @@ export function App() {
           signals={backend.listSignals({ sourceChannel })}
           scenarios={backend.listScenarios({ sourceChannel })}
           onSourceChange={setSourceFilter}
-          onRunScenario={runScenario}
+          onReviewInteraction={reviewLiveInteraction}
         />
       )}
       {activeView === 'overview' && <OverviewDashboard data={seedData} />}
@@ -145,7 +146,7 @@ export function App() {
           highlightedChunkId={highlightedChunkId}
           onHighlightChunk={setHighlightedChunkId}
           onSaveEvalCase={saveAsEvalCase}
-          run={scenarioRun}
+          review={interactionReview}
           savedEvalCaseId={savedEvalCaseId}
         />
       )}
@@ -173,9 +174,25 @@ export function App() {
         />
       )}
       {activeView === 'release' && (
-        <ReleaseCenter bundles={backend.listReleaseBundles()} evalResults={backend.listEvalResults()} />
+        <ReleaseCenter
+          bundles={backend.listReleaseBundles()}
+          evalResults={backend.listEvalResults()}
+          onReleaseDecision={(bundle, decision) =>
+            appendAuditEvent({
+              eventType: 'release_decision',
+              actor: 'PM',
+              title: decision === 'ready' ? 'Marked bundle ready for review' : 'Kept bundle blocked',
+              detail:
+                decision === 'ready'
+                  ? `${bundle.label} passed visible release gates and is ready for stakeholder review.`
+                  : `${bundle.label} remains blocked because one or more release gates failed.`,
+              entityRef: bundle.id
+            })
+          }
+        />
       )}
       {activeView === 'opsLog' && <OpsLog events={auditEvents} />}
+      <DemoGuide activeView={activeView} savedEvalCaseId={savedEvalCaseId} />
     </Shell>
   );
 

@@ -13,7 +13,7 @@ import type {
   TraceEvent
 } from '../types';
 
-export interface ScenarioRun {
+export interface InteractionReview {
   scenario: SupportScenario;
   messages: SeedData['conversationMessages'];
   traceEvents: TraceEvent[];
@@ -38,7 +38,7 @@ export class SeedBackendAdapter {
     return seedData.scenarios.find((scenario) => scenario.id === id);
   }
 
-  runScenario(id: string): ScenarioRun {
+  getInteractionReview(id: string): InteractionReview {
     const scenario = this.getScenario(id) ?? seedData.scenarios[0];
     return {
       scenario,

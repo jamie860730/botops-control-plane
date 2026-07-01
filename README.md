@@ -7,9 +7,9 @@ The current P0 version runs in seed-data mode, so the product can be reviewed wi
 ## What P0 Includes
 
 - Multi-channel intake for Web/App Chat, X, LINE, Telegram, Discord, and Internal Report.
-- Scenario launcher for cross-border payment policy, account takeover, KYC, missing KB, and incident spike cases.
-- Chat Playground with stable message IDs, citations, and trace events.
-- Knowledge metadata table with policy chunks and highlighted citations.
+- Live interaction review for cross-border payment policy, account takeover, KYC, missing KB, and incident spike cases.
+- Chat + Trace review with stable message IDs, citations, and retained runtime events.
+- RAG knowledge management with document lifecycle, chunk metadata, KB snapshot, index status, and highlighted citations.
 - Evaluation Center comparing v18 baseline and v19 candidate runs.
 - Error Analysis with badcase attribution and retest metrics.
 - Handoff Preview for high-risk support cases.
@@ -20,11 +20,11 @@ The current P0 version runs in seed-data mode, so the product can be reviewed wi
 
 | Page | Product purpose | Demo narrative |
 | --- | --- | --- |
-| Intake | Normalize support signals from Web/App Chat, X, LINE, Telegram, Discord, and internal reports. | Shows the PM understands bot inputs do not only come from one chat box. |
+| Intake | Monitor live support signals from Web/App Chat, X, LINE, Telegram, Discord, and internal reports after the bot has replied. | Shows the PM understands bot operations do not only happen inside one chat box. |
 | Overview | Summarize quality gates, source distribution, and the full bot management workflow. | Use this as the opening map before walking through the product. |
-| Chat + Trace | Run a scenario and inspect answer, citations, retrieval, verification, and handoff decisions. | Proves the product manages bot behavior, not only conversation UI. |
-| Knowledge | Show policy documents and chunks the bot can cite. | Explains how PMs and knowledge owners control answer grounding. |
-| Evaluation | Compare baseline and candidate flows, run offline eval, and export CSV. | Demonstrates measurable product iteration and release confidence. |
+| Chat + Trace | Review the live bot answer and retained trace: citations, retrieval, verification, and handoff decisions. | Proves the product manages bot behavior after real-time replies, not only conversation UI. |
+| Knowledge | Manage RAG documents, chunks, snapshots, index status, and retrieval config. | Explains how PMs and knowledge owners control answer grounding. |
+| Evaluation | Replay saved interactions against baseline and candidate flows, run offline eval, and export CSV. | Demonstrates measurable product iteration and release confidence. |
 | Error Analysis | Convert failed eval rows into fixable badcases with owner and expected metric movement. | Shows the improvement loop from failure to product decision. |
 | Handoff | Package high-risk cases for human queues with required fields and risk warnings. | Shows safety boundary and human escalation design. |
 | Release Center | Block unsafe versions when release gates fail. | Connects eval metrics to launch decisions. |

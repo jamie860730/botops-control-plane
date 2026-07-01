@@ -2,7 +2,7 @@
 
 ## 使用者角色
 
-本手冊以 support automation 管理人員的角度撰寫。你負責檢查多來源客服訊號、驗證 bot 回答品質、追蹤錯誤案例、決定是否允許新版 bot flow 進入 release。
+本手冊以 support automation 管理人員的角度撰寫。你負責監控多來源客服訊號、抽查 bot 已即時送出的回覆、檢查 retained trace、追蹤錯誤案例、決定是否允許新版 bot flow 進入 release。
 
 ## Demo 前準備
 
@@ -39,30 +39,31 @@ http://127.0.0.1:5173/
 
 ### 2. Intake：篩選多來源客服訊號
 
-用途：把 Web/App Chat、X、LINE、Telegram、Discord、內部通報等來源正規化成可執行情境。
+用途：監控 Web/App Chat、X、LINE、Telegram、Discord、內部通報等來源的真實訊號。訓練好的 bot 會即時回覆；此頁讓管理員打開已回覆 interaction 並檢查 trace。
 
 操作：
 
 1. 點擊 `Intake`。
 2. 使用來源 chip 篩選，例如 `Telegram` 或 `Internal Report`。
-3. 在 Scenario Launcher 點擊要測試的 `Run ...`。
+3. 在 Scenario Launcher 點擊 `Review live reply + trace`。
 
 管理員判斷重點：
 
 - 訊號是否有來源、地區、語言、產品、風險標籤。
 - 是否能把公開社群、內部通報、客服對話合併成同一個問題群。
+- 是否能快速找到需要抽查的已回覆 interaction。
 
 ### 3. Chat + Trace：檢查 bot 回答與決策鏈
 
-用途：執行情境並檢查回答、引用、retrieval、verification、handoff 等節點。
+用途：檢查 bot 已即時送出的回答、引用、retrieval、verification、handoff 等 retained trace 節點。
 
 操作：
 
-1. 從 Intake 啟動 scenario 後，系統會進入 `Chat + Trace`。
-2. 閱讀 bot 回答是否符合 expected behavior。
+1. 從 Intake 打開 live interaction 後，系統會進入 `Chat + Trace`。
+2. 閱讀 bot 已送出的回答是否符合 expected behavior。
 3. 在 Trace Panel 檢查 Source Normalization、Metadata Retrieval、Verification Gate。
 4. 點擊 citation button，確認引用 chunk 與回答內容一致。
-5. 點擊 `Save as eval case`，把這次對話加入後續評測候選。
+5. 點擊 `Save trace as eval case`，把這次 live interaction 加入後續 replay / eval。
 
 管理員判斷重點：
 
@@ -72,22 +73,24 @@ http://127.0.0.1:5173/
 
 ### 4. Knowledge：確認可引用知識
 
-用途：檢查 bot 可引用的政策文件、chunks、有效期間、owner、風險等級。
+用途：管理 bot RAG 可使用的政策文件、chunks、KB snapshot、index status、retrieval config、有效期間、owner、風險等級。
 
 操作：
 
 1. 點擊 `Knowledge`。
-2. 查看文件 metadata。
-3. 檢查 highlighted chunk 是否與剛才 citation 對應。
+2. 查看 RAG 管理摘要：Indexed Docs、Needs Re-index、Chunks、Retriever。
+3. 查看文件 lifecycle、index status、retrieval config。
+4. 檢查 highlighted chunk 是否與剛才 citation 對應。
 
 管理員判斷重點：
 
-- 文件是否為 Published 或可引用狀態。
+- 文件是否為 Published 且已 indexed。
 - chunk 是否足夠具體，能支撐回答。
+- 是否有 Needs re-index 的文件會影響 release confidence。
 
 ### 5. Evaluation：跑 offline eval 並匯出結果
 
-用途：用同一批 eval cases 比較 baseline 與 candidate，避免只靠人工主觀判斷。
+用途：用 saved live interactions / eval cases replay baseline 與 candidate，避免只靠人工主觀判斷。
 
 操作：
 

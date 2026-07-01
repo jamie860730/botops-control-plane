@@ -14,10 +14,10 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: 'Telegram' }).click();
   await expect(page.getByTestId('scenario-list')).toContainText('FR cross-border payment policy hold');
 
-  await page.getByRole('button', { name: /Run FR cross-border payment policy hold/i }).click();
-  await expect(page.getByTestId('chat-playground')).toContainText('Why is my transfer on hold');
-  await expect(page.getByTestId('chat-playground')).toContainText('Your transfer may require cross-border payment policy');
-  await expect(page.getByTestId('chat-playground')).toContainText('If the issue involves a suspicious transfer');
+  await page.getByRole('button', { name: /Review live reply and trace for FR cross-border payment policy hold/i }).click();
+  await expect(page.getByTestId('live-reply-review')).toContainText('Why is my transfer on hold');
+  await expect(page.getByTestId('live-reply-review')).toContainText('Your transfer may require cross-border payment policy');
+  await expect(page.getByTestId('live-reply-review')).toContainText('If the issue involves a suspicious transfer');
 
   await expect(page.getByTestId('trace-panel')).toContainText('Source Normalization');
   await expect(page.getByTestId('trace-panel')).toContainText('Metadata Retrieval');
@@ -26,7 +26,7 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: /Open citation chunk_payment_policy_eu_001/i }).click();
   await expect(page.getByTestId('highlighted-citation')).toContainText('cross-border payment policy requirements');
 
-  await page.getByRole('button', { name: /Save as eval case/i }).click();
+  await page.getByRole('button', { name: /Save trace as eval case/i }).click();
   await expect(page.getByTestId('eval-save-status')).toContainText('eval_saved_scn_cross_border_payment_fr');
 
   await page.getByRole('button', { name: 'Evaluation' }).click();
@@ -46,9 +46,10 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: 'Release Center' }).click();
   await expect(page.getByTestId('release-center')).toContainText('v18 baseline unsafe bundle');
   await expect(page.getByTestId('release-center')).toContainText('High-risk auto-answer rate must be 0');
+  await page.getByRole('button', { name: /Keep blocked/i }).click();
 
   await page.getByRole('button', { name: 'Intake' }).click();
-  await page.getByRole('button', { name: /Run Account takeover with transfer on hold/i }).click();
+  await page.getByRole('button', { name: /Review live reply and trace for Account takeover with transfer on hold/i }).click();
   await page.getByRole('button', { name: 'Handoff', exact: true }).click();
   await expect(page.getByTestId('handoff-preview')).toContainText('Security-L2');
   await expect(page.getByTestId('handoff-preview')).toContainText('Do not approve or override');
@@ -56,4 +57,5 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: 'Ops Log' }).click();
   await expect(page.getByTestId('ops-log')).toContainText('Completed offline eval run');
   await expect(page.getByTestId('ops-log')).toContainText('Exported eval summary CSV');
+  await expect(page.getByTestId('ops-log')).toContainText('Kept bundle blocked');
 });

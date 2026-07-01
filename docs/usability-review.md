@@ -10,8 +10,8 @@
 | --- | --- |
 | 載入產品並確認品牌與主標題 | 通過 |
 | 從 Overview 理解 bot management loop | 通過 |
-| 從 Intake 篩選 Telegram 訊號並啟動 scenario | 通過 |
-| 在 Chat + Trace 檢查回答、trace、citation | 通過 |
+| 從 Intake 篩選 Telegram 訊號並打開 live reply + trace | 通過 |
+| 在 Chat + Trace 檢查已送出回答、retained trace、citation | 通過 |
 | 儲存對話為 eval case | 通過 |
 | 在 Evaluation 跑 offline eval | 通過 |
 | 匯出 `botops-eval-summary.csv` | 通過 |
@@ -23,8 +23,9 @@
 
 ### 做得好的地方
 
-- 流程順序符合管理員心智模型：先看訊號，再看 bot 回答與 trace，接著 eval、badcase、release、audit。
+- 流程順序符合管理員心智模型：先看 live 訊號，再看 bot 已送出回答與 retained trace，接著 eval、badcase、release、audit。
 - `Chat + Trace` 能同時看到回答與內部決策鏈，適合面試時說明「我不是只做 chatbot UI」。
+- `Knowledge` 已補上 RAG 管理語意：KB snapshot、index status、retrieval config、citation chunks。
 - `Evaluation` 的 offline eval 與 CSV export 讓產品更像真實 PM/Ops 工作流。
 - `Ops Log` 補足治理與 auditability，對後端設計也有延伸價值。
 - 桌面版資訊密度合理，沒有明顯文字遮擋或卡片互相擠壓。
@@ -56,6 +57,6 @@
 
 ## 結論
 
-目前產品已能支撐一位管理員完成核心 demo 任務：從多來源訊號進入，檢查 bot answer + trace，保存 eval case，跑 offline eval，匯出結果，檢查 release gate，最後用 Ops Log 證明治理能力。
+目前產品已能支撐一位管理員完成核心 demo 任務：從多來源 live 訊號進入，檢查 bot 已即時送出的 answer + retained trace，保存 eval case，跑 offline eval，匯出結果，檢查 release gate，最後用 Ops Log 證明治理能力。
 
 下一步應優先補「demo walkthrough」與「release decision action」，讓產品更像可交付的內部平台，而不是靜態分析 dashboard。

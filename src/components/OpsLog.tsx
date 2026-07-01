@@ -6,11 +6,12 @@ interface OpsLogProps {
 }
 
 const eventIconMap = {
-  scenario_run: PlayCircle,
+  live_trace_review: PlayCircle,
   eval_case_saved: Save,
   eval_runner_started: Activity,
   eval_runner_completed: ShieldCheck,
-  csv_exported: Download
+  csv_exported: Download,
+  release_decision: ShieldCheck
 };
 
 export function OpsLog({ events }: OpsLogProps) {
@@ -26,7 +27,7 @@ export function OpsLog({ events }: OpsLogProps) {
         </div>
         <div className="audit-list">
           {events.map((event) => {
-            const Icon = eventIconMap[event.eventType];
+            const Icon = eventIconMap[event.eventType] ?? Activity;
             return (
               <article className="audit-row" key={event.id}>
                 <div className="row-icon">
