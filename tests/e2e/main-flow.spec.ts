@@ -42,8 +42,12 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: /Run offline eval/i }).click();
   await expect(page.getByTestId('eval-runner-status')).toContainText('Completed');
 
-  const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: /Export CSV/i }).click();
+  await expect(page.getByTestId('csv-preview-modal')).toContainText('run_id');
+  await expect(page.getByTestId('csv-preview-modal')).toContainText('run_v19_candidate');
+  await expect(page.getByTestId('csv-preview-modal')).toContainText('does not include customer identifiers');
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: /Download CSV/i }).click();
   const download = await downloadPromise;
   expect(download.suggestedFilename()).toBe('botops-eval-summary.csv');
 
@@ -72,4 +76,10 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await expect(page.getByTestId('ops-log')).toContainText('Exported eval summary CSV');
   await expect(page.getByTestId('ops-log')).toContainText('Promoted release bundle');
   await expect(page.getByTestId('ops-log')).toContainText('Blocked release bundle');
+  await page.getByRole('button', { name: 'Release decision' }).click();
+  await expect(page.getByTestId('ops-log')).toContainText('Promoted release bundle');
+  await expect(page.getByTestId('ops-log')).toContainText('Blocked release bundle');
+  await expect(page.getByTestId('ops-log')).not.toContainText('Exported eval summary CSV');
+  await page.getByRole('button', { name: 'CSV export' }).click();
+  await expect(page.getByTestId('ops-log')).toContainText('Exported eval summary CSV');
 });

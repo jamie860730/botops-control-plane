@@ -97,7 +97,9 @@ http://127.0.0.1:5173/
 1. 點擊 `Evaluation`。
 2. 點擊 `Run offline eval`。
 3. 確認 Runner status 變成 `Completed`。
-4. 點擊 `Export CSV` 下載 `botops-eval-summary.csv`。
+4. 點擊 `Export CSV` 開啟匯出預覽。
+5. 確認欄位不包含客戶識別資訊、私人訊息或帳戶資料。
+6. 點擊 `Download CSV` 下載 `botops-eval-summary.csv`。
 
 管理員判斷重點：
 
@@ -163,12 +165,14 @@ http://127.0.0.1:5173/
 
 1. 點擊 `Audit Log`。
 2. 檢查最新事件是否出現在列表最上方。
-3. 對照剛才操作是否都有紀錄。
+3. 使用 event type chip 篩選 `CSV export`、`Release decision` 或其他事件。
+4. 對照剛才操作是否都有紀錄。
 
 管理員判斷重點：
 
 - 是否能追溯操作者、操作對象、操作時間與影響範圍。
 - 未來後端應將此處事件寫入正式 audit log。
+- 篩選後是否仍能看到正確事件數與事件內容。
 
 ## 審查建議流程
 
@@ -185,3 +189,4 @@ http://127.0.0.1:5173/
 - P1 使用 deterministic seed data，不連接真實 channel、ticket system 或 LLM。
 - localStorage 僅供本機展示與流程驗證，不是正式資料儲存。
 - CSV export 是前端產生，未來應由後端提供 signed export 或 report job。
+- 後端 API、資料表與 eval runner job flow 請參考 `docs/backend-api-contract.md`。

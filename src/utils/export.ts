@@ -12,8 +12,8 @@ const csvHeader = [
   'eval_case_count'
 ];
 
-export function buildEvalSummaryCsv(evalRuns: EvalRun[], evalResults: EvalResult[], evalCases: EvalCase[]): string {
-  const rows = evalRuns.map((run) => {
+export function buildEvalSummaryRows(evalRuns: EvalRun[], evalResults: EvalResult[], evalCases: EvalCase[]): string[][] {
+  return evalRuns.map((run) => {
     const summary = calculateEvaluationSummary(evalResults, run.id);
     return [
       run.id,
@@ -26,6 +26,14 @@ export function buildEvalSummaryCsv(evalRuns: EvalRun[], evalResults: EvalResult
       String(evalCases.length)
     ];
   });
+}
+
+export function getEvalSummaryCsvHeader(): string[] {
+  return [...csvHeader];
+}
+
+export function buildEvalSummaryCsv(evalRuns: EvalRun[], evalResults: EvalResult[], evalCases: EvalCase[]): string {
+  const rows = buildEvalSummaryRows(evalRuns, evalResults, evalCases);
 
   return [csvHeader, ...rows].map((row) => row.map(escapeCsvCell).join(',')).join('\n');
 }

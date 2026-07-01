@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { Activity, Download, PlayCircle, Save, ShieldCheck } from 'lucide-react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
-import type { AuditEvent } from '../types';
+import type { AuditEvent, AuditEventType } from '../types';
 
 interface OpsLogProps {
   events: AuditEvent[];
@@ -17,7 +18,20 @@ const eventIconMap = {
   release_decision: ShieldCheck
 };
 
+const eventFilters: Array<{ value: AuditEventType | 'All'; labelEn: string; labelZh: string }> = [
+  { value: 'All', labelEn: 'All', labelZh: '全部' },
+  { value: 'live_trace_review', labelEn: 'Trace review', labelZh: 'Trace 審查' },
+  { value: 'eval_case_saved', labelEn: 'Eval case', labelZh: '評測案例' },
+  { value: 'eval_runner_completed', labelEn: 'Eval completed', labelZh: '評測完成' },
+  { value: 'csv_exported', labelEn: 'CSV export', labelZh: 'CSV 匯出' },
+  { value: 'release_decision', labelEn: 'Release decision', labelZh: '發布決策' }
+];
+
 export function OpsLog({ events, locale }: OpsLogProps) {
+  const [selectedFilter, setSelectedFilter] = useState<AuditEventType | 'All'>('All');
+  const filteredEvents =
+    selectedFilter === 'All' ? events : events.filter((event) => event.eventType === selectedFilter);
+
   return (
     <section className="screen-grid" data-testid="ops-log">
       <div className="panel span-2">
@@ -26,10 +40,22 @@ export function OpsLog({ events, locale }: OpsLogProps) {
             <p className="eyebrow">{text(locale, 'Ops Log', '操作紀錄')}</p>
             <h3>{text(locale, 'Persistent action history for product and operations review', '產品與營運審查操作紀錄')}</h3>
           </div>
-          <span className="count-pill">{text(locale, `${events.length} events`, `${events.length} 筆事件`)}</span>
+          <span className="count-pill">{text(locale, `${filteredEvents.length} events`, `${filteredEvents.length} 筆事件`)}</span>
+        </div>
+        <div className="source-tabs" aria-label={text(locale, 'Audit event filters', '稽核事件篩選')}>
+          {eventFilters.map((filter) => (
+            <button
+              className={selectedFilter === filter.value ? 'chip selected' : 'chip'}
+              key={filter.value}
+              onClick={() => setSelectedFilter(filter.value)}
+              type="button"
+            >
+              {text(locale, filter.labelEn, filter.labelZh)}
+            </button>
+          ))}
         </div>
         <div className="audit-list">
-          {events.map((event) => {
+          {filteredEvents.map((event) => {
             const Icon = eventIconMap[event.eventType] ?? Activity;
             return (
               <article className="audit-row" key={event.id}>
@@ -48,6 +74,12 @@ export function OpsLog({ events, locale }: OpsLogProps) {
               </article>
             );
           })}
+          {filteredEvents.length === 0 && (
+            <div className="empty-state">
+              <strong>{text(locale, 'No events match this filter', '沒有符合此篩選的事件')}</strong>
+              <p>{text(locale, 'Run an operation or choose another event type.', '請執行操作或選擇其他事件類型。')}</p>
+            </div>
+          )}
         </div>
       </div>
       <div className="panel">

@@ -70,6 +70,7 @@ button {
 .primary-action,
 .secondary-action,
 .tertiary-action,
+.icon-button,
 .citation-button {
   display: flex;
   align-items: center;
@@ -493,6 +494,16 @@ p {
   border: 1px solid #cfdbdd;
 }
 
+.icon-button {
+  width: 34px;
+  height: 34px;
+  justify-content: center;
+  color: #253236;
+  background: #f8fbfc;
+  border: 1px solid #cfdbdd;
+  border-radius: 6px;
+}
+
 .primary-action:disabled,
 .secondary-action:disabled,
 .tertiary-action:disabled {
@@ -701,6 +712,22 @@ p {
   grid-template-columns: 1.4fr repeat(5, 1fr);
 }
 
+.csv-preview-table {
+  max-height: 320px;
+  overflow: auto;
+}
+
+.csv-row {
+  min-width: 850px;
+  grid-template-columns: 1.15fr 0.95fr repeat(6, 0.72fr);
+  font-size: 0.78rem;
+}
+
+.csv-row span {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
 .knowledge-row {
   grid-template-columns: 1.6fr 0.7fr 0.9fr 0.8fr 0.9fr 0.9fr;
 }
@@ -833,6 +860,60 @@ p {
   margin-bottom: 0;
   color: #4d503b;
   font-size: 0.9rem;
+}
+
+.empty-state {
+  padding: 18px;
+  color: #4d503b;
+  background: #ffffff;
+  border: 1px dashed #b9dfe3;
+  border-radius: 7px;
+}
+
+.empty-state strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #232517;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(17, 24, 28, 0.42);
+}
+
+.modal-panel {
+  width: min(920px, 100%);
+  max-height: min(760px, calc(100vh - 48px));
+  overflow: auto;
+  padding: 18px;
+  background: #fffdf7;
+  border: 1px solid #cfdbdd;
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgba(17, 24, 28, 0.26);
+}
+
+.modal-copy {
+  margin-bottom: 14px;
+  color: #4d503b;
+  font-size: 0.92rem;
+}
+
+.modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
 }
 
 .demo-guide {

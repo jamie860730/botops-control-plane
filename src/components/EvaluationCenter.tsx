@@ -1,7 +1,9 @@
-import { Download, Play } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Download, Play, X } from 'lucide-react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { EvalCase, EvalResult, EvalRun } from '../types';
+import { buildEvalSummaryRows, getEvalSummaryCsvHeader } from '../utils/export';
 import { calculateEvaluationSummary } from '../utils/metrics';
 
 interface EvaluationCenterProps {
@@ -25,10 +27,21 @@ export function EvaluationCenter({
   onRunEval,
   savedEvalCaseId
 }: EvaluationCenterProps) {
+  const [isCsvPreviewOpen, setIsCsvPreviewOpen] = useState(false);
   const rows = evalRuns.map((run) => ({
     run,
     summary: calculateEvaluationSummary(evalResults, run.id)
   }));
+  const csvHeader = useMemo(() => getEvalSummaryCsvHeader(), []);
+  const csvRows = useMemo(
+    () => buildEvalSummaryRows(evalRuns, evalResults, evalCases),
+    [evalCases, evalResults, evalRuns]
+  );
+
+  function confirmCsvExport() {
+    onExportCsv();
+    setIsCsvPreviewOpen(false);
+  }
 
   return (
     <section className="screen-grid" data-testid="evaluation-center">
@@ -39,7 +52,7 @@ export function EvaluationCenter({
             <h3>{text(locale, 'Compare baseline and candidate on the same cases', '用同一批案例比較 baseline 與 candidate')}</h3>
           </div>
           <div className="action-row">
-            <button className="secondary-action" onClick={onExportCsv} type="button">
+            <button className="secondary-action" onClick={() => setIsCsvPreviewOpen(true)} type="button">
               <Download size={15} aria-hidden="true" />
               {text(locale, 'Export CSV', '匯出 CSV')}
             </button>
@@ -95,6 +108,64 @@ export function EvaluationCenter({
           )}
         </p>
       </div>
+      {isCsvPreviewOpen && (
+        <div
+          aria-labelledby="csv-preview-title"
+          aria-modal="true"
+          className="modal-backdrop"
+          data-testid="csv-preview-modal"
+          role="dialog"
+        >
+          <div className="modal-panel">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">{text(locale, 'CSV Preview', 'CSV 預覽')}</p>
+                <h3 id="csv-preview-title">
+                  {text(locale, 'Review export fields before download', '下載前確認匯出欄位')}
+                </h3>
+              </div>
+              <button
+                aria-label={text(locale, 'Close CSV preview', '關閉 CSV 預覽')}
+                className="icon-button"
+                onClick={() => setIsCsvPreviewOpen(false)}
+                type="button"
+              >
+                <X size={16} aria-hidden="true" />
+              </button>
+            </div>
+            <p className="modal-copy">
+              {text(
+                locale,
+                'This export contains run-level evaluation metrics only. It does not include customer identifiers, raw private messages, or account data.',
+                '此匯出僅包含 run-level 評測指標，不包含客戶識別資訊、私人原文訊息或帳戶資料。'
+              )}
+            </p>
+            <div className="data-table csv-preview-table">
+              <div className="table-row table-head csv-row">
+                {csvHeader.map((column) => (
+                  <span key={column}>{column}</span>
+                ))}
+              </div>
+              {csvRows.map((row) => (
+                <div className="table-row csv-row" key={row[0]}>
+                  {row.map((cell, index) => (
+                    <span key={`${row[0]}_${csvHeader[index]}`}>{cell}</span>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <div className="modal-actions">
+              <button className="tertiary-action" onClick={() => setIsCsvPreviewOpen(false)} type="button">
+                {text(locale, 'Cancel', '取消')}
+              </button>
+              <button className="primary-action compact-action" onClick={confirmCsvExport} type="button">
+                <Download size={15} aria-hidden="true" />
+                {text(locale, 'Download CSV', '下載 CSV')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

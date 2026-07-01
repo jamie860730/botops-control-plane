@@ -55,10 +55,11 @@ npm run test:e2e
 
 - [Admin user manual](docs/admin-user-manual.md)
 - [Usability review](docs/usability-review.md)
+- [Backend API contract](docs/backend-api-contract.md)
 
 ## Roadmap
 
 - P0: Bot management MVP with deterministic workflow and E2E flow.
 - P1: Local persistence, eval runner, CSV export, audit log, page intent guidance, and auditable release decisions.
-- P2: Live Bot Mode with model adapter, retrieval adapter, trace logging, and fallback.
+- P2: CSV preview, Ops Log filters, Live Bot Mode with model adapter, retrieval adapter, trace logging, and fallback.
 - P3: Channel connector and ticket/CRM handoff adapters.
