@@ -14,7 +14,7 @@ export function ErrorAnalysis({ badcases, locale }: ErrorAnalysisProps) {
         <div className="section-heading">
           <div>
             <p className="eyebrow">{text(locale, 'Error Analysis', '錯誤分析')}</p>
-            <h3>{text(locale, 'Badcases become product work items', '把 badcases 轉成產品修正任務')}</h3>
+            <h3>{text(locale, 'Badcases become product work items', '失敗案例轉換為產品修正項目')}</h3>
           </div>
         </div>
         <div className="stacked-list">

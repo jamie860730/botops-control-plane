@@ -45,7 +45,7 @@ export function ReleaseCenter({ bundles, evalResults, locale, onReleaseDecision 
               {blockedReasons.length > 0 ? (
                 blockedReasons.map((reason) => <p key={reason}>{reason}</p>)
               ) : (
-                <p>{text(locale, 'All P0 release gates pass for seed-mode review.', '所有 P0 發布門檻皆通過 seed-mode review。')}</p>
+                <p>{text(locale, 'All P0 release gates pass for seed-mode review.', '所有 P0 發布門檻皆已通過種子資料審查。')}</p>
               )}
             </div>
             <div className="release-actions">
@@ -65,7 +65,7 @@ export function ReleaseCenter({ bundles, evalResults, locale, onReleaseDecision 
                   type="button"
                 >
                   <CheckCircle2 size={15} aria-hidden="true" />
-                  {text(locale, 'Mark ready for review', '標記為可審查')}
+                  {text(locale, 'Mark ready for review', '標記為待審查')}
                 </button>
               )}
             </div>

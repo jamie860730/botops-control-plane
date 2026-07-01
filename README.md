@@ -19,17 +19,17 @@ The current P0 version runs in seed-data mode, so the product can be reviewed wi
 
 ## Page Purpose
 
-| Page | Product purpose | Demo narrative |
+| Page | Product purpose | Review narrative |
 | --- | --- | --- |
-| Intake | Monitor live support signals from Web/App Chat, X, LINE, Telegram, Discord, and internal reports after the bot has replied. | Shows the PM understands bot operations do not only happen inside one chat box. |
-| Overview | Summarize quality gates, source distribution, and the full bot management workflow. | Use this as the opening map before walking through the product. |
-| Chat + Trace | Review the live bot answer and retained trace: citations, retrieval, verification, and handoff decisions. | Proves the product manages bot behavior after real-time replies, not only conversation UI. |
+| Signal Intake | Monitor live support signals from Web/App Chat, X, LINE, Telegram, Discord, and internal reports after the bot has replied. | Establishes multi-channel operational coverage. |
+| Overview | Summarize quality gates, source distribution, and the full bot management workflow. | Defines the operating model before detailed review. |
+| Response Trace | Review the live bot answer and retained trace: citations, retrieval, verification, and handoff decisions. | Provides post-reply accountability and traceability. |
 | Knowledge | Manage RAG documents, chunks, snapshots, index status, and retrieval config. | Explains how PMs and knowledge owners control answer grounding. |
-| Evaluation | Replay saved interactions against baseline and candidate flows, run offline eval, and export CSV. | Demonstrates measurable product iteration and release confidence. |
-| Error Analysis | Convert failed eval rows into fixable badcases with owner and expected metric movement. | Shows the improvement loop from failure to product decision. |
-| Handoff | Package high-risk cases for human queues with required fields and risk warnings. | Shows safety boundary and human escalation design. |
-| Release Center | Block unsafe versions when release gates fail. | Connects eval metrics to launch decisions. |
-| Ops Log | Persist key actions as an audit trail. | Shows governance and readiness for backend audit logging. |
+| Evaluation | Replay saved interactions against baseline and candidate flows, run offline eval, and export CSV. | Supports evidence-based release assessment. |
+| Error Analysis | Convert failed eval rows into fixable badcases with owner and expected metric movement. | Links failures to accountable remediation work. |
+| Handoff | Package high-risk cases for human queues with required fields and risk warnings. | Enforces escalation boundaries for sensitive cases. |
+| Release Center | Block unsafe versions when release gates fail. | Connects eval outcomes to release decisions. |
+| Audit Log | Persist key actions as an audit trail. | Supports governance and backend audit logging readiness. |
 
 ## What P0 Does Not Claim
 

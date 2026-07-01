@@ -36,7 +36,7 @@ export function Intake({
         <div className="section-heading">
           <div>
             <p className="eyebrow">Multi-channel Intake</p>
-            <h3>{text(locale, 'Monitor live signals after real-time bot replies', '監控 Bot 即時回覆後留下的多來源訊號')}</h3>
+            <h3>{text(locale, 'Monitor post-reply signals across channels', '監控跨渠道回覆後訊號')}</h3>
           </div>
           <span className="count-pill">
             {text(locale, `${signals.length} signals`, `${signals.length} 筆訊號`)}
@@ -77,8 +77,8 @@ export function Intake({
       <div className="panel">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">{text(locale, 'Live review queue', '即時回覆審查佇列')}</p>
-            <h3>{text(locale, 'Open live bot replies and retained traces', '打開已送出的 Bot 回覆與保留 trace')}</h3>
+            <p className="eyebrow">{text(locale, 'Interaction review queue', '互動審查佇列')}</p>
+            <h3>{text(locale, 'Inspect delivered bot replies and retained traces', '檢視已送出回覆與保留 trace')}</h3>
           </div>
         </div>
         <div className="scenario-list" data-testid="scenario-list">
@@ -106,14 +106,14 @@ export function Intake({
                 aria-label={text(
                   locale,
                   `Review live reply and trace for ${scenario.title}`,
-                  `查看 ${scenario.title} 的即時回覆與 trace`
+                  `檢視 ${scenario.title} 的回覆與 trace`
                 )}
                 className="primary-action"
                 onClick={() => onReviewInteraction(scenario.id)}
                 type="button"
               >
                 <Eye size={15} aria-hidden="true" />
-                {text(locale, 'Review live reply + trace', '查看回覆與 trace')}
+                {text(locale, 'Inspect reply + trace', '檢視回覆與 trace')}
               </button>
             </article>
           ))}

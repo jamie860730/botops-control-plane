@@ -10,10 +10,10 @@
 | --- | --- |
 | 載入產品並確認品牌與主標題 | 通過 |
 | 從 Overview 理解 bot management loop | 通過 |
-| 從 Intake 篩選 Telegram 訊號並打開 live reply + trace | 通過 |
+| 從 Signal Intake 篩選 Telegram 訊號並開啟 reply trace review | 通過 |
 | 在 Chat + Trace 檢查已送出回答、retained trace、citation | 通過 |
 | 儲存對話為 eval case | 通過 |
-| 在 Evaluation 跑 offline eval | 通過 |
+| 在 Evaluation 執行 offline eval | 通過 |
 | 匯出 `botops-eval-summary.csv` | 通過 |
 | 在 Release Center 檢查 blocked reason | 通過 |
 | 在 Ops Log 確認操作紀錄 | 通過 |
@@ -21,9 +21,9 @@
 
 ## 管理員視角觀察
 
-### 做得好的地方
+### 主要優點
 
-- 流程順序符合管理員心智模型：先看 live 訊號，再看 bot 已送出回答與 retained trace，接著 eval、badcase、release、audit。
+- 流程順序符合管理員作業模型：先檢視 live 訊號，再審查 bot 已送出回答與 retained trace，接著進行 eval、badcase、release、audit。
 - `Chat + Trace` 能同時看到回答與內部決策鏈，適合面試時說明「我不是只做 chatbot UI」。
 - `Knowledge` 已補上 RAG 管理語意：KB snapshot、index status、retrieval config、citation chunks。
 - `Evaluation` 的 offline eval 與 CSV export 讓產品更像真實 PM/Ops 工作流。
@@ -34,7 +34,7 @@
 
 | 嚴重度 | 問題 | 影響 | 修正 |
 | --- | --- | --- | --- |
-| P2 | 手機寬度下左側導覽變成單欄，進入主內容前需要滑太久。 | 管理員在手機或窄視窗 demo 時，主工作區出現太晚。 | 手機導覽改成雙欄，並隱藏 sidebar note，保留 44px touch target。 |
+| P2 | 手機寬度下左側導覽變成單欄，主工作區進入視野前需要過多捲動。 | 管理員在手機或窄視窗操作時，主要內容呈現延遲。 | 手機導覽改成雙欄，並隱藏 sidebar note，保留 44px touch target。 |
 
 ## 仍可改進
 
@@ -57,6 +57,6 @@
 
 ## 結論
 
-目前產品已能支撐一位管理員完成核心 demo 任務：從多來源 live 訊號進入，檢查 bot 已即時送出的 answer + retained trace，保存 eval case，跑 offline eval，匯出結果，檢查 release gate，最後用 Ops Log 證明治理能力。
+目前產品已能支撐管理員完成核心審查任務：從多來源 live 訊號進入，審查 bot 已送出的 answer 與 retained trace，轉存 eval case，執行 offline eval，匯出結果，檢查 release gate，並透過 Audit Log 保留治理證據。
 
-下一步應優先補「demo walkthrough」與「release decision action」，讓產品更像可交付的內部平台，而不是靜態分析 dashboard。
+下一步應優先補「operational workflow guidance」與「release decision action」，使產品更接近可交付的內部營運平台，而非靜態分析 dashboard。

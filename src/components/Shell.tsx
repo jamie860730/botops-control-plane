@@ -27,15 +27,15 @@ export type ViewKey =
   | 'opsLog';
 
 const navItems: { key: ViewKey; labelEn: string; labelZh: string; icon: typeof RadioTower }[] = [
-  { key: 'intake', labelEn: 'Intake', labelZh: '訊號收件匣', icon: RadioTower },
+  { key: 'intake', labelEn: 'Signal Intake', labelZh: '訊號受理', icon: RadioTower },
   { key: 'overview', labelEn: 'Overview', labelZh: '總覽', icon: LayoutDashboard },
-  { key: 'chat', labelEn: 'Chat + Trace', labelZh: '回覆與追蹤', icon: Bot },
-  { key: 'knowledge', labelEn: 'Knowledge', labelZh: '知識庫', icon: Database },
+  { key: 'chat', labelEn: 'Response Trace', labelZh: '回覆稽核', icon: Bot },
+  { key: 'knowledge', labelEn: 'Knowledge Governance', labelZh: '知識治理', icon: Database },
   { key: 'evaluation', labelEn: 'Evaluation', labelZh: '評測中心', icon: ClipboardCheck },
   { key: 'errors', labelEn: 'Error Analysis', labelZh: '錯誤分析', icon: AlertTriangle },
   { key: 'handoff', labelEn: 'Handoff', labelZh: '人工交接', icon: GitBranch },
   { key: 'release', labelEn: 'Release Center', labelZh: '發布中心', icon: ShieldCheck },
-  { key: 'opsLog', labelEn: 'Ops Log', labelZh: '操作紀錄', icon: Activity }
+  { key: 'opsLog', labelEn: 'Audit Log', labelZh: '稽核紀錄', icon: Activity }
 ];
 
 interface ShellProps {
@@ -53,7 +53,7 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
         <div className="brand-block">
           <div className="brand-mark">BO</div>
           <div>
-            <p className="eyebrow">{text(locale, 'Bot management MVP', '機器人管理 MVP')}</p>
+            <p className="eyebrow">{text(locale, 'Bot management platform', '機器人治理平台')}</p>
             <h1>BotOps Control Plane</h1>
           </div>
         </div>
@@ -79,7 +79,7 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
             {text(
               locale,
               'P0 uses the real product data model with deterministic seed execution.',
-              'P0 使用真實產品資料模型與可重現的 seed execution。'
+              'P0 使用標準化產品資料模型與可重現的種子資料流程。'
             )}
           </span>
         </div>
@@ -88,11 +88,11 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
         <header className="workspace-header">
           <div>
             <p className="eyebrow">{text(locale, 'Policy-aware support automation', '政策感知客服自動化')}</p>
-            <h2>{text(locale, 'Quality loop for multi-channel customer support', '多渠道客服機器人的品質管理閉環')}</h2>
+            <h2>{text(locale, 'Operational quality control for support bots', '客服機器人營運品質控管')}</h2>
           </div>
           <div className="header-status">
-            <span>{text(locale, 'Stable IDs enforced', '穩定 ID 已啟用')}</span>
-            <span>{text(locale, 'Offline eval ready', '離線評測就緒')}</span>
+            <span>{text(locale, 'Stable IDs enforced', '穩定 ID 管控')}</span>
+            <span>{text(locale, 'Offline eval ready', '離線評測可用')}</span>
             <span>{text(locale, 'Live Bot P2', '即時 Bot P2')}</span>
             <div className="locale-toggle" aria-label={text(locale, 'Language switcher', '語言切換')}>
               <button

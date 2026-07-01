@@ -12,52 +12,52 @@ interface DemoGuideProps {
 const demoSteps: { view: ViewKey; title: string; titleZh: string; detail: string; detailZh: string }[] = [
   {
     view: 'overview',
-    title: 'Map the control loop',
-    titleZh: '建立管理閉環',
-    detail: 'Start with quality gates, source distribution, and page purpose.',
-    detailZh: '先看品質門檻、來源分布與頁面用途。'
+    title: 'Review operating model',
+    titleZh: '審查營運模型',
+    detail: 'Review quality gates, source distribution, and functional coverage.',
+    detailZh: '審查品質門檻、來源分布與功能覆蓋。'
   },
   {
     view: 'intake',
-    title: 'Choose a live signal',
-    titleZh: '選擇 live signal',
-    detail: 'Filter a channel and open the bot reply with retained trace.',
-    detailZh: '篩選 channel，打開 Bot 已送出回覆與保留 trace。'
+    title: 'Select interaction record',
+    titleZh: '選取互動紀錄',
+    detail: 'Filter by channel and inspect the retained response trace.',
+    detailZh: '依渠道篩選並檢視保留的回覆 trace。'
   },
   {
     view: 'chat',
-    title: 'Inspect live reply and trace',
-    titleZh: '檢查回覆與 trace',
-    detail: 'Check the already-sent response, citation, risk guard, retrieval, and verification.',
-    detailZh: '檢查已送出回覆、引用、風險守門、檢索與驗證。'
+    title: 'Audit response trace',
+    titleZh: '稽核回覆 trace',
+    detail: 'Review response, citation, risk guard, retrieval, and verification.',
+    detailZh: '審查回覆、引用、風險守門、檢索與驗證。'
   },
   {
     view: 'evaluation',
     title: 'Run offline eval',
     titleZh: '執行離線評測',
     detail: 'Compare baseline and candidate, then export CSV evidence.',
-    detailZh: '比較 baseline / candidate，並匯出 CSV 證據。'
+    detailZh: '比較 baseline / candidate，並匯出 CSV 依據。'
   },
   {
     view: 'errors',
     title: 'Review badcases',
-    titleZh: '檢視 badcases',
+    titleZh: '審查失敗案例',
     detail: 'Turn failures into owner-specific improvement tasks.',
-    detailZh: '把失敗案例轉成 owner-specific 改善任務。'
+    detailZh: '將失敗案例轉換為責任歸屬明確的改善項目。'
   },
   {
     view: 'release',
     title: 'Make a release decision',
-    titleZh: '做發布決策',
+    titleZh: '執行發布決策',
     detail: 'Block unsafe versions or mark safe bundles ready for review.',
-    detailZh: '阻擋不安全版本，或標記安全版本可審查。'
+    detailZh: '阻擋不合規版本，或標記合格版本進入審查。'
   },
   {
     view: 'opsLog',
     title: 'Verify audit trail',
-    titleZh: '確認 audit trail',
+    titleZh: '核對稽核軌跡',
     detail: 'Confirm admin actions are persisted for governance.',
-    detailZh: '確認管理員動作有被保存以支援稽核。'
+    detailZh: '確認管理操作已持久化並可供稽核。'
   }
 ];
 
@@ -68,10 +68,10 @@ export function DemoGuide({ activeView, locale, savedEvalCaseId }: DemoGuideProp
   );
 
   return (
-    <aside className="demo-guide" aria-label={text(locale, 'Demo walkthrough', 'Demo 操作導引')}>
+    <aside className="demo-guide" aria-label={text(locale, 'Operational workflow', '營運作業流程')}>
       <div>
-        <p className="eyebrow">{text(locale, 'Admin walkthrough', '管理員操作導引')}</p>
-        <h3>{text(locale, 'Demo path for a bot manager', 'Bot 管理員 demo 路徑')}</h3>
+        <p className="eyebrow">{text(locale, 'Operational workflow', '營運作業流程')}</p>
+        <h3>{text(locale, 'Bot governance review sequence', '機器人治理審查序列')}</h3>
       </div>
       <div className="demo-step-list">
         {demoSteps.map((step, index) => {

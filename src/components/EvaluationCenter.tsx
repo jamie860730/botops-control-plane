@@ -75,23 +75,23 @@ export function EvaluationCenter({
       </div>
       <div className="panel">
         <p className="eyebrow">{text(locale, 'Runner status', '評測執行狀態')}</p>
-        <h3 data-testid="eval-runner-status">{text(locale, evalRunnerStatus, evalRunnerStatus === 'Completed' ? '已完成' : '閒置')}</h3>
+        <h3 data-testid="eval-runner-status">{text(locale, evalRunnerStatus, evalRunnerStatus === 'Completed' ? '已完成' : '待執行')}</h3>
         <p>
           {text(
             locale,
             'Offline runner output is deterministic in P1, so product and operations can review gates before live model traffic exists.',
-            'P1 的離線評測輸出可重現，讓產品與營運在接上真實模型流量前先審查品質門檻。'
+            'P1 的離線評測輸出具可重現性，可在接入正式模型流量前完成品質門檻審查。'
           )}
         </p>
       </div>
       <div className="panel">
-        <p className="eyebrow">{text(locale, 'Saved eval candidate', '已保存評測候選')}</p>
-        <h3>{savedEvalCaseId ?? text(locale, 'No saved live case yet', '尚未保存 live case')}</h3>
+        <p className="eyebrow">{text(locale, 'Saved eval candidate', '評測候選案例')}</p>
+        <h3>{savedEvalCaseId ?? text(locale, 'No saved interaction yet', '尚未轉存互動紀錄')}</h3>
         <p>
           {text(
             locale,
             'Saved conversations keep the source signal, messages, trace events, and version config so they can be replayed in the eval runner.',
-            '保存的互動會保留來源訊號、訊息、trace events 與版本設定，後續可在評測 runner 中 replay。'
+            '轉存互動會保留來源訊號、訊息、trace events 與版本設定，後續可於評測 runner 中 replay。'
           )}
         </p>
       </div>

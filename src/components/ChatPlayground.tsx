@@ -32,13 +32,13 @@ export function ChatPlayground({
         <div className="section-heading">
           <div>
             <p className="eyebrow">
-              {text(locale, `${review.scenario.sourceChannel} live interaction`, `${review.scenario.sourceChannel} 即時互動`)}
+              {text(locale, `${review.scenario.sourceChannel} interaction record`, `${review.scenario.sourceChannel} 互動紀錄`)}
             </p>
             <h3>{review.scenario.title}</h3>
           </div>
           <button className="secondary-action" onClick={onSaveEvalCase} type="button">
             <BookmarkPlus size={15} aria-hidden="true" />
-            {text(locale, 'Save trace as eval case', '保存 trace 為評測案例')}
+            {text(locale, 'Save trace as eval case', '轉存為評測案例')}
           </button>
         </div>
         <div className="profile-strip">
@@ -62,7 +62,7 @@ export function ChatPlayground({
                       type="button"
                     >
                       <ExternalLink size={13} aria-hidden="true" />
-                      {text(locale, `Open citation ${citationId}`, `打開引用 ${citationId}`)}
+                      {text(locale, `Open citation ${citationId}`, `檢視引用 ${citationId}`)}
                     </button>
                   ))}
                 </div>
@@ -72,11 +72,11 @@ export function ChatPlayground({
         </div>
         <div className="eval-save-status" data-testid="eval-save-status">
           {savedEvalCaseId
-            ? text(locale, `Saved ${savedEvalCaseId}`, `已保存 ${savedEvalCaseId}`)
+            ? text(locale, `Saved ${savedEvalCaseId}`, `已轉存 ${savedEvalCaseId}`)
             : text(
                 locale,
                 'This live interaction has not been saved as an eval case yet.',
-                '這筆即時互動尚未保存為評測案例。'
+                '此互動紀錄尚未轉存為評測案例。'
               )}
         </div>
       </div>
@@ -85,7 +85,7 @@ export function ChatPlayground({
         <div className="section-heading">
           <div>
             <p className="eyebrow">{text(locale, 'Trace Panel', 'Trace 面板')}</p>
-            <h3>{text(locale, 'Retained runtime decisions behind the live answer', '即時回覆背後保留下來的執行決策')}</h3>
+            <h3>{text(locale, 'Retained runtime decisions behind the delivered answer', '已送出回覆的執行決策紀錄')}</h3>
           </div>
         </div>
         <div className="trace-list">
