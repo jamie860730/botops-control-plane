@@ -54,6 +54,12 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: 'Error Analysis' }).click();
   await expect(page.getByTestId('error-analysis')).toContainText('Account takeover case auto-answered');
 
+  await page.getByRole('button', { name: 'Ticket Center' }).click();
+  await expect(page.getByTestId('ticket-center')).toContainText('Security-L2');
+  await expect(page.getByTestId('ticket-center')).toContainText('Possible account takeover with transfer on hold');
+  await expect(page.getByTestId('ticket-center')).toContainText('Next action');
+  await expect(page.getByTestId('ticket-center')).toContainText('SLA watch');
+
   await page.getByRole('button', { name: 'Release Center' }).click();
   await expect(page.getByText('Promote, block, or request review based on visible release gates.')).toBeVisible();
   await expect(page.getByTestId('release-center')).toContainText('v18 baseline unsafe bundle');

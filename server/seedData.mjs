@@ -262,6 +262,36 @@ export const releaseBundles = [
   }
 ];
 
+export const supportTickets = [
+  {
+    id: 'ticket_sec_20260701_001',
+    scenarioId: 'scn_account_takeover_locked_transfer',
+    sourceSignalIds: ['sig_web_takeover_004'],
+    queue: 'Security-L2',
+    priority: 'High',
+    status: 'Escalated',
+    owner: 'Security Ops',
+    slaDueAt: '2026-07-01T10:12:00.000Z',
+    summary: 'Possible account takeover with transfer on hold.',
+    caseSummary:
+      'Customer reports account compromise and a transfer hold. Bot refused account-specific resolution and routed to Security-L2.',
+    nextAction: 'Verify non-sensitive timeline, confirm security queue intake, and prevent automated unlock guidance.'
+  },
+  {
+    id: 'ticket_policy_20260701_002',
+    scenarioId: 'scn_cross_border_payment_fr',
+    sourceSignalIds: ['sig_tg_transfer_policy_fr_001', 'sig_internal_risk_003'],
+    queue: 'Compliance Support',
+    priority: 'Medium',
+    status: 'Pending review',
+    owner: 'Compliance',
+    slaDueAt: '2026-07-01T12:30:00.000Z',
+    summary: 'FR users report transfer holds after cross-border payment policy prompts.',
+    caseSummary: 'Multiple community and internal signals point to the same policy explanation gap.',
+    nextAction: 'Review whether the EU/FR policy article needs a clearer customer-facing explanation.'
+  }
+];
+
 export const handoffPreviews = [
   {
     id: 'handoff_security_l2_001',

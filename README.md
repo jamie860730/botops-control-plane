@@ -12,6 +12,7 @@ The current P0 version runs in seed-data mode, so the product can be reviewed wi
 - RAG knowledge management with document lifecycle, chunk metadata, KB snapshot, index status, and highlighted citations.
 - Evaluation Center comparing v18 baseline and v19 candidate runs.
 - Error Analysis with badcase attribution and retest metrics.
+- Ticket Center with queue, owner, priority, SLA, AI case summary, and next action.
 - Handoff Preview for high-risk support cases.
 - Release Center with Promote / Block / Request review decisions based on visible release gates.
 - Ops Log with local persistence for scenario runs, saved eval cases, eval runner actions, and CSV exports.
@@ -29,6 +30,7 @@ The current P0 version runs in seed-data mode, so the product can be reviewed wi
 | Knowledge | Manage RAG documents, chunks, snapshots, index status, and retrieval config. | Explains how PMs and knowledge owners control answer grounding. |
 | Evaluation | Replay saved interactions against baseline and candidate flows, run offline eval, and export CSV. | Supports evidence-based release assessment. |
 | Error Analysis | Convert failed eval rows into fixable badcases with owner and expected metric movement. | Links failures to accountable remediation work. |
+| Ticket Center | Track bot-reviewed support cases by queue, priority, owner, SLA, summary, and next action. | Makes the JD's ticket center requirement explicit. |
 | Handoff | Package high-risk cases for human queues with required fields and risk warnings. | Enforces escalation boundaries for sensitive cases. |
 | Release Center | Promote, block, or request review based on visible release gates. | Connects eval outcomes to auditable release decisions. |
 | Audit Log | Persist key actions as an audit trail. | Supports governance and backend audit logging readiness. |

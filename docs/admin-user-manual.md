@@ -121,7 +121,25 @@ http://127.0.0.1:5173/
 - 問題是 prompt、retrieval、knowledge、risk routing 還是 handoff。
 - 是否有 owner 和 retest metric。
 
-### 7. Handoff：檢查人工交接品質
+### 7. Ticket Center：管理客服工單隊列
+
+用途：將 bot 已處理或已審查的案例放入客服工單隊列，追蹤 queue、owner、priority、SLA、case summary 與 next action。
+
+操作：
+
+1. 點擊 `Ticket Center`。
+2. 檢查高優先或已升級工單。
+3. 檢查每張工單的 queue、owner、SLA 時間與狀態。
+4. 閱讀 AI case summary 與 next action，確認人工團隊知道下一步。
+
+管理員判斷重點：
+
+- 高風險安全案例是否進入 `Security-L2`。
+- 法遵或知識缺口是否被分派給正確 owner。
+- SLA watch 數量是否需要升級處理。
+- next action 是否具體且不要求 bot 做帳戶層級決策。
+
+### 8. Handoff：檢查人工交接品質
 
 用途：高風險案例不能只讓 bot 自動回答，必須包裝成可交接給人工隊列的資訊。
 
@@ -137,7 +155,7 @@ http://127.0.0.1:5173/
 - 是否要求必要欄位。
 - 是否禁止 bot 做不該做的帳戶操作或安全結論。
 
-### 8. Release Center：執行發布決策
+### 9. Release Center：執行發布決策
 
 用途：將 eval 結果轉換為 release gate，並對每個 bundle 做出可稽核的發布決策。
 
@@ -157,7 +175,7 @@ http://127.0.0.1:5173/
 - 決策後是否出現 bundle 內的 decision banner。
 - `Audit Log` 是否留下對應的 release decision event。
 
-### 9. Audit Log：檢查操作稽核紀錄
+### 10. Audit Log：檢查操作稽核紀錄
 
 用途：確認重要管理動作皆已留存紀錄，包含 trace review、eval case saved、offline eval、CSV export 與 release decision。
 
@@ -181,8 +199,9 @@ http://127.0.0.1:5173/
 3. `Response Trace`：審查回覆、引用、trace 與 eval case 轉存。
 4. `Evaluation`：執行 offline eval 並匯出 CSV。
 5. `Error Analysis`：從失敗案例定位產品修正項目。
-6. `Release Center`：依 release gate 執行 Promote / Block / Request review。
-7. `Audit Log`：檢視 governance 與後端稽核擴充方向。
+6. `Ticket Center`：檢查客服工單、SLA、owner 與 next action。
+7. `Release Center`：依 release gate 執行 Promote / Block / Request review。
+8. `Audit Log`：檢視 governance 與後端稽核擴充方向。
 
 ## 目前限制
 

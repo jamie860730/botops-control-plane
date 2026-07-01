@@ -8,6 +8,7 @@ import type {
   KnowledgeDocument,
   ReleaseBundle,
   SeedData,
+  SupportTicket,
   SupportScenario,
   SupportSignal,
   TraceEvent
@@ -628,6 +629,51 @@ const handoffPreviews: HandoffPreview[] = [
   }
 ];
 
+const supportTickets: SupportTicket[] = [
+  {
+    id: 'ticket_sec_20260701_001',
+    scenarioId: 'scn_account_takeover_locked_transfer',
+    sourceSignalIds: ['sig_web_takeover_004'],
+    queue: 'Security-L2',
+    priority: 'High',
+    status: 'Escalated',
+    owner: 'Security Ops',
+    slaDueAt: '2026-07-01T10:12:00.000Z',
+    summary: 'Possible account takeover with transfer on hold.',
+    caseSummary:
+      'Customer reports account compromise and a transfer hold. Bot refused account-specific resolution and routed to Security-L2.',
+    nextAction: 'Verify non-sensitive timeline, confirm security queue intake, and prevent automated unlock guidance.'
+  },
+  {
+    id: 'ticket_policy_20260701_002',
+    scenarioId: 'scn_cross_border_payment_fr',
+    sourceSignalIds: ['sig_tg_transfer_policy_fr_001', 'sig_x_transfer_policy_fr_002', 'sig_internal_risk_003'],
+    queue: 'Compliance Support',
+    priority: 'Medium',
+    status: 'Pending review',
+    owner: 'Compliance',
+    slaDueAt: '2026-07-01T12:30:00.000Z',
+    summary: 'FR users report transfer holds after cross-border payment policy prompts.',
+    caseSummary:
+      'Multiple community and internal signals point to the same policy explanation gap. Bot provided general policy context with citations.',
+    nextAction: 'Review whether the EU/FR policy article needs a clearer customer-facing explanation.'
+  },
+  {
+    id: 'ticket_kb_20260701_003',
+    scenarioId: 'scn_missing_kb_jp_cross_border_payment',
+    sourceSignalIds: ['sig_discord_jp_gap_006'],
+    queue: 'Knowledge Ops',
+    priority: 'Medium',
+    status: 'Open',
+    owner: 'Knowledge Owner',
+    slaDueAt: '2026-07-02T02:00:00.000Z',
+    summary: 'JP cross-border payment policy exception article is missing.',
+    caseSummary:
+      'Discord moderator requested a localized policy exception article. Bot should abstain until reviewed knowledge is available.',
+    nextAction: 'Create or review JP policy article before allowing citation-backed automated answers.'
+  }
+];
+
 export const seedData: SeedData = {
   supportSignals,
   scenarios,
@@ -639,5 +685,6 @@ export const seedData: SeedData = {
   evalResults,
   badcases,
   releaseBundles,
-  handoffPreviews
+  handoffPreviews,
+  supportTickets
 };

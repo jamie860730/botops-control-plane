@@ -58,4 +58,14 @@ describe('BotOps seed API server', () => {
     assert.equal(body.bundleId, 'rel_mvp_019');
     assert.match(body.auditEventId, /^audit_release_decision_/);
   });
+
+  it('lists ticket center queue records', async () => {
+    const response = await fetch(`${baseUrl}/api/tickets?queue=Security-L2`);
+    const body = await response.json();
+
+    assert.equal(response.status, 200);
+    assert.equal(body.length, 1);
+    assert.equal(body[0].id, 'ticket_sec_20260701_001');
+    assert.equal(body[0].status, 'Escalated');
+  });
 });

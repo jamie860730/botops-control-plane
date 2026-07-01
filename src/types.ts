@@ -216,6 +216,20 @@ export interface HandoffPreview {
   riskWarning: string;
 }
 
+export interface SupportTicket {
+  id: string;
+  scenarioId: string;
+  sourceSignalIds: string[];
+  queue: 'General Support' | 'Security-L2' | 'KYC Review' | 'Compliance Support' | 'Knowledge Ops';
+  priority: RiskLevel;
+  status: 'Open' | 'Pending review' | 'Escalated' | 'Resolved';
+  owner: 'Support Ops' | 'Security Ops' | 'KYC Ops' | 'Knowledge Owner' | 'Compliance';
+  slaDueAt: string;
+  summary: string;
+  caseSummary: string;
+  nextAction: string;
+}
+
 export interface AuditEvent {
   id: string;
   eventType: AuditEventType;
@@ -238,6 +252,7 @@ export interface SeedData {
   badcases: Badcase[];
   releaseBundles: ReleaseBundle[];
   handoffPreviews: HandoffPreview[];
+  supportTickets: SupportTicket[];
 }
 
 export interface EvaluationSummary {

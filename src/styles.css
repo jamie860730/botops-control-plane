@@ -304,6 +304,10 @@ p {
   grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
 }
 
+.ticket-grid {
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.65fr);
+}
+
 .span-2 {
   grid-column: span 2;
 }
@@ -346,6 +350,7 @@ p {
 
 .signal-list,
 .scenario-list,
+.ticket-list,
 .stacked-list,
 .trace-list,
 .conversation,
@@ -355,6 +360,7 @@ p {
 }
 
 .signal-row,
+.ticket-row,
 .scenario-card,
 .trace-row,
 .badcase-row,
@@ -370,6 +376,13 @@ p {
   grid-template-columns: 34px minmax(0, 1fr) auto;
   gap: 11px;
   padding: 12px;
+}
+
+.ticket-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 150px;
+  gap: 12px;
+  padding: 13px;
 }
 
 .row-icon {
@@ -392,6 +405,52 @@ p {
 .profile-strip span {
   color: #5c6048;
   font-size: 0.78rem;
+}
+
+.ticket-next-action {
+  display: grid;
+  gap: 3px;
+  margin-top: 10px;
+  padding: 9px 10px;
+  color: #28343a;
+  background: #edf8f9;
+  border: 1px solid #b9e5ea;
+  border-radius: 6px;
+  font-size: 0.84rem;
+}
+
+.ticket-next-action strong {
+  color: #11181c;
+}
+
+.ticket-status-panel {
+  display: grid;
+  justify-items: end;
+  align-content: start;
+  gap: 8px;
+  color: #4d503b;
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.ticket-status-panel strong {
+  color: #11181c;
+}
+
+.sla-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  color: #253236;
+  background: #f8fbfc;
+  border: 1px solid #cfdbdd;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.ticket-summary-list {
+  margin-top: 14px;
 }
 
 .signal-row p,
@@ -995,6 +1054,7 @@ p {
   .screen-grid,
   .intake-grid,
   .chat-grid,
+  .ticket-grid,
   .overview-grid {
     grid-template-columns: 1fr;
   }
@@ -1053,6 +1113,15 @@ p {
 
   .signal-row {
     grid-template-columns: 1fr;
+  }
+
+  .ticket-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ticket-status-panel {
+    justify-items: start;
+    text-align: left;
   }
 
   .audit-row {

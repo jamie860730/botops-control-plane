@@ -11,6 +11,7 @@ import {
   releaseBundles,
   scenarios,
   supportSignals,
+  supportTickets,
   traceEvents
 } from './seedData.mjs';
 
@@ -161,6 +162,18 @@ async function routeRequest(request, url) {
 
   if (request.method === 'GET' && url.pathname === '/api/release/bundles') {
     return { body: releaseBundles };
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/tickets') {
+    const queue = url.searchParams.get('queue');
+    const status = url.searchParams.get('status');
+    return {
+      body: supportTickets.filter((ticket) => {
+        const matchesQueue = queue ? ticket.queue === queue : true;
+        const matchesStatus = status ? ticket.status === status : true;
+        return matchesQueue && matchesStatus;
+      })
+    };
   }
 
   const releaseDecisionMatch = url.pathname.match(/^\/api\/release\/bundles\/([^/]+)\/decisions$/);

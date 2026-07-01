@@ -12,6 +12,7 @@ import { OpsLog } from './components/OpsLog';
 import { OverviewDashboard } from './components/OverviewDashboard';
 import { ReleaseCenter, type ReleaseDecision } from './components/ReleaseCenter';
 import { Shell, type ViewKey } from './components/Shell';
+import { TicketCenter } from './components/TicketCenter';
 import { buildEvalSummaryCsv } from './utils/export';
 import type { Locale } from './i18n';
 
@@ -174,6 +175,7 @@ export function App() {
         />
       )}
       {activeView === 'errors' && <ErrorAnalysis badcases={backend.listBadcases()} locale={locale} />}
+      {activeView === 'tickets' && <TicketCenter locale={locale} tickets={backend.listSupportTickets()} />}
       {activeView === 'handoff' && (
         <HandoffPreview
           locale={locale}

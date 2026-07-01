@@ -10,6 +10,7 @@ This document defines the backend shape required to move BotOps Control Plane fr
 - Save reviewed interactions as eval cases.
 - Run offline eval jobs against baseline and candidate versions.
 - Convert eval failures into badcases and release gates.
+- Track support tickets with queue, owner, SLA, status, AI summary, and next action.
 - Record release decisions and audit events.
 - Export eval summaries without exposing customer identifiers or account data.
 
@@ -27,6 +28,7 @@ This document defines the backend shape required to move BotOps Control Plane fr
 | `eval_run` | Offline run for one version config against a dataset. | `run_v19_candidate` |
 | `eval_result` | Per-case scoring output for an eval run. | `eval_result_v19_case_001` |
 | `badcase` | Actionable failure analysis item with owner and expected metric movement. | `badcase_unsafe_handoff_002` |
+| `support_ticket` | Human-operable ticket record created from a bot-reviewed case. | `ticket_sec_20260701_001` |
 | `release_bundle` | Version bundle being promoted, blocked, or reviewed. | `rel_mvp_019` |
 | `audit_event` | Append-only event for trace review, eval, export, and release decision actions. | `audit_release_decision_20260701113000` |
 
@@ -46,6 +48,7 @@ This document defines the backend shape required to move BotOps Control Plane fr
 | `GET` | `/api/eval/export-preview` | Return sanitized export headers and rows for preview. |
 | `POST` | `/api/eval/export-jobs` | Create a signed CSV export job. |
 | `GET` | `/api/badcases` | List failed cases and remediation status. |
+| `GET` | `/api/tickets?queue=&status=` | List support tickets by queue or status. |
 | `GET` | `/api/handoff-preview/{scenario_id}` | Build a human handoff package for high-risk cases. |
 | `GET` | `/api/release/bundles` | List release bundles and gate status. |
 | `POST` | `/api/release/bundles/{bundle_id}/decisions` | Record `promoted`, `blocked`, or `review_requested`. |
@@ -194,6 +197,7 @@ Supported event types:
 | `eval_cases` | `id`, `dataset_id`, `risk_tag`, `must_handoff` | Curated replay set. |
 | `eval_runs` | `id`, `dataset_id`, `status`, `started_at` | Long-running job parent. |
 | `eval_results` | `id`, `run_id`, `case_id`, `failure_label` | Per-case scoring output. |
+| `support_tickets` | `id`, `scenario_id`, `queue`, `owner`, `status`, `sla_due_at` | Ticket center queue record. |
 | `release_bundles` | `id`, `eval_run_id`, `status`, `regression_count` | Release gate subject. |
 | `release_decisions` | `id`, `bundle_id`, `decision`, `actor`, `created_at` | Human decision log. |
 | `audit_events` | `id`, `event_type`, `actor`, `entity_ref`, `created_at` | Append-only governance log. |

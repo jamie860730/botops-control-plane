@@ -7,6 +7,7 @@ import {
   Database,
   GitBranch,
   LayoutDashboard,
+  Tickets,
   RadioTower,
   ShieldCheck,
   Workflow
@@ -22,6 +23,7 @@ export type ViewKey =
   | 'knowledge'
   | 'evaluation'
   | 'errors'
+  | 'tickets'
   | 'handoff'
   | 'release'
   | 'opsLog';
@@ -33,6 +35,7 @@ const navItems: { key: ViewKey; labelEn: string; labelZh: string; icon: typeof R
   { key: 'knowledge', labelEn: 'Knowledge Governance', labelZh: '知識治理', icon: Database },
   { key: 'evaluation', labelEn: 'Evaluation', labelZh: '評測中心', icon: ClipboardCheck },
   { key: 'errors', labelEn: 'Error Analysis', labelZh: '錯誤分析', icon: AlertTriangle },
+  { key: 'tickets', labelEn: 'Ticket Center', labelZh: '工單中心', icon: Tickets },
   { key: 'handoff', labelEn: 'Handoff', labelZh: '人工交接', icon: GitBranch },
   { key: 'release', labelEn: 'Release Center', labelZh: '發布中心', icon: ShieldCheck },
   { key: 'opsLog', labelEn: 'Audit Log', labelZh: '稽核紀錄', icon: Activity }
@@ -89,6 +92,14 @@ const viewIntents: Record<
     titleZh: '將失敗 eval case 轉換為可追蹤的產品修正。',
     decisionEn: 'Decision: assign the failure to PM, Bot Ops, Knowledge, or Compliance.',
     decisionZh: '決策：將失敗歸因給 PM、Bot Ops、知識庫或法遵。'
+  },
+  tickets: {
+    labelEn: 'Ticket operations',
+    labelZh: '工單營運',
+    titleEn: 'Track escalated and review-ready cases after bot handling.',
+    titleZh: '追蹤機器人處理後需升級或審查的客服工單。',
+    decisionEn: 'Decision: confirm queue, owner, SLA, case summary, and next action.',
+    decisionZh: '決策：確認隊列、負責人、SLA、案例摘要與下一步。'
   },
   handoff: {
     labelEn: 'Escalation',

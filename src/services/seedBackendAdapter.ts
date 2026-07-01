@@ -10,6 +10,7 @@ import type {
   SourceChannel,
   SupportScenario,
   SupportSignal,
+  SupportTicket,
   TraceEvent
 } from '../types';
 
@@ -79,6 +80,10 @@ export class SeedBackendAdapter {
 
   getHandoffPreview(scenarioId: string): HandoffPreview | undefined {
     return seedData.handoffPreviews.find((preview) => preview.scenarioId === scenarioId);
+  }
+
+  listSupportTickets(): SupportTicket[] {
+    return seedData.supportTickets;
   }
 }
 
