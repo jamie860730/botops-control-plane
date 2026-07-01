@@ -14,10 +14,12 @@ import { OverviewDashboard } from './components/OverviewDashboard';
 import { ReleaseCenter } from './components/ReleaseCenter';
 import { Shell, type ViewKey } from './components/Shell';
 import { buildEvalSummaryCsv } from './utils/export';
+import type { Locale } from './i18n';
 
 const defaultScenarioId = 'scn_cross_border_payment_fr';
 const savedEvalCaseStorageKey = 'botops.savedEvalCaseId';
 const auditEventsStorageKey = 'botops.auditEvents';
+const localeStorageKey = 'botops.locale';
 
 const initialAuditEvents: AuditEvent[] = [
   {
@@ -42,6 +44,7 @@ export function App() {
   );
   const [auditEvents, setAuditEvents] = useState<AuditEvent[]>(() => readPersistedAuditEvents());
   const [evalRunnerStatus, setEvalRunnerStatus] = useState('Idle');
+  const [locale, setLocale] = useState<Locale>(() => readPersistedLocale());
 
   const interactionReview = backend.getInteractionReview(selectedScenarioId);
   const sourceChannel = sourceFilter === 'All' ? undefined : sourceFilter;
@@ -55,6 +58,10 @@ export function App() {
   useEffect(() => {
     window.localStorage.setItem(auditEventsStorageKey, JSON.stringify(auditEvents));
   }, [auditEvents]);
+
+  useEffect(() => {
+    window.localStorage.setItem(localeStorageKey, locale);
+  }, [locale]);
 
   function reviewLiveInteraction(id: string) {
     setSelectedScenarioId(id);
@@ -129,9 +136,10 @@ export function App() {
   }
 
   return (
-    <Shell activeView={activeView} onViewChange={changeView}>
+    <Shell activeView={activeView} locale={locale} onLocaleChange={setLocale} onViewChange={changeView}>
       {activeView === 'intake' && (
         <Intake
+          locale={locale}
           selectedSource={sourceFilter}
           signals={backend.listSignals({ sourceChannel })}
           scenarios={backend.listScenarios({ sourceChannel })}
@@ -139,11 +147,12 @@ export function App() {
           onReviewInteraction={reviewLiveInteraction}
         />
       )}
-      {activeView === 'overview' && <OverviewDashboard data={seedData} />}
+      {activeView === 'overview' && <OverviewDashboard data={seedData} locale={locale} />}
       {activeView === 'chat' && (
         <ChatPlayground
           documents={backend.listDocuments()}
           highlightedChunkId={highlightedChunkId}
+          locale={locale}
           onHighlightChunk={setHighlightedChunkId}
           onSaveEvalCase={saveAsEvalCase}
           review={interactionReview}
@@ -151,7 +160,7 @@ export function App() {
         />
       )}
       {activeView === 'knowledge' && (
-        <KnowledgeBase documents={backend.listDocuments()} highlightedChunkId={highlightedChunkId} />
+        <KnowledgeBase documents={backend.listDocuments()} highlightedChunkId={highlightedChunkId} locale={locale} />
       )}
       {activeView === 'evaluation' && (
         <EvaluationCenter
@@ -159,14 +168,16 @@ export function App() {
           evalResults={backend.listEvalResults()}
           evalRuns={seedData.evalRuns}
           evalRunnerStatus={evalRunnerStatus}
+          locale={locale}
           onExportCsv={exportEvalCsv}
           onRunEval={runOfflineEval}
           savedEvalCaseId={savedEvalCaseId}
         />
       )}
-      {activeView === 'errors' && <ErrorAnalysis badcases={backend.listBadcases()} />}
+      {activeView === 'errors' && <ErrorAnalysis badcases={backend.listBadcases()} locale={locale} />}
       {activeView === 'handoff' && (
         <HandoffPreview
+          locale={locale}
           preview={
             backend.getHandoffPreview(selectedScenarioId) ??
             backend.getHandoffPreview('scn_account_takeover_locked_transfer')
@@ -177,6 +188,7 @@ export function App() {
         <ReleaseCenter
           bundles={backend.listReleaseBundles()}
           evalResults={backend.listEvalResults()}
+          locale={locale}
           onReleaseDecision={(bundle, decision) =>
             appendAuditEvent({
               eventType: 'release_decision',
@@ -191,8 +203,8 @@ export function App() {
           }
         />
       )}
-      {activeView === 'opsLog' && <OpsLog events={auditEvents} />}
-      <DemoGuide activeView={activeView} savedEvalCaseId={savedEvalCaseId} />
+      {activeView === 'opsLog' && <OpsLog events={auditEvents} locale={locale} />}
+      <DemoGuide activeView={activeView} locale={locale} savedEvalCaseId={savedEvalCaseId} />
     </Shell>
   );
 
@@ -221,4 +233,9 @@ function readPersistedAuditEvents(): AuditEvent[] {
   } catch {
     return initialAuditEvents;
   }
+}
+
+function readPersistedLocale(): Locale {
+  const stored = window.localStorage.getItem(localeStorageKey);
+  return stored === 'zh-TW' || stored === 'en' ? stored : 'en';
 }

@@ -1,4 +1,6 @@
 import { Eye, SignalHigh } from 'lucide-react';
+import type { Locale } from '../i18n';
+import { text } from '../i18n';
 import type { SourceChannel, SupportScenario, SupportSignal } from '../types';
 
 const sourceChannels: (SourceChannel | 'All')[] = [
@@ -12,6 +14,7 @@ const sourceChannels: (SourceChannel | 'All')[] = [
 ];
 
 interface IntakeProps {
+  locale: Locale;
   selectedSource: SourceChannel | 'All';
   signals: SupportSignal[];
   scenarios: SupportScenario[];
@@ -20,6 +23,7 @@ interface IntakeProps {
 }
 
 export function Intake({
+  locale,
   selectedSource,
   signals,
   scenarios,
@@ -32,9 +36,11 @@ export function Intake({
         <div className="section-heading">
           <div>
             <p className="eyebrow">Multi-channel Intake</p>
-            <h3>Normalize support signals before the bot answers</h3>
+            <h3>{text(locale, 'Monitor live signals after real-time bot replies', '監控 Bot 即時回覆後留下的多來源訊號')}</h3>
           </div>
-          <span className="count-pill">{signals.length} signals</span>
+          <span className="count-pill">
+            {text(locale, `${signals.length} signals`, `${signals.length} 筆訊號`)}
+          </span>
         </div>
         <div className="source-tabs" aria-label="Source filters">
           {sourceChannels.map((source) => (
@@ -71,8 +77,8 @@ export function Intake({
       <div className="panel">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Scenario Launcher</p>
-            <h3>Open live bot replies and retained traces</h3>
+            <p className="eyebrow">{text(locale, 'Live review queue', '即時回覆審查佇列')}</p>
+            <h3>{text(locale, 'Open live bot replies and retained traces', '打開已送出的 Bot 回覆與保留 trace')}</h3>
           </div>
         </div>
         <div className="scenario-list" data-testid="scenario-list">
@@ -97,13 +103,17 @@ export function Intake({
                 </div>
               </dl>
               <button
-                aria-label={`Review live reply and trace for ${scenario.title}`}
+                aria-label={text(
+                  locale,
+                  `Review live reply and trace for ${scenario.title}`,
+                  `查看 ${scenario.title} 的即時回覆與 trace`
+                )}
                 className="primary-action"
                 onClick={() => onReviewInteraction(scenario.id)}
                 type="button"
               >
                 <Eye size={15} aria-hidden="true" />
-                Review live reply + trace
+                {text(locale, 'Review live reply + trace', '查看回覆與 trace')}
               </button>
             </article>
           ))}

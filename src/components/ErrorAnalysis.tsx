@@ -1,17 +1,20 @@
 import type { Badcase } from '../types';
+import type { Locale } from '../i18n';
+import { text } from '../i18n';
 
 interface ErrorAnalysisProps {
   badcases: Badcase[];
+  locale: Locale;
 }
 
-export function ErrorAnalysis({ badcases }: ErrorAnalysisProps) {
+export function ErrorAnalysis({ badcases, locale }: ErrorAnalysisProps) {
   return (
     <section className="screen-grid" data-testid="error-analysis">
       <div className="panel">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Error Analysis</p>
-            <h3>Badcases become product work items</h3>
+            <p className="eyebrow">{text(locale, 'Error Analysis', '錯誤分析')}</p>
+            <h3>{text(locale, 'Badcases become product work items', '把 badcases 轉成產品修正任務')}</h3>
           </div>
         </div>
         <div className="stacked-list">
@@ -25,27 +28,27 @@ export function ErrorAnalysis({ badcases }: ErrorAnalysisProps) {
         </div>
       </div>
       <div className="panel span-2">
-        <p className="eyebrow">Badcase detail</p>
+        <p className="eyebrow">{text(locale, 'Badcase detail', 'Badcase 詳情')}</p>
         <h3>{badcases[0]?.title}</h3>
         <dl className="detail-list">
           <div>
-            <dt>Low-score dimension</dt>
+            <dt>{text(locale, 'Low-score dimension', '低分維度')}</dt>
             <dd>{badcases[0]?.lowScoreDimension}</dd>
           </div>
           <div>
-            <dt>Trace diagnosis</dt>
+            <dt>{text(locale, 'Trace diagnosis', 'Trace 診斷')}</dt>
             <dd>{badcases[0]?.traceDiagnosis}</dd>
           </div>
           <div>
-            <dt>Chain node to change</dt>
+            <dt>{text(locale, 'Chain node to change', '需修改節點')}</dt>
             <dd>{badcases[0]?.chainNodeToChange}</dd>
           </div>
           <div>
-            <dt>Modification</dt>
+            <dt>{text(locale, 'Modification', '修改方式')}</dt>
             <dd>{badcases[0]?.modification}</dd>
           </div>
           <div>
-            <dt>Retest metric</dt>
+            <dt>{text(locale, 'Retest metric', '重測指標')}</dt>
             <dd>{badcases[0]?.retestMetric}</dd>
           </div>
         </dl>

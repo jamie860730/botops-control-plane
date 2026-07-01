@@ -15,6 +15,7 @@ The current P0 version runs in seed-data mode, so the product can be reviewed wi
 - Handoff Preview for high-risk support cases.
 - Release Center with blocked unsafe release gates.
 - Ops Log with local persistence for scenario runs, saved eval cases, eval runner actions, and CSV exports.
+- English / Traditional Chinese UI switcher with persisted locale preference.
 
 ## Page Purpose
 

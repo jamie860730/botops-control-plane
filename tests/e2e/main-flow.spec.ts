@@ -6,6 +6,12 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /BotOps Control Plane/i })).toBeVisible();
   await expect(page.getByTestId('support-signal-list')).toContainText('Telegram');
 
+  await page.getByRole('button', { name: '切換語言為繁體中文' }).click();
+  await expect(page.getByRole('heading', { name: '多渠道客服機器人的品質管理閉環' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '訊號收件匣' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /查看 FR cross-border payment policy hold 的即時回覆與 trace/i })).toBeVisible();
+  await page.getByRole('button', { name: 'Switch language to English' }).click();
+
   await page.getByRole('button', { name: 'Overview' }).click();
   await expect(page.getByText('What each page proves in the bot management loop')).toBeVisible();
   await expect(page.getByText('Persist scenario runs, eval saves, eval runner actions, and exports')).toBeVisible();

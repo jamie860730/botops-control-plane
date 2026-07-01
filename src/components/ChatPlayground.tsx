@@ -1,10 +1,13 @@
 import { BookmarkPlus, ExternalLink } from 'lucide-react';
+import type { Locale } from '../i18n';
+import { text } from '../i18n';
 import type { KnowledgeDocument } from '../types';
 import type { InteractionReview } from '../services/seedBackendAdapter';
 
 interface ChatPlaygroundProps {
   documents: KnowledgeDocument[];
   highlightedChunkId: string;
+  locale: Locale;
   review: InteractionReview;
   savedEvalCaseId: string | null;
   onHighlightChunk: (chunkId: string) => void;
@@ -14,6 +17,7 @@ interface ChatPlaygroundProps {
 export function ChatPlayground({
   documents,
   highlightedChunkId,
+  locale,
   review,
   savedEvalCaseId,
   onHighlightChunk,
@@ -27,12 +31,14 @@ export function ChatPlayground({
       <div className="panel" data-testid="live-reply-review">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">{review.scenario.sourceChannel} live interaction</p>
+            <p className="eyebrow">
+              {text(locale, `${review.scenario.sourceChannel} live interaction`, `${review.scenario.sourceChannel} 即時互動`)}
+            </p>
             <h3>{review.scenario.title}</h3>
           </div>
           <button className="secondary-action" onClick={onSaveEvalCase} type="button">
             <BookmarkPlus size={15} aria-hidden="true" />
-            Save trace as eval case
+            {text(locale, 'Save trace as eval case', '保存 trace 為評測案例')}
           </button>
         </div>
         <div className="profile-strip">
@@ -44,7 +50,7 @@ export function ChatPlayground({
         <div className="conversation">
           {review.messages.map((message) => (
             <article className={`message ${message.role}`} key={message.id}>
-              <div className="message-role">{message.role}</div>
+              <div className="message-role">{text(locale, message.role, message.role === 'assistant' ? 'bot' : message.role)}</div>
               <p>{message.content}</p>
               {message.citationIds.length > 0 && (
                 <div className="citation-list">
@@ -56,7 +62,7 @@ export function ChatPlayground({
                       type="button"
                     >
                       <ExternalLink size={13} aria-hidden="true" />
-                      Open citation {citationId}
+                      {text(locale, `Open citation ${citationId}`, `打開引用 ${citationId}`)}
                     </button>
                   ))}
                 </div>
@@ -65,15 +71,21 @@ export function ChatPlayground({
           ))}
         </div>
         <div className="eval-save-status" data-testid="eval-save-status">
-          {savedEvalCaseId ? `Saved ${savedEvalCaseId}` : 'This live interaction has not been saved as an eval case yet.'}
+          {savedEvalCaseId
+            ? text(locale, `Saved ${savedEvalCaseId}`, `已保存 ${savedEvalCaseId}`)
+            : text(
+                locale,
+                'This live interaction has not been saved as an eval case yet.',
+                '這筆即時互動尚未保存為評測案例。'
+              )}
         </div>
       </div>
 
       <div className="panel" data-testid="trace-panel">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Trace Panel</p>
-            <h3>Retained runtime decisions behind the live answer</h3>
+            <p className="eyebrow">{text(locale, 'Trace Panel', 'Trace 面板')}</p>
+            <h3>{text(locale, 'Retained runtime decisions behind the live answer', '即時回覆背後保留下來的執行決策')}</h3>
           </div>
         </div>
         <div className="trace-list">
@@ -88,14 +100,14 @@ export function ChatPlayground({
           ))}
         </div>
         <div className="highlighted-citation" data-testid="highlighted-citation">
-          <p className="eyebrow">Highlighted citation</p>
+          <p className="eyebrow">{text(locale, 'Highlighted citation', '目前引用證據')}</p>
           {highlightedChunk && highlightedDoc ? (
             <>
               <strong>{highlightedDoc.title}</strong>
               <p>{highlightedChunk.chunkText}</p>
             </>
           ) : (
-            <p>No citation selected.</p>
+            <p>{text(locale, 'No citation selected.', '尚未選擇引用。')}</p>
           )}
         </div>
       </div>

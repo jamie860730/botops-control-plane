@@ -1,11 +1,14 @@
 import type { KnowledgeDocument } from '../types';
+import type { Locale } from '../i18n';
+import { text } from '../i18n';
 
 interface KnowledgeBaseProps {
   documents: KnowledgeDocument[];
   highlightedChunkId: string;
+  locale: Locale;
 }
 
-export function KnowledgeBase({ documents, highlightedChunkId }: KnowledgeBaseProps) {
+export function KnowledgeBase({ documents, highlightedChunkId, locale }: KnowledgeBaseProps) {
   const indexedCount = documents.filter((doc) => doc.indexStatus === 'Indexed').length;
   const reindexCount = documents.filter((doc) => doc.indexStatus === 'Needs re-index').length;
   const chunkCount = documents.flatMap((doc) => doc.chunks).length;
@@ -15,18 +18,18 @@ export function KnowledgeBase({ documents, highlightedChunkId }: KnowledgeBasePr
       <div className="panel span-2">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">RAG Knowledge Management</p>
-            <h3>Govern documents, chunks, snapshots, and retrieval config</h3>
+            <p className="eyebrow">{text(locale, 'RAG Knowledge Management', 'RAG 知識庫管理')}</p>
+            <h3>{text(locale, 'Govern documents, chunks, snapshots, and retrieval config', '管理文件、chunks、snapshot 與 retrieval config')}</h3>
           </div>
           <span className="count-pill">kb_2026_07_seed</span>
         </div>
         <div className="metric-grid rag-metric-grid">
           <div className="metric-tile">
-            <span>Indexed Docs</span>
+            <span>{text(locale, 'Indexed Docs', '已索引文件')}</span>
             <strong>{indexedCount}</strong>
           </div>
           <div className="metric-tile">
-            <span>Needs Re-index</span>
+            <span>{text(locale, 'Needs Re-index', '需重建索引')}</span>
             <strong>{reindexCount}</strong>
           </div>
           <div className="metric-tile">
@@ -41,20 +44,20 @@ export function KnowledgeBase({ documents, highlightedChunkId }: KnowledgeBasePr
       </div>
 
       <div className="panel">
-        <p className="eyebrow">Retrieval controls</p>
-        <h3>What this page manages</h3>
+        <p className="eyebrow">{text(locale, 'Retrieval controls', '檢索控制')}</p>
+        <h3>{text(locale, 'What this page manages', '此頁管理項目')}</h3>
         <dl className="detail-list">
           <div>
             <dt>Snapshot</dt>
-            <dd>Versioned KB state used by eval and release gates.</dd>
+            <dd>{text(locale, 'Versioned KB state used by eval and release gates.', '評測與發布門檻使用的版本化知識庫狀態。')}</dd>
           </div>
           <div>
-            <dt>Indexing</dt>
-            <dd>Tracks whether published docs are embedded and searchable.</dd>
+            <dt>{text(locale, 'Indexing', '索引')}</dt>
+            <dd>{text(locale, 'Tracks whether published docs are embedded and searchable.', '追蹤已發布文件是否完成 embedding 並可被搜尋。')}</dd>
           </div>
           <div>
-            <dt>Citation policy</dt>
-            <dd>Only citation-allowed chunks can support bot answers.</dd>
+            <dt>{text(locale, 'Citation policy', '引用政策')}</dt>
+            <dd>{text(locale, 'Only citation-allowed chunks can support bot answers.', '只有允許引用的 chunks 可以支撐 Bot 回答。')}</dd>
           </div>
         </dl>
       </div>
@@ -62,18 +65,18 @@ export function KnowledgeBase({ documents, highlightedChunkId }: KnowledgeBasePr
       <div className="panel span-2">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Document lifecycle</p>
-            <h3>Published content must stay indexed before release</h3>
+            <p className="eyebrow">{text(locale, 'Document lifecycle', '文件生命週期')}</p>
+            <h3>{text(locale, 'Published content must stay indexed before release', '已發布內容必須完成索引後才能支持發布')}</h3>
           </div>
         </div>
         <div className="data-table">
           <div className="table-row table-head knowledge-row">
-            <span>Title</span>
-            <span>Region</span>
-            <span>Product</span>
-            <span>Status</span>
-            <span>Index</span>
-            <span>Retriever</span>
+            <span>{text(locale, 'Title', '標題')}</span>
+            <span>{text(locale, 'Region', '區域')}</span>
+            <span>{text(locale, 'Product', '產品')}</span>
+            <span>{text(locale, 'Status', '狀態')}</span>
+            <span>{text(locale, 'Index', '索引')}</span>
+            <span>Cfg</span>
           </div>
           {documents.map((doc) => (
             <div className="table-row knowledge-row" key={doc.id}>
@@ -91,8 +94,8 @@ export function KnowledgeBase({ documents, highlightedChunkId }: KnowledgeBasePr
       <div className="panel">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Citation chunks</p>
-            <h3>Evidence available to the bot</h3>
+            <p className="eyebrow">{text(locale, 'Citation chunks', '引用 chunks')}</p>
+            <h3>{text(locale, 'Evidence available to the bot', 'Bot 可使用的回答證據')}</h3>
           </div>
         </div>
         <div className="chunk-preview-list">

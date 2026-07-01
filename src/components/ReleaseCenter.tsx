@@ -1,14 +1,17 @@
 import { Ban, CheckCircle2 } from 'lucide-react';
+import type { Locale } from '../i18n';
+import { text } from '../i18n';
 import type { EvalResult, ReleaseBundle } from '../types';
 import { getBlockedReleaseReasons } from '../utils/metrics';
 
 interface ReleaseCenterProps {
   bundles: ReleaseBundle[];
   evalResults: EvalResult[];
+  locale: Locale;
   onReleaseDecision: (bundle: ReleaseBundle, decision: 'blocked' | 'ready') => void;
 }
 
-export function ReleaseCenter({ bundles, evalResults, onReleaseDecision }: ReleaseCenterProps) {
+export function ReleaseCenter({ bundles, evalResults, locale, onReleaseDecision }: ReleaseCenterProps) {
   return (
     <section className="screen-grid" data-testid="release-center">
       {bundles.map((bundle) => {
@@ -21,7 +24,7 @@ export function ReleaseCenter({ bundles, evalResults, onReleaseDecision }: Relea
                 <h3>{bundle.label}</h3>
               </div>
               <span className={blockedReasons.length > 0 ? 'risk-pill high' : 'risk-pill low'}>
-                {blockedReasons.length > 0 ? 'blocked' : 'ready'}
+                {text(locale, blockedReasons.length > 0 ? 'blocked' : 'ready', blockedReasons.length > 0 ? 'blocked' : 'ready')}
               </span>
             </div>
             <dl className="mini-meta release-meta">
@@ -42,7 +45,7 @@ export function ReleaseCenter({ bundles, evalResults, onReleaseDecision }: Relea
               {blockedReasons.length > 0 ? (
                 blockedReasons.map((reason) => <p key={reason}>{reason}</p>)
               ) : (
-                <p>All P0 release gates pass for seed-mode review.</p>
+                <p>{text(locale, 'All P0 release gates pass for seed-mode review.', '所有 P0 發布門檻皆通過 seed-mode review。')}</p>
               )}
             </div>
             <div className="release-actions">
@@ -53,7 +56,7 @@ export function ReleaseCenter({ bundles, evalResults, onReleaseDecision }: Relea
                   type="button"
                 >
                   <Ban size={15} aria-hidden="true" />
-                  Keep blocked
+                  {text(locale, 'Keep blocked', '維持阻擋')}
                 </button>
               ) : (
                 <button
@@ -62,7 +65,7 @@ export function ReleaseCenter({ bundles, evalResults, onReleaseDecision }: Relea
                   type="button"
                 >
                   <CheckCircle2 size={15} aria-hidden="true" />
-                  Mark ready for review
+                  {text(locale, 'Mark ready for review', '標記為可審查')}
                 </button>
               )}
             </div>

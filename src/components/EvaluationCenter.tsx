@@ -1,4 +1,6 @@
 import { Download, Play } from 'lucide-react';
+import type { Locale } from '../i18n';
+import { text } from '../i18n';
 import type { EvalCase, EvalResult, EvalRun } from '../types';
 import { calculateEvaluationSummary } from '../utils/metrics';
 
@@ -7,6 +9,7 @@ interface EvaluationCenterProps {
   evalResults: EvalResult[];
   evalRuns: EvalRun[];
   evalRunnerStatus: string;
+  locale: Locale;
   onExportCsv: () => void;
   onRunEval: () => void;
   savedEvalCaseId: string | null;
@@ -17,6 +20,7 @@ export function EvaluationCenter({
   evalResults,
   evalRuns,
   evalRunnerStatus,
+  locale,
   onExportCsv,
   onRunEval,
   savedEvalCaseId
@@ -31,29 +35,31 @@ export function EvaluationCenter({
       <div className="panel span-2">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Evaluation Center</p>
-            <h3>Compare baseline and candidate on the same cases</h3>
+            <p className="eyebrow">{text(locale, 'Evaluation Center', '評測中心')}</p>
+            <h3>{text(locale, 'Compare baseline and candidate on the same cases', '用同一批案例比較 baseline 與 candidate')}</h3>
           </div>
           <div className="action-row">
             <button className="secondary-action" onClick={onExportCsv} type="button">
               <Download size={15} aria-hidden="true" />
-              Export CSV
+              {text(locale, 'Export CSV', '匯出 CSV')}
             </button>
             <button className="primary-action compact-action" onClick={onRunEval} type="button">
               <Play size={15} aria-hidden="true" />
-              Run offline eval
+              {text(locale, 'Run offline eval', '執行離線評測')}
             </button>
-            <span className="count-pill">{evalCases.length} eval cases</span>
+            <span className="count-pill">
+              {text(locale, `${evalCases.length} eval cases`, `${evalCases.length} 個評測案例`)}
+            </span>
           </div>
         </div>
         <div className="data-table">
           <div className="table-row table-head eval-row">
-            <span>Run</span>
-            <span>Overall</span>
-            <span>Citation</span>
-            <span>Handoff Safety Recall</span>
-            <span>Auto-answer</span>
-            <span>Regressions</span>
+            <span>{text(locale, 'Run', '評測批次')}</span>
+            <span>{text(locale, 'Overall', '整體')}</span>
+            <span>{text(locale, 'Citation', '引用')}</span>
+            <span>{text(locale, 'Handoff Safety Recall', '交接召回')}</span>
+            <span>{text(locale, 'Auto-answer', '自動回覆')}</span>
+            <span>{text(locale, 'Regressions', '退化')}</span>
           </div>
           {rows.map(({ run, summary }) => (
             <div className="table-row eval-row" key={run.id}>
@@ -68,19 +74,25 @@ export function EvaluationCenter({
         </div>
       </div>
       <div className="panel">
-        <p className="eyebrow">Runner status</p>
-        <h3 data-testid="eval-runner-status">{evalRunnerStatus}</h3>
+        <p className="eyebrow">{text(locale, 'Runner status', '評測執行狀態')}</p>
+        <h3 data-testid="eval-runner-status">{text(locale, evalRunnerStatus, evalRunnerStatus === 'Completed' ? '已完成' : '閒置')}</h3>
         <p>
-          Offline runner output is deterministic in P1, so product and operations can review gates before live model
-          traffic exists.
+          {text(
+            locale,
+            'Offline runner output is deterministic in P1, so product and operations can review gates before live model traffic exists.',
+            'P1 的離線評測輸出可重現，讓產品與營運在接上真實模型流量前先審查品質門檻。'
+          )}
         </p>
       </div>
       <div className="panel">
-        <p className="eyebrow">Saved eval candidate</p>
-        <h3>{savedEvalCaseId ?? 'No saved live case yet'}</h3>
+        <p className="eyebrow">{text(locale, 'Saved eval candidate', '已保存評測候選')}</p>
+        <h3>{savedEvalCaseId ?? text(locale, 'No saved live case yet', '尚未保存 live case')}</h3>
         <p>
-          Saved conversations keep the source signal, messages, trace events, and version config so they can be
-          replayed in the eval runner.
+          {text(
+            locale,
+            'Saved conversations keep the source signal, messages, trace events, and version config so they can be replayed in the eval runner.',
+            '保存的互動會保留來源訊號、訊息、trace events 與版本設定，後續可在評測 runner 中 replay。'
+          )}
         </p>
       </div>
     </section>
