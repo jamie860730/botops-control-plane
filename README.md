@@ -2,7 +2,7 @@
 
 This is an MVP product for bot management in regulated customer support scenarios.
 
-The current P0 version runs in seed-data mode, so the product can be reviewed without API keys, backend credentials, private customer data, or company-internal systems. It is designed to evolve into live bot execution, persistent eval runs, channel connectors, and ticket/CRM handoff integrations.
+The current P0 version runs in seed-data mode, so the product can be reviewed without API keys, backend credentials, private customer data, or company-internal systems. It includes a lightweight local seed API server for backend contract validation, and is designed to evolve into live bot execution, persistent eval runs, channel connectors, and ticket/CRM handoff integrations.
 
 ## What P0 Includes
 
@@ -16,6 +16,7 @@ The current P0 version runs in seed-data mode, so the product can be reviewed wi
 - Release Center with Promote / Block / Request review decisions based on visible release gates.
 - Ops Log with local persistence for scenario runs, saved eval cases, eval runner actions, and CSV exports.
 - Compact page intent headers so reviewers know the decision each page supports.
+- Local seed API server for signals, scenario review, knowledge, eval, release decisions, and audit events.
 - English / Traditional Chinese UI switcher with persisted locale preference.
 
 ## Page Purpose
@@ -44,12 +45,16 @@ The current P0 version runs in seed-data mode, so the product can be reviewed wi
 ```bash
 npm install
 npm run dev
+npm run api
 npm run build
 npm run test
+npm run test:api
 npm run test:e2e
 ```
 
 `npm run test:e2e` builds the app first, then runs the Playwright desktop and mobile flow against the production preview.
+
+`npm run api` starts the local seed API at `http://127.0.0.1:8787`. It is intentionally dependency-free and uses deterministic seed data only.
 
 ## Operator Docs
 

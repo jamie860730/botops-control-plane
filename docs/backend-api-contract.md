@@ -1,6 +1,6 @@
 # Backend API Contract
 
-This document defines the backend shape required to move BotOps Control Plane from deterministic seed mode into a production-ready service. The current UI still runs locally, but the data contract below matches the product workflow and the TypeScript entities in `src/types.ts`.
+This document defines the backend shape required to move BotOps Control Plane from deterministic seed mode into a production-ready service. The repo now includes a lightweight local seed API in `server/server.mjs`; it validates the API contract without requiring API keys, a database, or private customer data.
 
 ## Backend Responsibilities
 
@@ -50,6 +50,22 @@ This document defines the backend shape required to move BotOps Control Plane fr
 | `GET` | `/api/release/bundles` | List release bundles and gate status. |
 | `POST` | `/api/release/bundles/{bundle_id}/decisions` | Record `promoted`, `blocked`, or `review_requested`. |
 | `GET` | `/api/audit-events?event_type=` | List audit events, optionally filtered by type. |
+
+## Local Seed API
+
+Run:
+
+```bash
+npm run api
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8787/api/health
+```
+
+The server is dependency-free and backed by deterministic mock data in `server/seedData.mjs`. It is not a production database, auth layer, or live LLM adapter.
 
 ## Request / Response Examples
 
