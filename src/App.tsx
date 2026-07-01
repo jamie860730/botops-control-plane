@@ -1,0 +1,207 @@
+import { useEffect, useMemo, useState } from 'react';
+import { seedData } from './data/seedData';
+import { SeedBackendAdapter } from './services/seedBackendAdapter';
+import type { AuditEvent, SourceChannel } from './types';
+import { ChatPlayground } from './components/ChatPlayground';
+import { ErrorAnalysis } from './components/ErrorAnalysis';
+import { EvaluationCenter } from './components/EvaluationCenter';
+import { HandoffPreview } from './components/HandoffPreview';
+import { Intake } from './components/Intake';
+import { KnowledgeBase } from './components/KnowledgeBase';
+import { OpsLog } from './components/OpsLog';
+import { OverviewDashboard } from './components/OverviewDashboard';
+import { ReleaseCenter } from './components/ReleaseCenter';
+import { Shell, type ViewKey } from './components/Shell';
+import { buildEvalSummaryCsv } from './utils/export';
+
+const defaultScenarioId = 'scn_cross_border_payment_fr';
+const savedEvalCaseStorageKey = 'botops.savedEvalCaseId';
+const auditEventsStorageKey = 'botops.auditEvents';
+
+const initialAuditEvents: AuditEvent[] = [
+  {
+    id: 'audit_bootstrap_p0_seed_review',
+    eventType: 'eval_runner_completed',
+    actor: 'System',
+    title: 'P0 seed dataset loaded',
+    detail: 'Loaded deterministic support signals, traces, eval runs, badcases, and release bundles.',
+    entityRef: 'dataset_policy_support_seed_v1',
+    createdAt: '2026-07-01T09:00:00.000Z'
+  }
+];
+
+export function App() {
+  const backend = useMemo(() => new SeedBackendAdapter(), []);
+  const [activeView, setActiveView] = useState<ViewKey>('intake');
+  const [sourceFilter, setSourceFilter] = useState<SourceChannel | 'All'>('All');
+  const [selectedScenarioId, setSelectedScenarioId] = useState(defaultScenarioId);
+  const [highlightedChunkId, setHighlightedChunkId] = useState('chunk_payment_policy_eu_001');
+  const [savedEvalCaseId, setSavedEvalCaseId] = useState<string | null>(() =>
+    window.localStorage.getItem(savedEvalCaseStorageKey)
+  );
+  const [auditEvents, setAuditEvents] = useState<AuditEvent[]>(() => readPersistedAuditEvents());
+  const [evalRunnerStatus, setEvalRunnerStatus] = useState('Idle');
+
+  const scenarioRun = backend.runScenario(selectedScenarioId);
+  const sourceChannel = sourceFilter === 'All' ? undefined : sourceFilter;
+
+  useEffect(() => {
+    if (savedEvalCaseId) {
+      window.localStorage.setItem(savedEvalCaseStorageKey, savedEvalCaseId);
+    }
+  }, [savedEvalCaseId]);
+
+  useEffect(() => {
+    window.localStorage.setItem(auditEventsStorageKey, JSON.stringify(auditEvents));
+  }, [auditEvents]);
+
+  function runScenario(id: string) {
+    setSelectedScenarioId(id);
+    setActiveView('chat');
+    const run = backend.runScenario(id);
+    const retrievalEvent = run.traceEvents.find((event) => event.eventType === 'retrieval');
+    if (retrievalEvent) {
+      setHighlightedChunkId(retrievalEvent.outputRef);
+    }
+    appendAuditEvent({
+      eventType: 'scenario_run',
+      actor: 'PM',
+      title: `Ran ${run.scenario.title}`,
+      detail: `Source ${run.scenario.sourceChannel}, risk ${run.scenario.riskTag}, region ${run.scenario.region}.`,
+      entityRef: run.scenario.id
+    });
+  }
+
+  function saveAsEvalCase() {
+    const id = backend.saveConversationAsEvalCase(selectedScenarioId);
+    setSavedEvalCaseId(id);
+    appendAuditEvent({
+      eventType: 'eval_case_saved',
+      actor: 'PM',
+      title: 'Saved conversation as eval case',
+      detail: 'Captured messages, citations, trace events, source channel, risk tag, and expected behavior.',
+      entityRef: id
+    });
+  }
+
+  function runOfflineEval() {
+    setEvalRunnerStatus('Completed');
+    appendAuditEvent({
+      eventType: 'eval_runner_started',
+      actor: 'Bot Ops',
+      title: 'Started offline eval run',
+      detail: 'Compared baseline and candidate against the same deterministic eval dataset.',
+      entityRef: 'run_v19_candidate'
+    });
+    appendAuditEvent({
+      eventType: 'eval_runner_completed',
+      actor: 'System',
+      title: 'Completed offline eval run',
+      detail: 'Candidate passed citation support and handoff safety gates; unsafe baseline remains blocked.',
+      entityRef: 'run_v19_candidate'
+    });
+  }
+
+  function exportEvalCsv() {
+    const csv = buildEvalSummaryCsv(seedData.evalRuns, backend.listEvalResults(), backend.listEvalCases());
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'botops-eval-summary.csv';
+    anchor.click();
+    URL.revokeObjectURL(url);
+    appendAuditEvent({
+      eventType: 'csv_exported',
+      actor: 'PM',
+      title: 'Exported eval summary CSV',
+      detail: 'Downloaded run-level eval summary for stakeholder review.',
+      entityRef: 'botops-eval-summary.csv'
+    });
+  }
+
+  function changeView(view: ViewKey) {
+    if (view === 'intake') {
+      setSourceFilter('All');
+    }
+    setActiveView(view);
+  }
+
+  return (
+    <Shell activeView={activeView} onViewChange={changeView}>
+      {activeView === 'intake' && (
+        <Intake
+          selectedSource={sourceFilter}
+          signals={backend.listSignals({ sourceChannel })}
+          scenarios={backend.listScenarios({ sourceChannel })}
+          onSourceChange={setSourceFilter}
+          onRunScenario={runScenario}
+        />
+      )}
+      {activeView === 'overview' && <OverviewDashboard data={seedData} />}
+      {activeView === 'chat' && (
+        <ChatPlayground
+          documents={backend.listDocuments()}
+          highlightedChunkId={highlightedChunkId}
+          onHighlightChunk={setHighlightedChunkId}
+          onSaveEvalCase={saveAsEvalCase}
+          run={scenarioRun}
+          savedEvalCaseId={savedEvalCaseId}
+        />
+      )}
+      {activeView === 'knowledge' && (
+        <KnowledgeBase documents={backend.listDocuments()} highlightedChunkId={highlightedChunkId} />
+      )}
+      {activeView === 'evaluation' && (
+        <EvaluationCenter
+          evalCases={backend.listEvalCases()}
+          evalResults={backend.listEvalResults()}
+          evalRuns={seedData.evalRuns}
+          evalRunnerStatus={evalRunnerStatus}
+          onExportCsv={exportEvalCsv}
+          onRunEval={runOfflineEval}
+          savedEvalCaseId={savedEvalCaseId}
+        />
+      )}
+      {activeView === 'errors' && <ErrorAnalysis badcases={backend.listBadcases()} />}
+      {activeView === 'handoff' && (
+        <HandoffPreview
+          preview={
+            backend.getHandoffPreview(selectedScenarioId) ??
+            backend.getHandoffPreview('scn_account_takeover_locked_transfer')
+          }
+        />
+      )}
+      {activeView === 'release' && (
+        <ReleaseCenter bundles={backend.listReleaseBundles()} evalResults={backend.listEvalResults()} />
+      )}
+      {activeView === 'opsLog' && <OpsLog events={auditEvents} />}
+    </Shell>
+  );
+
+  function appendAuditEvent(event: Omit<AuditEvent, 'id' | 'createdAt'>) {
+    const createdAt = new Date().toISOString();
+    setAuditEvents((events) => [
+      {
+        ...event,
+        id: `audit_${event.eventType}_${createdAt.replace(/[-:.TZ]/g, '')}`,
+        createdAt
+      },
+      ...events
+    ]);
+  }
+}
+
+function readPersistedAuditEvents(): AuditEvent[] {
+  const stored = window.localStorage.getItem(auditEventsStorageKey);
+  if (!stored) {
+    return initialAuditEvents;
+  }
+
+  try {
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed) ? parsed : initialAuditEvents;
+  } catch {
+    return initialAuditEvents;
+  }
+}
