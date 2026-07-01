@@ -3,7 +3,6 @@ import { seedData } from './data/seedData';
 import { SeedBackendAdapter } from './services/seedBackendAdapter';
 import type { AuditEvent, SourceChannel } from './types';
 import { ChatPlayground } from './components/ChatPlayground';
-import { DemoGuide } from './components/DemoGuide';
 import { ErrorAnalysis } from './components/ErrorAnalysis';
 import { EvaluationCenter } from './components/EvaluationCenter';
 import { HandoffPreview } from './components/HandoffPreview';
@@ -204,7 +203,6 @@ export function App() {
         />
       )}
       {activeView === 'opsLog' && <OpsLog events={auditEvents} locale={locale} />}
-      <DemoGuide activeView={activeView} locale={locale} savedEvalCaseId={savedEvalCaseId} />
     </Shell>
   );
 

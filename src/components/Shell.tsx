@@ -85,37 +85,41 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
         </div>
       </aside>
       <main className="workspace">
-        <header className="workspace-header">
-          <div>
-            <p className="eyebrow">{text(locale, 'Policy-aware support automation', '政策感知客服自動化')}</p>
-            <h2>{text(locale, 'Operational quality control for support bots', '客服機器人營運品質控管')}</h2>
-          </div>
-          <div className="header-status">
-            <span>{text(locale, 'Stable IDs enforced', '穩定 ID 管控')}</span>
-            <span>{text(locale, 'Offline eval ready', '離線評測可用')}</span>
-            <span>{text(locale, 'Live Bot P2', '即時 Bot P2')}</span>
-            <div className="locale-toggle" aria-label={text(locale, 'Language switcher', '語言切換')}>
-              <button
-                aria-label="Switch language to English"
-                className={locale === 'en' ? 'active' : ''}
-                onClick={() => onLocaleChange('en')}
-                type="button"
-              >
-                EN
-              </button>
-              <button
-                aria-label="切換語言為繁體中文"
-                className={locale === 'zh-TW' ? 'active' : ''}
-                onClick={() => onLocaleChange('zh-TW')}
-                type="button"
-              >
-                繁中
-              </button>
+        <div className="workspace-inner">
+          <header className="workspace-header">
+            <div>
+              <p className="eyebrow">{text(locale, 'Policy-aware support automation', '政策感知客服自動化')}</p>
+              <h2>{text(locale, 'Operational quality control for support bots', '客服機器人營運品質控管')}</h2>
             </div>
-            <ArrowUpRight size={16} aria-hidden="true" />
+            <div className="header-status">
+              <span>{text(locale, 'Stable IDs enforced', '穩定 ID 管控')}</span>
+              <span>{text(locale, 'Offline eval ready', '離線評測可用')}</span>
+              <span>{text(locale, 'Live Bot P2', '即時 Bot P2')}</span>
+              <div className="locale-toggle" aria-label={text(locale, 'Language switcher', '語言切換')}>
+                <button
+                  aria-label="Switch language to English"
+                  className={locale === 'en' ? 'active' : ''}
+                  onClick={() => onLocaleChange('en')}
+                  type="button"
+                >
+                  EN
+                </button>
+                <button
+                  aria-label="切換語言為繁體中文"
+                  className={locale === 'zh-TW' ? 'active' : ''}
+                  onClick={() => onLocaleChange('zh-TW')}
+                  type="button"
+                >
+                  繁中
+                </button>
+              </div>
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </div>
+          </header>
+          <div className="view-surface">
+            {children}
           </div>
-        </header>
-        {children}
+        </div>
       </main>
     </div>
   );

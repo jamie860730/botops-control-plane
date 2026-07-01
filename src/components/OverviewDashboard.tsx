@@ -16,8 +16,8 @@ export function OverviewDashboard({ data, locale }: OverviewDashboardProps) {
   }, {});
 
   return (
-    <section className="screen-grid">
-      <div className="panel span-2">
+    <section className="screen-grid overview-grid">
+      <div className="panel overview-kpi">
         <div className="section-heading">
           <div>
             <p className="eyebrow">KPI Dashboard</p>
@@ -31,7 +31,7 @@ export function OverviewDashboard({ data, locale }: OverviewDashboardProps) {
           <Metric label={text(locale, 'High-risk Auto-answer', '高風險自動回覆')} value={summary.highRiskAutoAnswerRate.toFixed(2)} danger />
         </div>
       </div>
-      <div className="panel">
+      <div className="panel overview-source">
         <div className="section-heading">
           <div>
             <p className="eyebrow">{text(locale, 'Source Distribution', '來源分布')}</p>
@@ -47,7 +47,7 @@ export function OverviewDashboard({ data, locale }: OverviewDashboardProps) {
           ))}
         </div>
       </div>
-      <div className="panel span-2">
+      <div className="panel overview-map">
         <div className="section-heading">
           <div>
             <p className="eyebrow">{text(locale, 'Operating model', '營運模型')}</p>

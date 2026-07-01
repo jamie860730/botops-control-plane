@@ -39,8 +39,8 @@ button {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
   background:
-    linear-gradient(90deg, rgba(20, 21, 15, 0.05) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(20, 21, 15, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 21, 15, 0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(20, 21, 15, 0.03) 1px, transparent 1px),
     #eef3f4;
   background-size: 34px 34px;
 }
@@ -115,6 +115,12 @@ h1 {
   line-height: 1.15;
 }
 
+.brand-block h1 {
+  font-size: 0.98rem;
+  line-height: 1.12;
+  white-space: nowrap;
+}
+
 h2 {
   margin-bottom: 0;
   font-size: clamp(1.35rem, 2vw, 2.1rem);
@@ -175,13 +181,23 @@ p {
 
 .workspace {
   min-width: 0;
-  padding: 26px;
+  padding: 26px 28px 42px;
+}
+
+.workspace-inner {
+  width: min(100%, 1180px);
+  margin: 0 auto;
 }
 
 .workspace-header {
   justify-content: space-between;
   gap: 24px;
   margin-bottom: 22px;
+}
+
+.view-surface {
+  display: grid;
+  gap: 18px;
 }
 
 .header-status {
@@ -239,6 +255,21 @@ p {
   align-items: start;
 }
 
+.overview-grid {
+  grid-template-columns: minmax(0, 1.8fr) minmax(300px, 0.8fr);
+  gap: 18px;
+}
+
+.overview-kpi,
+.overview-map {
+  grid-column: 1;
+}
+
+.overview-source {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
 .intake-grid {
   grid-template-columns: minmax(0, 1.35fr) minmax(340px, 0.65fr);
 }
@@ -257,7 +288,7 @@ p {
   background: rgba(255, 252, 242, 0.94);
   border: 1px solid #cfdbdd;
   border-radius: 8px;
-  box-shadow: 0 18px 42px rgba(43, 38, 22, 0.08);
+  box-shadow: 0 10px 30px rgba(17, 24, 28, 0.045);
 }
 
 .section-heading {
@@ -533,8 +564,8 @@ p {
 }
 
 .metric-tile {
-  min-height: 100px;
-  padding: 14px;
+  min-height: 88px;
+  padding: 13px;
   background: #11181c;
   color: #e9fbfd;
   border-radius: 7px;
@@ -549,8 +580,8 @@ p {
 
 .metric-tile strong {
   display: block;
-  margin-top: 18px;
-  font-size: 2rem;
+  margin-top: 14px;
+  font-size: 1.85rem;
 }
 
 .metric-tile.danger strong {
@@ -800,8 +831,16 @@ p {
 
   .screen-grid,
   .intake-grid,
-  .chat-grid {
+  .chat-grid,
+  .overview-grid {
     grid-template-columns: 1fr;
+  }
+
+  .overview-kpi,
+  .overview-source,
+  .overview-map {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .span-2 {
