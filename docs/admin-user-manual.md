@@ -135,25 +135,29 @@ http://127.0.0.1:5173/
 - 是否要求必要欄位。
 - 是否禁止 bot 做不該做的帳戶操作或安全結論。
 
-### 8. Release Center：審查發布狀態
+### 8. Release Center：執行發布決策
 
-用途：將 eval 結果轉換為 release gate，阻擋不合規版本。
+用途：將 eval 結果轉換為 release gate，並對每個 bundle 做出可稽核的發布決策。
 
 操作：
 
 1. 點擊 `Release Center`。
 2. 檢查每個 bundle 的狀態。
-3. 如果看到 blocked reasons，代表該版本不可發布。
+3. 若所有 gate 通過，可點擊 `Promote` 將 bundle 推進至 canary 或利害關係人審查。
+4. 若仍有 blocked reasons，點擊 `Block release`，確認該版本不可進入 rollout。
+5. 若需要法遵、PM 或 Support Ops 確認，點擊 `Request review`。
 
 管理員判斷重點：
 
 - Regression count 是否超標。
 - High-risk auto-answer 是否為 0。
 - Handoff safety recall 是否達到 1.00。
+- 決策後是否出現 bundle 內的 decision banner。
+- `Audit Log` 是否留下對應的 release decision event。
 
 ### 9. Audit Log：檢查操作稽核紀錄
 
-用途：確認重要管理動作皆已留存紀錄，包含 trace review、eval case saved、offline eval、CSV export。
+用途：確認重要管理動作皆已留存紀錄，包含 trace review、eval case saved、offline eval、CSV export 與 release decision。
 
 操作：
 
@@ -173,7 +177,7 @@ http://127.0.0.1:5173/
 3. `Response Trace`：審查回覆、引用、trace 與 eval case 轉存。
 4. `Evaluation`：執行 offline eval 並匯出 CSV。
 5. `Error Analysis`：從失敗案例定位產品修正項目。
-6. `Release Center`：以 release gate 阻擋不合規版本。
+6. `Release Center`：依 release gate 執行 Promote / Block / Request review。
 7. `Audit Log`：檢視 governance 與後端稽核擴充方向。
 
 ## 目前限制

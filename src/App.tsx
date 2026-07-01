@@ -10,7 +10,7 @@ import { Intake } from './components/Intake';
 import { KnowledgeBase } from './components/KnowledgeBase';
 import { OpsLog } from './components/OpsLog';
 import { OverviewDashboard } from './components/OverviewDashboard';
-import { ReleaseCenter } from './components/ReleaseCenter';
+import { ReleaseCenter, type ReleaseDecision } from './components/ReleaseCenter';
 import { Shell, type ViewKey } from './components/Shell';
 import { buildEvalSummaryCsv } from './utils/export';
 import type { Locale } from './i18n';
@@ -192,11 +192,8 @@ export function App() {
             appendAuditEvent({
               eventType: 'release_decision',
               actor: 'PM',
-              title: decision === 'ready' ? 'Marked bundle ready for review' : 'Kept bundle blocked',
-              detail:
-                decision === 'ready'
-                  ? `${bundle.label} passed visible release gates and is ready for stakeholder review.`
-                  : `${bundle.label} remains blocked because one or more release gates failed.`,
+              title: releaseDecisionTitle(decision),
+              detail: releaseDecisionDetail(bundle.label, decision),
               entityRef: bundle.id
             })
           }
@@ -217,6 +214,26 @@ export function App() {
       ...events
     ]);
   }
+}
+
+function releaseDecisionTitle(decision: ReleaseDecision) {
+  if (decision === 'promoted') {
+    return 'Promoted release bundle';
+  }
+  if (decision === 'review_requested') {
+    return 'Requested release review';
+  }
+  return 'Blocked release bundle';
+}
+
+function releaseDecisionDetail(bundleLabel: string, decision: ReleaseDecision) {
+  if (decision === 'promoted') {
+    return `${bundleLabel} was promoted to canary review after visible release gates passed.`;
+  }
+  if (decision === 'review_requested') {
+    return `${bundleLabel} was sent for stakeholder review before any rollout decision.`;
+  }
+  return `${bundleLabel} remains blocked and unavailable for rollout until release gates are corrected.`;
 }
 
 function readPersistedAuditEvents(): AuditEvent[] {

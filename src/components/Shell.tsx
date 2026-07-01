@@ -38,6 +38,84 @@ const navItems: { key: ViewKey; labelEn: string; labelZh: string; icon: typeof R
   { key: 'opsLog', labelEn: 'Audit Log', labelZh: '稽核紀錄', icon: Activity }
 ];
 
+const viewIntents: Record<
+  ViewKey,
+  { labelEn: string; labelZh: string; titleEn: string; titleZh: string; decisionEn: string; decisionZh: string }
+> = {
+  intake: {
+    labelEn: 'Operator intent',
+    labelZh: '管理目的',
+    titleEn: 'Prioritize post-reply signals that require product review.',
+    titleZh: '判斷哪些回覆後訊號需要產品審查。',
+    decisionEn: 'Decision: select a source or scenario for retained trace review.',
+    decisionZh: '決策：選擇來源或案例，進入 retained trace 審查。'
+  },
+  overview: {
+    labelEn: 'Operating model',
+    labelZh: '營運模型',
+    titleEn: 'Review quality gates and coverage before entering case-level work.',
+    titleZh: '進入個案前，先確認品質門檻與治理覆蓋。',
+    decisionEn: 'Decision: identify which part of the bot governance loop needs attention.',
+    decisionZh: '決策：判斷治理流程中哪個環節需要關注。'
+  },
+  chat: {
+    labelEn: 'Trace review',
+    labelZh: 'Trace 審查',
+    titleEn: 'Validate the answer that was already delivered by the bot.',
+    titleZh: '審查機器人已送出的回答是否可被追溯與驗證。',
+    decisionEn: 'Decision: accept the trace, open evidence, or save it as an eval case.',
+    decisionZh: '決策：接受 trace、檢視證據，或保存為 eval case。'
+  },
+  knowledge: {
+    labelEn: 'Knowledge control',
+    labelZh: '知識控管',
+    titleEn: 'Confirm whether retrieval evidence is current, indexed, and citeable.',
+    titleZh: '確認檢索依據是否有效、已索引且可引用。',
+    decisionEn: 'Decision: inspect the source document, chunk, snapshot, and retrieval config.',
+    decisionZh: '決策：檢查來源文件、chunk、snapshot 與 retrieval config。'
+  },
+  evaluation: {
+    labelEn: 'Quality gate',
+    labelZh: '品質門檻',
+    titleEn: 'Replay saved interactions before release decisions are made.',
+    titleZh: '在發布決策前重播已保存互動並檢查指標。',
+    decisionEn: 'Decision: run offline eval, compare versions, or export evidence.',
+    decisionZh: '決策：執行離線評測、比較版本，或匯出證據。'
+  },
+  errors: {
+    labelEn: 'Remediation',
+    labelZh: '修正管理',
+    titleEn: 'Convert failed eval cases into accountable product fixes.',
+    titleZh: '將失敗 eval case 轉換為可追蹤的產品修正。',
+    decisionEn: 'Decision: assign the failure to PM, Bot Ops, Knowledge, or Compliance.',
+    decisionZh: '決策：將失敗歸因給 PM、Bot Ops、知識庫或法遵。'
+  },
+  handoff: {
+    labelEn: 'Escalation',
+    labelZh: '升級處理',
+    titleEn: 'Package high-risk interactions for a human support queue.',
+    titleZh: '將高風險互動封裝成人工隊列可處理的案例。',
+    decisionEn: 'Decision: verify required fields, queue, summary, and safety warning.',
+    decisionZh: '決策：確認必要欄位、隊列、摘要與安全警示。'
+  },
+  release: {
+    labelEn: 'Release decision',
+    labelZh: '發布決策',
+    titleEn: 'Promote, block, or request review based on visible release gates.',
+    titleZh: '依據可見發布門檻決定推進、阻擋或請求審查。',
+    decisionEn: 'Decision: leave an auditable release action for the selected bundle.',
+    decisionZh: '決策：為所選 bundle 留下可稽核的發布動作。'
+  },
+  opsLog: {
+    labelEn: 'Auditability',
+    labelZh: '稽核性',
+    titleEn: 'Review the action trail produced by product and operations decisions.',
+    titleZh: '檢查產品與營運決策留下的操作軌跡。',
+    decisionEn: 'Decision: confirm that critical review, eval, export, and release actions are logged.',
+    decisionZh: '決策：確認關鍵審查、評測、匯出與發布動作已留存。'
+  }
+};
+
 interface ShellProps {
   activeView: ViewKey;
   children: ReactNode;
@@ -116,6 +194,13 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
               <ArrowUpRight size={16} aria-hidden="true" />
             </div>
           </header>
+          <section className="page-intent" aria-label={text(locale, 'Current page intent', '目前頁面目的')}>
+            <div>
+              <p className="eyebrow">{text(locale, viewIntents[activeView].labelEn, viewIntents[activeView].labelZh)}</p>
+              <h3>{text(locale, viewIntents[activeView].titleEn, viewIntents[activeView].titleZh)}</h3>
+            </div>
+            <p>{text(locale, viewIntents[activeView].decisionEn, viewIntents[activeView].decisionZh)}</p>
+          </section>
           <div className="view-surface">
             {children}
           </div>

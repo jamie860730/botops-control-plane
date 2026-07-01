@@ -15,7 +15,7 @@
 | 儲存對話為 eval case | 通過 |
 | 在 Evaluation 執行 offline eval | 通過 |
 | 匯出 `botops-eval-summary.csv` | 通過 |
-| 在 Release Center 檢查 blocked reason | 通過 |
+| 在 Release Center 檢查 blocked reason 並執行 release decision | 通過 |
 | 在 Ops Log 確認操作紀錄 | 通過 |
 | 在手機尺寸開啟 Overview | 通過 |
 
@@ -27,6 +27,8 @@
 - `Chat + Trace` 能同時看到回答與內部決策鏈，適合面試時說明「我不是只做 chatbot UI」。
 - `Knowledge` 已補上 RAG 管理語意：KB snapshot、index status、retrieval config、citation chunks。
 - `Evaluation` 的 offline eval 與 CSV export 讓產品更像真實 PM/Ops 工作流。
+- 每頁的 compact page intent header 能快速說明該頁支援的管理決策。
+- `Release Center` 已可執行 Promote / Block / Request review，並將決策寫入 audit trail。
 - `Ops Log` 補足治理與 auditability，對後端設計也有延伸價值。
 - 桌面版資訊密度合理，沒有明顯文字遮擋或卡片互相擠壓。
 
@@ -35,16 +37,16 @@
 | 嚴重度 | 問題 | 影響 | 修正 |
 | --- | --- | --- | --- |
 | P2 | 手機寬度下左側導覽變成單欄，主工作區進入視野前需要過多捲動。 | 管理員在手機或窄視窗操作時，主要內容呈現延遲。 | 手機導覽改成雙欄，並隱藏 sidebar note，保留 44px touch target。 |
+| P1 | 每頁缺少 compact page intent header。 | 管理員切頁後需要自行推論本頁決策目的。 | Shell 層加入 page intent，標示本頁支援的決策。 |
+| P2 | Release Center 缺少明確 CTA。 | 管理員只能看 gate，無法留下發布決策。 | 加入 Promote / Block / Request review，並寫入 Ops Log。 |
 
 ## 仍可改進
 
 | 優先級 | 建議 | 原因 |
 | --- | --- | --- |
 | P1 | 加入首次使用 walkthrough 或 demo mode stepper。 | 面試時可以更穩定地引導對方走完 7 步 demo。 |
-| P1 | 在每頁加一個 compact page intent header。 | 管理員切頁後能快速確認「這頁要做什麼決策」。 |
 | P2 | Evaluation 的 CSV export 可加入 preview modal。 | 管理員下載前可確認欄位與範圍。 |
 | P2 | Ops Log 可加入 event type filter。 | 事件變多後需要快速篩選 eval / release / handoff 類操作。 |
-| P2 | Release Center 可加入明確 CTA：Promote / Block / Request review。 | 現在能看 gate，但管理員決策動作還不完整。 |
 
 ## 測試產物
 
@@ -59,4 +61,4 @@
 
 目前產品已能支撐管理員完成核心審查任務：從多來源 live 訊號進入，審查 bot 已送出的 answer 與 retained trace，轉存 eval case，執行 offline eval，匯出結果，檢查 release gate，並透過 Audit Log 保留治理證據。
 
-下一步應優先補「operational workflow guidance」與「release decision action」，使產品更接近可交付的內部營運平台，而非靜態分析 dashboard。
+下一步應優先補「first-run walkthrough」與「CSV preview / Ops Log filter」，使面試展示與日常審查情境更穩定。

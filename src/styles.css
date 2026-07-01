@@ -60,6 +60,7 @@ button {
 
 .brand-block,
 .workspace-header,
+.page-intent,
 .section-heading,
 .header-status,
 .row-title,
@@ -68,6 +69,7 @@ button {
 .action-row,
 .primary-action,
 .secondary-action,
+.tertiary-action,
 .citation-button {
   display: flex;
   align-items: center;
@@ -192,7 +194,30 @@ p {
 .workspace-header {
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 22px;
+  margin-bottom: 14px;
+}
+
+.page-intent {
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  background: rgba(248, 251, 252, 0.72);
+  border: 1px solid #d7e3e5;
+  border-radius: 8px;
+}
+
+.page-intent h3 {
+  font-size: 0.98rem;
+}
+
+.page-intent p:last-child {
+  max-width: 420px;
+  margin: 0;
+  color: #4d503b;
+  font-size: 0.86rem;
+  font-weight: 720;
+  line-height: 1.45;
 }
 
 .view-surface {
@@ -433,6 +458,7 @@ p {
 
 .primary-action,
 .secondary-action,
+.tertiary-action,
 .citation-button {
   justify-content: center;
   gap: 8px;
@@ -458,6 +484,20 @@ p {
   color: #edf8f9;
   background: #171910;
   border: 1px solid #171910;
+}
+
+.tertiary-action {
+  padding: 9px 11px;
+  color: #253236;
+  background: #f8fbfc;
+  border: 1px solid #cfdbdd;
+}
+
+.primary-action:disabled,
+.secondary-action:disabled,
+.tertiary-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
 }
 
 .action-row {
@@ -704,8 +744,19 @@ p {
   min-height: 260px;
 }
 
+.release-grid {
+  grid-template-columns: repeat(2, minmax(340px, 1fr));
+  max-width: 900px;
+}
+
 .release-meta {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.release-meta dd {
+  font-size: 0.8rem;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .blocked-reasons {
@@ -716,17 +767,47 @@ p {
 .blocked-reasons p {
   margin: 0;
   padding: 9px 10px;
-  color: #5b1a1a;
-  background: #ffe8e6;
-  border: 1px solid #ffc8c3;
   border-radius: 6px;
   font-weight: 750;
 }
 
+.blocked-reasons.fail p {
+  color: #5b1a1a;
+  background: #ffe8e6;
+  border: 1px solid #ffc8c3;
+}
+
+.blocked-reasons.pass p {
+  color: #0f4f32;
+  background: #e0f6ec;
+  border: 1px solid #b9e7cc;
+}
+
 .release-actions {
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   justify-content: flex-end;
   margin-top: 14px;
+}
+
+.release-decision-banner {
+  margin-top: 12px;
+  padding: 11px 12px;
+  background: #edf8f9;
+  border: 1px solid #b9e5ea;
+  border-radius: 7px;
+}
+
+.release-decision-banner strong {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.release-decision-banner p {
+  margin: 0;
+  color: #4d503b;
+  font-size: 0.86rem;
 }
 
 .audit-list {
@@ -824,6 +905,7 @@ p {
   }
 
   .workspace-header,
+  .page-intent,
   .section-heading {
     align-items: flex-start;
     flex-direction: column;

@@ -13,6 +13,7 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: 'Switch language to English' }).click();
 
   await page.getByRole('button', { name: 'Overview' }).click();
+  await expect(page.getByText('Review quality gates and coverage before entering case-level work.')).toBeVisible();
   await expect(page.getByText('Functional coverage across the bot governance loop')).toBeVisible();
   await expect(page.getByText('Supports governance and backend audit logging readiness')).toBeVisible();
 
@@ -50,9 +51,15 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await expect(page.getByTestId('error-analysis')).toContainText('Account takeover case auto-answered');
 
   await page.getByRole('button', { name: 'Release Center' }).click();
+  await expect(page.getByText('Promote, block, or request review based on visible release gates.')).toBeVisible();
   await expect(page.getByTestId('release-center')).toContainText('v18 baseline unsafe bundle');
   await expect(page.getByTestId('release-center')).toContainText('High-risk auto-answer rate must be 0');
-  await page.getByRole('button', { name: /Keep blocked/i }).click();
+  await expect(page.getByRole('button', { name: 'Promote' }).first()).toBeEnabled();
+  await page.getByRole('button', { name: 'Promote' }).first().click();
+  await expect(page.getByTestId('release-decision-rel_mvp_019')).toContainText('Promoted to canary review');
+  await expect(page.getByRole('button', { name: 'Promote' }).nth(1)).toBeDisabled();
+  await page.getByRole('button', { name: /Block release/i }).nth(1).click();
+  await expect(page.getByTestId('release-decision-rel_mvp_018_blocked')).toContainText('Release blocked');
 
   await page.getByRole('button', { name: 'Signal Intake' }).click();
   await page.getByRole('button', { name: /Review live reply and trace for Account takeover with transfer on hold/i }).click();
@@ -63,5 +70,6 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: 'Audit Log' }).click();
   await expect(page.getByTestId('ops-log')).toContainText('Completed offline eval run');
   await expect(page.getByTestId('ops-log')).toContainText('Exported eval summary CSV');
-  await expect(page.getByTestId('ops-log')).toContainText('Kept bundle blocked');
+  await expect(page.getByTestId('ops-log')).toContainText('Promoted release bundle');
+  await expect(page.getByTestId('ops-log')).toContainText('Blocked release bundle');
 });
