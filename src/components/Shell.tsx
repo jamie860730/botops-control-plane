@@ -34,7 +34,7 @@ export type ViewKey =
 const navItems: { key: ViewKey; labelEn: string; labelZh: string; icon: typeof RadioTower }[] = [
   { key: 'overview', labelEn: 'Overview', labelZh: '總覽', icon: LayoutDashboard },
   { key: 'intake', labelEn: 'Signal Intake', labelZh: '訊號受理', icon: RadioTower },
-  { key: 'chat', labelEn: 'Response Trace', labelZh: '回覆稽核', icon: Bot },
+  { key: 'chat', labelEn: 'Response Trace', labelZh: '回覆追蹤', icon: Bot },
   { key: 'knowledge', labelEn: 'Knowledge Governance', labelZh: '知識治理', icon: Database },
   { key: 'csKpi', labelEn: 'CS Bot KPI', labelZh: '客服 KPI', icon: ChartNoAxesCombined },
   { key: 'evaluation', labelEn: 'Evaluation', labelZh: '評測中心', icon: ClipboardCheck },
@@ -140,8 +140,8 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
         <div className="workspace-inner">
           <header className="workspace-header">
             <div>
-              <p className="eyebrow">{text(locale, 'Policy-aware support automation', '政策感知客服自動化')}</p>
-              <h2>{text(locale, 'Operational quality control for support bots', '客服機器人營運品質控管')}</h2>
+              <p className="eyebrow">{text(locale, 'Support automation operations', '客服自動化營運')}</p>
+              <h2>{text(locale, 'Support bot management platform', '客服機器人管理平台')}</h2>
             </div>
             <div className="desktop-header-actions">
               <LocaleToggle locale={locale} onLocaleChange={onLocaleChange} />

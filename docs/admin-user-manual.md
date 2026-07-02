@@ -24,7 +24,7 @@ http://127.0.0.1:5173/
 
 ### 1. Overview：檢視治理總覽
 
-用途：檢視整體 KPI、訊號來源分布，以及各功能頁於 bot governance loop 中的職責。
+這一頁用來檢視整體 KPI、訊號來源分布，以及客服機器人治理流程的目前狀態。
 
 操作：
 
@@ -39,7 +39,7 @@ http://127.0.0.1:5173/
 
 ### 2. Signal Intake：篩選多來源客服訊號
 
-用途：監控 Web/App Chat、X、LINE、Telegram、Discord、內部通報等來源的真實訊號。訓練完成的 bot 會即時回覆；此頁用於檢視已回覆 interaction 與其 retained trace。
+這一頁彙整 Web/App Chat、X、LINE、Telegram、Discord、內部通報等來源的客服訊號。訓練完成的 bot 會即時回覆；管理員在此檢視已回覆互動與保留的處理紀錄。
 
 操作：
 
@@ -55,7 +55,7 @@ http://127.0.0.1:5173/
 
 ### 3. Response Trace：審查 bot 回答與決策鏈
 
-用途：檢查 bot 已即時送出的回答、引用、retrieval、verification、handoff 等 retained trace 節點。
+這一頁用來檢查 bot 已送出的回答、引用、檢索、驗證與人工交接等處理節點。
 
 操作：
 
@@ -73,7 +73,7 @@ http://127.0.0.1:5173/
 
 ### 4. Knowledge Governance：確認可引用知識
 
-用途：管理 bot RAG 可使用的政策文件、chunks、KB snapshot、index status、retrieval config、有效期間、owner、風險等級。
+這一頁管理 RAG 可使用的政策文件、chunks、KB snapshot、index status、retrieval config、有效期間、owner 與風險等級。
 
 操作：
 
@@ -90,13 +90,13 @@ http://127.0.0.1:5173/
 
 ### 5. CS Bot KPI：審查客服營運指標
 
-用途：定期檢視 bot 對客服營運的影響，例如 auto-resolution、handoff、repeat contact、citation failure 與 SLA risk，並連回實際用戶案例群。
+這一頁用來定期檢視 bot 對客服營運的影響，例如 auto-resolution、handoff、repeat contact、citation failure 與 SLA risk，並連回實際使用者案例群。
 
 操作：
 
 1. 點擊 `CS Bot KPI`。
 2. 檢查上方 KPI cards，確認每個指標是否達標或進入 watch。
-3. 在 Segment Drilldown 檢查不同渠道與案例類型。
+3. 在 Segment Drilldown 檢查不同來源與案例類型。
 4. 根據 review focus 判斷下一步應改善 prompt、知識文件、handoff 或客服流程。
 
 管理員判斷重點：
@@ -108,7 +108,7 @@ http://127.0.0.1:5173/
 
 ### 6. Evaluation：執行評測並匯出結果
 
-用途：用 saved live interactions / eval cases 比較版本化發布設定，避免只靠人工主觀判斷。
+這一頁用同一批 saved live interactions / eval cases 比較不同發布設定，避免只靠人工主觀判斷。
 
 操作：
 
@@ -127,7 +127,7 @@ http://127.0.0.1:5173/
 
 ### 7. Error Analysis：將失敗案例轉為修正任務
 
-用途：將低分 eval rows 轉換為 PM / Bot Ops / Knowledge Owner / Compliance 可處理的 badcase。
+這一頁將低分 eval rows 轉換為 PM / Bot Ops / Knowledge Owner / Compliance 可處理的失敗案例。
 
 操作：
 
@@ -141,7 +141,7 @@ http://127.0.0.1:5173/
 
 ### 8. Ticket Center：管理客服工單隊列
 
-用途：將 bot 已處理或已審查的案例放入客服工單隊列，追蹤 queue、owner、priority、SLA、case summary 與 next action。
+這一頁追蹤 bot 已處理或已審查的客服工單，包含 queue、owner、priority、SLA、case summary 與 next action。
 
 操作：
 
@@ -159,7 +159,7 @@ http://127.0.0.1:5173/
 
 ### 9. Handoff：檢查人工交接品質
 
-用途：高風險案例不能只讓 bot 自動回答，必須包裝成可交接給人工隊列的資訊。
+這一頁檢查高風險案例的人工交接內容，確保人工隊列能接手處理。
 
 操作：
 
@@ -175,7 +175,7 @@ http://127.0.0.1:5173/
 
 ### 10. Release Center：執行發布決策
 
-用途：將 eval 結果轉換為 release gate，並對每個 bundle 做出可稽核的發布決策。
+這一頁將 eval 結果轉換為 release gate，並對每個 bundle 做出可稽核的發布決策。
 
 操作：
 
@@ -195,7 +195,7 @@ http://127.0.0.1:5173/
 
 ### 11. Audit Log：檢查操作稽核紀錄
 
-用途：確認重要管理動作皆已留存紀錄，包含 trace review、eval case saved、offline eval、CSV export 與 release decision。
+這一頁確認重要管理動作皆已留存紀錄，包含 trace review、eval case saved、offline eval、CSV export 與 release decision。
 
 操作：
 

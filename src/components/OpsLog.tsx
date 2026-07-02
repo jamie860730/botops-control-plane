@@ -3,6 +3,7 @@ import { Activity, Download, PlayCircle, Save, ShieldCheck } from 'lucide-react'
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { AuditEvent, AuditEventType } from '../types';
+import { formatDisplayText } from '../utils/display';
 
 interface OpsLogProps {
   events: AuditEvent[];
@@ -69,11 +70,11 @@ export function OpsLog({ events, locale }: OpsLogProps) {
                 </div>
                 <div>
                   <div className="row-title">
-                    <strong>{event.title}</strong>
-                    <span>{event.actor}</span>
+                    <strong>{formatDisplayText(locale, event.title)}</strong>
+                    <span>{formatDisplayText(locale, event.actor)}</span>
                     <span>{event.entityRef}</span>
                   </div>
-                  <p>{event.detail}</p>
+                  <p>{formatDisplayText(locale, event.detail)}</p>
                 </div>
                 <time>{new Date(event.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time>
               </article>

@@ -1,6 +1,7 @@
 import type { KnowledgeDocument } from '../types';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
+import { formatDisplayText, formatProduct } from '../utils/display';
 
 interface KnowledgeBaseProps {
   documents: KnowledgeDocument[];
@@ -80,11 +81,11 @@ export function KnowledgeBase({ documents, highlightedChunkId, locale }: Knowled
           </div>
           {documents.map((doc) => (
             <div className="table-row knowledge-row" key={doc.id}>
-              <span>{doc.title}</span>
+              <span>{formatDisplayText(locale, doc.title)}</span>
               <span>{doc.regionScope}</span>
-              <span>{doc.productScope}</span>
-              <span>{doc.status}</span>
-              <span>{doc.indexStatus}</span>
+              <span>{formatProduct(locale, doc.productScope)}</span>
+              <span>{formatDisplayText(locale, doc.status)}</span>
+              <span>{formatDisplayText(locale, doc.indexStatus)}</span>
               <span>{doc.retrievalConfig.replace('retriever_', '')}</span>
             </div>
           ))}

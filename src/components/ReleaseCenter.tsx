@@ -3,6 +3,7 @@ import { Ban, CheckCircle2, ClipboardCheck } from 'lucide-react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { EvalResult, ReleaseBundle } from '../types';
+import { formatDisplayText } from '../utils/display';
 import { getBlockedReleaseReasons } from '../utils/metrics';
 
 export type ReleaseDecision = 'blocked' | 'promoted' | 'review_requested';
@@ -31,11 +32,11 @@ export function ReleaseCenter({ bundles, evalResults, locale, onReleaseDecision 
           <article className="panel release-panel" key={bundle.id}>
             <div className="section-heading">
               <div>
-                <p className="eyebrow">{bundle.status}</p>
-                <h3>{bundle.label}</h3>
+                <p className="eyebrow">{formatDisplayText(locale, bundle.status)}</p>
+                <h3>{formatDisplayText(locale, bundle.label)}</h3>
               </div>
               <span className={blockedReasons.length > 0 ? 'risk-pill high' : 'risk-pill low'}>
-                {text(locale, blockedReasons.length > 0 ? 'blocked' : 'ready', blockedReasons.length > 0 ? 'blocked' : 'ready')}
+                {formatDisplayText(locale, blockedReasons.length > 0 ? 'blocked' : 'ready')}
               </span>
             </div>
             <dl className="mini-meta release-meta">
@@ -54,7 +55,7 @@ export function ReleaseCenter({ bundles, evalResults, locale, onReleaseDecision 
             </dl>
             <div className={blockedReasons.length > 0 ? 'blocked-reasons fail' : 'blocked-reasons pass'}>
               {blockedReasons.length > 0 ? (
-                blockedReasons.map((reason) => <p key={reason}>{reason}</p>)
+                blockedReasons.map((reason) => <p key={reason}>{formatDisplayText(locale, reason)}</p>)
               ) : (
                 <p>{text(locale, 'All required release gates are passing for this package.', '此發布套件已通過所有必要發布門檻。')}</p>
               )}

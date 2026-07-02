@@ -2,6 +2,7 @@ import { Clock, ShieldAlert, TicketCheck } from 'lucide-react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { SupportTicket } from '../types';
+import { formatDisplayText, formatRiskLevel } from '../utils/display';
 
 interface TicketCenterProps {
   locale: Locale;
@@ -31,20 +32,22 @@ export function TicketCenter({ locale, tickets }: TicketCenterProps) {
               </div>
               <div>
                 <div className="row-title">
-                  <strong>{ticket.summary}</strong>
+                  <strong>{formatDisplayText(locale, ticket.summary)}</strong>
                   <span>{ticket.id}</span>
-                  <span>{ticket.queue}</span>
+                  <span>{formatDisplayText(locale, ticket.queue)}</span>
                 </div>
-                <p>{ticket.caseSummary}</p>
+                <p>{formatDisplayText(locale, ticket.caseSummary)}</p>
                 <div className="ticket-next-action">
                   <strong>{text(locale, 'Next action', '下一步')}</strong>
-                  <span>{ticket.nextAction}</span>
+                  <span>{formatDisplayText(locale, ticket.nextAction)}</span>
                 </div>
               </div>
               <aside className="ticket-status-panel">
-                <span className={`risk-pill ${ticket.priority.toLowerCase()}`}>{ticket.priority}</span>
-                <strong>{ticket.status}</strong>
-                <span>{ticket.owner}</span>
+                <span className={`risk-pill ${ticket.priority.toLowerCase()}`}>
+                  {formatRiskLevel(locale, ticket.priority)}
+                </span>
+                <strong>{formatDisplayText(locale, ticket.status)}</strong>
+                <span>{formatDisplayText(locale, ticket.owner)}</span>
                 <span className="sla-pill">
                   <Clock size={13} aria-hidden="true" />
                   {new Date(ticket.slaDueAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

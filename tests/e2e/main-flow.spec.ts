@@ -11,7 +11,7 @@ test('support quality operations flow works end to end', async ({ page }) => {
   await expect(page.getByText('Queues requiring operational attention')).toBeVisible();
 
   await page.getByRole('button', { name: '切換語言為繁體中文' }).click();
-  await expect(page.getByRole('heading', { name: '客服機器人營運品質控管' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '客服機器人管理平台' })).toBeVisible();
   await expectLocalizedNav(page);
   await expect(page.getByText('需要營運處理的隊列')).toBeVisible();
   await page.getByRole('button', { name: 'Switch language to English' }).click();

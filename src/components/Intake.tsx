@@ -2,6 +2,14 @@ import { Eye, SignalHigh } from 'lucide-react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { SourceChannel, SupportScenario, SupportSignal } from '../types';
+import {
+  formatExpectedBehavior,
+  formatReporterType,
+  formatRiskLevel,
+  formatRiskTag,
+  formatScenarioTitle,
+  formatSourceChannel
+} from '../utils/display';
 
 const sourceChannels: (SourceChannel | 'All')[] = [
   'All',
@@ -36,7 +44,7 @@ export function Intake({
         <div className="section-heading">
           <div>
             <p className="eyebrow">Multi-channel Intake</p>
-            <h3>{text(locale, 'Monitor post-reply signals across channels', '監控跨渠道回覆後訊號')}</h3>
+            <h3>{text(locale, 'Monitor post-reply signals across sources', '監控多來源回覆後訊號')}</h3>
           </div>
           <span className="count-pill">
             {text(locale, `${signals.length} signals`, `${signals.length} 筆訊號`)}
@@ -51,7 +59,7 @@ export function Intake({
               onClick={() => onSourceChange(source)}
               type="button"
             >
-              {source}
+              {formatSourceChannel(locale, source)}
             </button>
           ))}
         </div>
@@ -63,13 +71,15 @@ export function Intake({
               </div>
               <div>
                 <div className="row-title">
-                  <strong>{signal.sourceChannel}</strong>
-                  <span>{signal.reporterType}</span>
+                  <strong>{formatSourceChannel(locale, signal.sourceChannel)}</strong>
+                  <span>{formatReporterType(locale, signal.reporterType)}</span>
                   <span>{signal.region}</span>
                 </div>
                 <p>{signal.rawText}</p>
               </div>
-              <span className={`risk-pill ${signal.priority.toLowerCase()}`}>{signal.priority}</span>
+              <span className={`risk-pill ${signal.priority.toLowerCase()}`}>
+                {formatRiskLevel(locale, signal.priority)}
+              </span>
             </article>
           ))}
         </div>
@@ -79,27 +89,27 @@ export function Intake({
         <div className="section-heading">
           <div>
             <p className="eyebrow">{text(locale, 'Interaction review queue', '互動審查佇列')}</p>
-            <h3>{text(locale, 'Inspect delivered bot replies and retained traces', '檢視已送出回覆與保留 trace')}</h3>
+            <h3>{text(locale, 'Inspect delivered bot replies and retained traces', '檢視已送出回覆與處理紀錄')}</h3>
           </div>
         </div>
         <div className="scenario-list" data-testid="scenario-list">
           {scenarios.map((scenario) => (
             <article className="scenario-card" key={scenario.id}>
               <div>
-                <strong>{scenario.title}</strong>
-                <p>{scenario.expectedBehavior}</p>
+                <strong>{formatScenarioTitle(locale, scenario.title)}</strong>
+                <p>{formatExpectedBehavior(locale, scenario.expectedBehavior)}</p>
               </div>
               <dl className="mini-meta">
                 <div>
-                  <dt>Source</dt>
-                  <dd>{scenario.sourceChannel}</dd>
+                  <dt>{text(locale, 'Source', '來源')}</dt>
+                  <dd>{formatSourceChannel(locale, scenario.sourceChannel)}</dd>
                 </div>
                 <div>
-                  <dt>Risk</dt>
-                  <dd>{scenario.riskTag}</dd>
+                  <dt>{text(locale, 'Risk', '風險')}</dt>
+                  <dd>{formatRiskTag(locale, scenario.riskTag)}</dd>
                 </div>
                 <div>
-                  <dt>Region</dt>
+                  <dt>{text(locale, 'Region', '地區')}</dt>
                   <dd>{scenario.region}</dd>
                 </div>
               </dl>
@@ -107,14 +117,14 @@ export function Intake({
                 aria-label={text(
                   locale,
                   `Review live reply and trace for ${scenario.title}`,
-                  `檢視 ${scenario.title} 的回覆與 trace`
+                  `檢視 ${formatScenarioTitle(locale, scenario.title)} 的回覆與處理紀錄`
                 )}
                 className="primary-action"
                 onClick={() => onReviewInteraction(scenario.id)}
                 type="button"
               >
                 <Eye size={15} aria-hidden="true" />
-                {text(locale, 'Inspect reply + trace', '檢視回覆與 trace')}
+                {text(locale, 'Inspect reply + trace', '檢視回覆與紀錄')}
               </button>
             </article>
           ))}

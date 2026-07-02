@@ -21,7 +21,7 @@ export function OverviewDashboard({ data, locale }: OverviewDashboardProps) {
     {
       name: text(locale, 'Signals awaiting review', '待審訊號'),
       value: data.supportSignals.length,
-      detail: text(locale, 'Prioritize channels with repeated post-reply issues.', '優先處理重複出現回覆後問題的渠道。')
+      detail: text(locale, 'Prioritize sources with repeated post-reply issues.', '優先處理重複出現回覆後問題的來源。')
     },
     {
       name: text(locale, 'Active support tickets', '進行中工單'),
@@ -60,7 +60,7 @@ export function OverviewDashboard({ data, locale }: OverviewDashboardProps) {
         <div className="section-heading">
           <div>
             <p className="eyebrow">{text(locale, 'Source Distribution', '來源分布')}</p>
-            <h3>{text(locale, 'Support signal ingress by channel', '客服訊號渠道分布')}</h3>
+            <h3>{text(locale, 'Support signal ingress by source', '客服訊號來源分布')}</h3>
           </div>
         </div>
         <div className="stacked-list">

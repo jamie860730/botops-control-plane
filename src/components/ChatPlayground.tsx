@@ -3,6 +3,17 @@ import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { KnowledgeDocument } from '../types';
 import type { InteractionReview } from '../services/seedBackendAdapter';
+import {
+  formatLanguage,
+  formatMessageRole,
+  formatProduct,
+  formatRiskTag,
+  formatScenarioTitle,
+  formatSourceChannel,
+  formatTraceDetail,
+  formatTraceNode,
+  formatTraceStatus
+} from '../utils/display';
 
 interface ChatPlaygroundProps {
   documents: KnowledgeDocument[];
@@ -32,9 +43,13 @@ export function ChatPlayground({
         <div className="section-heading">
           <div>
             <p className="eyebrow">
-              {text(locale, `${review.scenario.sourceChannel} interaction record`, `${review.scenario.sourceChannel} 互動紀錄`)}
+              {text(
+                locale,
+                `${review.scenario.sourceChannel} interaction record`,
+                `${formatSourceChannel(locale, review.scenario.sourceChannel)} 互動紀錄`
+              )}
             </p>
-            <h3>{review.scenario.title}</h3>
+            <h3>{formatScenarioTitle(locale, review.scenario.title)}</h3>
           </div>
           <button className="secondary-action" onClick={onSaveEvalCase} type="button">
             <BookmarkPlus size={15} aria-hidden="true" />
@@ -42,15 +57,27 @@ export function ChatPlayground({
           </button>
         </div>
         <div className="profile-strip">
-          <span>{review.scenario.region}</span>
-          <span>{review.scenario.language}</span>
-          <span>{review.scenario.product}</span>
-          <span>{review.scenario.riskTag}</span>
+          <span>
+            <small>{text(locale, 'Region', '地區')}</small>
+            <strong>{review.scenario.region}</strong>
+          </span>
+          <span>
+            <small>{text(locale, 'Language', '語言')}</small>
+            <strong>{formatLanguage(locale, review.scenario.language)}</strong>
+          </span>
+          <span>
+            <small>{text(locale, 'Product', '產品')}</small>
+            <strong>{formatProduct(locale, review.scenario.product)}</strong>
+          </span>
+          <span>
+            <small>{text(locale, 'Risk', '風險')}</small>
+            <strong>{formatRiskTag(locale, review.scenario.riskTag)}</strong>
+          </span>
         </div>
         <div className="conversation">
           {review.messages.map((message) => (
             <article className={`message ${message.role}`} key={message.id}>
-              <div className="message-role">{text(locale, message.role, message.role === 'assistant' ? 'bot' : message.role)}</div>
+              <div className="message-role">{formatMessageRole(locale, message.role)}</div>
               <p>{message.content}</p>
               {message.citationIds.length > 0 && (
                 <div className="citation-list">
@@ -84,18 +111,18 @@ export function ChatPlayground({
       <div className="panel" data-testid="trace-panel">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">{text(locale, 'Trace Panel', 'Trace 面板')}</p>
-            <h3>{text(locale, 'Retained runtime decisions behind the delivered answer', '已送出回覆的執行決策紀錄')}</h3>
+            <p className="eyebrow">{text(locale, 'Response processing log', '回覆處理紀錄')}</p>
+            <h3>{text(locale, 'Bot steps used for the delivered answer', '機器人送出回覆時採用的處理步驟')}</h3>
           </div>
         </div>
         <div className="trace-list">
           {review.traceEvents.map((event) => (
             <article className={`trace-row ${event.status}`} key={event.id}>
               <div>
-                <strong>{event.nodeName}</strong>
-                <p>{event.detail}</p>
+                <strong>{formatTraceNode(locale, event.nodeName)}</strong>
+                <p>{formatTraceDetail(locale, event.detail)}</p>
               </div>
-              <span>{event.status}</span>
+              <span>{formatTraceStatus(locale, event.status)}</span>
             </article>
           ))}
         </div>

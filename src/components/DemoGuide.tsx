@@ -22,7 +22,7 @@ const workflowSteps: { view: ViewKey; title: string; titleZh: string; detail: st
     title: 'Select interaction record',
     titleZh: '選取互動紀錄',
     detail: 'Filter by channel and inspect the retained response trace.',
-    detailZh: '依渠道篩選並檢視保留的回覆 trace。'
+    detailZh: '依來源篩選並檢視保留的回覆 trace。'
   },
   {
     view: 'chat',

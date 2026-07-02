@@ -3,6 +3,7 @@ import { Download, Play, X } from 'lucide-react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { EvalCase, EvalResult, EvalRun } from '../types';
+import { formatDisplayText } from '../utils/display';
 import { buildEvalSummaryRows, getEvalSummaryCsvHeader } from '../utils/export';
 import { calculateEvaluationSummary } from '../utils/metrics';
 
@@ -76,7 +77,7 @@ export function EvaluationCenter({
           </div>
           {rows.map(({ run, summary }) => (
             <div className="table-row eval-row" key={run.id}>
-              <span>{run.label}</span>
+              <span>{formatDisplayText(locale, run.label)}</span>
               <span>{summary.overallQualityScore.toFixed(2)}</span>
               <span>{summary.citationSupportRate.toFixed(2)}</span>
               <span>{summary.handoffSafetyRecall.toFixed(2)}</span>

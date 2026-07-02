@@ -2,6 +2,7 @@ import { ArrowDownRight, ArrowRight, ArrowUpRight, BarChart3 } from 'lucide-reac
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { CsBotKpiMetric, CsBotKpiSegment } from '../types';
+import { formatDisplayText, formatSourceChannel } from '../utils/display';
 
 interface CsBotKpiProps {
   locale: Locale;
@@ -34,14 +35,14 @@ export function CsBotKpi({ locale, metrics, segments }: CsBotKpiProps) {
           {metrics.map((metric) => (
             <article className={`cs-kpi-card ${metric.status}`} key={metric.id}>
               <div className="row-title">
-                <strong>{metric.label}</strong>
+                <strong>{formatDisplayText(locale, metric.label)}</strong>
                 <span>{metric.target}</span>
               </div>
               <div className="cs-kpi-value-row">
                 <strong>{metric.value}</strong>
                 <TrendIcon trend={metric.trend} />
               </div>
-              <p>{metric.insight}</p>
+              <p>{formatDisplayText(locale, metric.insight)}</p>
             </article>
           ))}
         </div>
@@ -53,7 +54,7 @@ export function CsBotKpi({ locale, metrics, segments }: CsBotKpiProps) {
           {text(
             locale,
             'Segment movement by source channel, case cluster, and accountable owner.',
-            '依來源渠道、案例群與負責 owner 追蹤分群變化。'
+            '依來源、案例群與負責 owner 追蹤分群變化。'
           )}
         </p>
       </div>
@@ -61,7 +62,7 @@ export function CsBotKpi({ locale, metrics, segments }: CsBotKpiProps) {
         <div className="section-heading">
           <div>
             <p className="eyebrow">{text(locale, 'Segment Drilldown', '分群分析')}</p>
-            <h3>{text(locale, 'Channel and case-type KPI review', '依渠道與案例類型檢視 KPI')}</h3>
+            <h3>{text(locale, 'Source and case-type KPI review', '依來源與案例類型檢視 KPI')}</h3>
           </div>
         </div>
         <div className="data-table">
@@ -77,8 +78,8 @@ export function CsBotKpi({ locale, metrics, segments }: CsBotKpiProps) {
           {segments.map((segment) => (
             <div className="table-row cs-kpi-row" key={segment.id}>
               <span data-label={labels.segment}>
-                <strong>{segment.segment}</strong>
-                <small>{segment.sourceChannel}</small>
+                <strong>{formatDisplayText(locale, segment.segment)}</strong>
+                <small>{formatSourceChannel(locale, segment.sourceChannel)}</small>
               </span>
               <span data-label={labels.volume}>{segment.volume.toLocaleString()}</span>
               <span data-label={labels.autoResolve}>{formatRate(segment.autoResolutionRate)}</span>
@@ -86,7 +87,7 @@ export function CsBotKpi({ locale, metrics, segments }: CsBotKpiProps) {
               <span data-label={labels.citationFail}>{formatRate(segment.citationFailureRate)}</span>
               <span data-label={labels.repeatContact}>{formatRate(segment.repeatContactRate)}</span>
               <span data-label={labels.slaRisk}>{segment.slaRiskCount}</span>
-              <p>{segment.reviewFocus}</p>
+              <p>{formatDisplayText(locale, segment.reviewFocus)}</p>
             </div>
           ))}
         </div>

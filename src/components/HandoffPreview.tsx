@@ -2,6 +2,7 @@ import { ShieldAlert } from 'lucide-react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { HandoffPreview as HandoffPreviewType } from '../types';
+import { formatDisplayText } from '../utils/display';
 
 interface HandoffPreviewProps {
   locale: Locale;
@@ -29,19 +30,19 @@ export function HandoffPreview({ locale, preview }: HandoffPreviewProps) {
       <dl className="detail-list">
         <div>
           <dt>{text(locale, 'Trigger reason', '觸發原因')}</dt>
-          <dd>{preview.reason}</dd>
+          <dd>{formatDisplayText(locale, preview.reason)}</dd>
         </div>
         <div>
           <dt>{text(locale, 'AI summary', 'AI 摘要')}</dt>
-          <dd>{preview.summary}</dd>
+          <dd>{formatDisplayText(locale, preview.summary)}</dd>
         </div>
         <div>
           <dt>{text(locale, 'Required fields', '必要欄位')}</dt>
-          <dd>{preview.requiredFields.join(', ')}</dd>
+          <dd>{formatDisplayText(locale, preview.requiredFields.join(', '))}</dd>
         </div>
         <div>
           <dt>{text(locale, 'Risk warning', '風險警示')}</dt>
-          <dd>{preview.riskWarning}</dd>
+          <dd>{formatDisplayText(locale, preview.riskWarning)}</dd>
         </div>
       </dl>
     </section>
