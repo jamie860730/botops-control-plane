@@ -55,6 +55,7 @@ interface ShellProps {
 
 export function Shell({ activeView, children, locale, onLocaleChange, onViewChange }: ShellProps) {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const activeNavItem = navItems.find((item) => item.key === activeView) ?? navItems[0];
 
   function handleViewChange(view: ViewKey) {
     onViewChange(view);
@@ -140,8 +141,8 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
         <div className="workspace-inner">
           <header className="workspace-header">
             <div>
-              <p className="eyebrow">{text(locale, 'Support automation operations', '客服自動化營運')}</p>
-              <h2>{text(locale, 'Support bot management platform', '客服機器人管理平台')}</h2>
+              <p className="eyebrow">{text(locale, 'Workspace', '功能頁')}</p>
+              <h2>{text(locale, activeNavItem.labelEn, activeNavItem.labelZh)}</h2>
             </div>
             <div className="desktop-header-actions">
               <LocaleToggle locale={locale} onLocaleChange={onLocaleChange} />
