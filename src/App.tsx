@@ -24,11 +24,11 @@ const localeStorageKey = 'botops.locale';
 
 const initialAuditEvents: AuditEvent[] = [
   {
-    id: 'audit_bootstrap_p0_seed_review',
+    id: 'audit_system_data_sync_initial',
     eventType: 'eval_runner_completed',
     actor: 'System',
-    title: 'P0 seed dataset loaded',
-    detail: 'Loaded deterministic support signals, traces, eval runs, badcases, and release bundles.',
+    title: 'Operational data synchronized',
+    detail: 'Support signals, traces, evaluation results, badcases, and release packages are available for review.',
     entityRef: 'dataset_policy_support_seed_v1',
     createdAt: '2026-07-01T09:00:00.000Z'
   }
@@ -36,7 +36,7 @@ const initialAuditEvents: AuditEvent[] = [
 
 export function App() {
   const backend = useMemo(() => new SeedBackendAdapter(), []);
-  const [activeView, setActiveView] = useState<ViewKey>('intake');
+  const [activeView, setActiveView] = useState<ViewKey>('overview');
   const [sourceFilter, setSourceFilter] = useState<SourceChannel | 'All'>('All');
   const [selectedScenarioId, setSelectedScenarioId] = useState(defaultScenarioId);
   const [highlightedChunkId, setHighlightedChunkId] = useState('chunk_payment_policy_eu_001');
@@ -99,14 +99,14 @@ export function App() {
       eventType: 'eval_runner_started',
       actor: 'Bot Ops',
       title: 'Started offline eval run',
-      detail: 'Compared baseline and candidate against the same deterministic eval dataset.',
+      detail: 'Compared the current release and proposed release against the approved evaluation set.',
       entityRef: 'run_v19_candidate'
     });
     appendAuditEvent({
       eventType: 'eval_runner_completed',
       actor: 'System',
       title: 'Completed offline eval run',
-      detail: 'Candidate passed citation support and handoff safety gates; unsafe baseline remains blocked.',
+      detail: 'Proposed release passed citation support and handoff safety gates; the blocked release remains unavailable.',
       entityRef: 'run_v19_candidate'
     });
   }

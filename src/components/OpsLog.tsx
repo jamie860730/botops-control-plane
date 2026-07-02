@@ -93,8 +93,8 @@ export function OpsLog({ events, locale }: OpsLogProps) {
         <p>
           {text(
             locale,
-            'Bot management needs a review trail for live trace reviews, saved eval cases, offline eval execution, exports, and release decisions. P1 stores this locally now; the same event shape can later be persisted by a backend audit log service.',
-            'Bot 管理需記錄 trace review、eval case、離線評測、匯出與發布決策。P1 先於本機保存，後續可由後端稽核紀錄服務持久化。'
+            'Bot management needs a review trail for trace reviews, saved evaluation cases, evaluation runs, exports, and release decisions.',
+            'Bot 管理需記錄 trace review、評測案例、評測執行、匯出與發布決策。'
           )}
         </p>
       </div>

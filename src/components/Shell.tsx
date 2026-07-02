@@ -32,8 +32,8 @@ export type ViewKey =
   | 'opsLog';
 
 const navItems: { key: ViewKey; labelEn: string; labelZh: string; icon: typeof RadioTower }[] = [
-  { key: 'intake', labelEn: 'Signal Intake', labelZh: '訊號受理', icon: RadioTower },
   { key: 'overview', labelEn: 'Overview', labelZh: '總覽', icon: LayoutDashboard },
+  { key: 'intake', labelEn: 'Signal Intake', labelZh: '訊號受理', icon: RadioTower },
   { key: 'chat', labelEn: 'Response Trace', labelZh: '回覆稽核', icon: Bot },
   { key: 'knowledge', labelEn: 'Knowledge Governance', labelZh: '知識治理', icon: Database },
   { key: 'csKpi', labelEn: 'CS Bot KPI', labelZh: '客服 KPI', icon: ChartNoAxesCombined },
@@ -58,12 +58,12 @@ const viewIntents: Record<
     decisionZh: '決策：選擇來源或案例，進入 retained trace 審查。'
   },
   overview: {
-    labelEn: 'Operating model',
-    labelZh: '營運模型',
-    titleEn: 'Review quality gates and coverage before entering case-level work.',
-    titleZh: '進入個案前，先確認品質門檻與治理覆蓋。',
-    decisionEn: 'Decision: identify which part of the bot governance loop needs attention.',
-    decisionZh: '決策：判斷治理流程中哪個環節需要關注。'
+    labelEn: 'Dashboard',
+    labelZh: '總覽',
+    titleEn: 'Monitor bot quality, support workload, and release risk.',
+    titleZh: '監控機器人品質、客服工作量與發布風險。',
+    decisionEn: 'Decision: choose the queue, knowledge gap, or release package that needs attention.',
+    decisionZh: '決策：選擇需要處理的隊列、知識缺口或發布套件。'
   },
   chat: {
     labelEn: 'Trace review',
@@ -224,8 +224,8 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
           <span>
             {text(
               locale,
-              'P0 uses the real product data model with deterministic seed execution.',
-              'P0 使用標準化產品資料模型與可重現的種子資料流程。'
+              'Review signals, knowledge, evaluations, and releases from one control plane.',
+              '從同一個控制台審查訊號、知識、評測與發布。'
             )}
           </span>
         </div>

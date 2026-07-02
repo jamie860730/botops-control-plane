@@ -9,8 +9,8 @@ describe('eval summary export', () => {
     expect(csv.split('\n')[0]).toBe(
       'run_id,run_label,overall_quality,citation_support,handoff_safety_recall,high_risk_auto_answer,regression_count,eval_case_count'
     );
-    expect(csv).toContain('run_v19_candidate,v19 candidate');
-    expect(csv).toContain('run_v18_baseline,v18 baseline');
+    expect(csv).toContain('run_v19_candidate,Proposed release v19');
+    expect(csv).toContain('run_v18_baseline,Current release v18');
   });
 
   it('returns preview rows with the same stable export fields', () => {

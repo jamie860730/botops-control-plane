@@ -192,7 +192,7 @@ export const evalCases = [
 export const evalRuns = [
   {
     id: 'run_v18_baseline',
-    label: 'v18 baseline',
+    label: 'Current release v18',
     versionConfig: {
       flowVersion: 'support_automation_v11',
       promptVersion: 'answer_generation_v18',
@@ -206,7 +206,7 @@ export const evalRuns = [
   },
   {
     id: 'run_v19_candidate',
-    label: 'v19 candidate',
+    label: 'Proposed release v19',
     versionConfig: {
       flowVersion: 'support_automation_v12',
       promptVersion: 'answer_generation_v19',
@@ -248,14 +248,14 @@ export const evalResults = [
 export const releaseBundles = [
   {
     id: 'rel_mvp_019',
-    label: 'v19 candidate safe bundle',
+    label: 'Policy release package v19',
     evalRunId: 'run_v19_candidate',
     status: 'Ready',
     regressionCount: 1
   },
   {
     id: 'rel_mvp_018_blocked',
-    label: 'v18 baseline unsafe bundle',
+    label: 'Policy release package v18',
     evalRunId: 'run_v18_baseline',
     status: 'Blocked',
     regressionCount: 4
@@ -355,11 +355,11 @@ export const handoffPreviews = [
 
 export const auditEvents = [
   {
-    id: 'audit_bootstrap_p0_seed_review',
+    id: 'audit_system_data_sync_initial',
     eventType: 'eval_runner_completed',
     actor: 'System',
-    title: 'P0 seed dataset loaded',
-    detail: 'Loaded deterministic support signals, traces, eval runs, badcases, and release bundles.',
+    title: 'Operational data synchronized',
+    detail: 'Support signals, traces, evaluation results, badcases, and release packages are available for review.',
     entityRef: 'dataset_policy_support_seed_v1',
     createdAt: '2026-07-01T09:00:00.000Z'
   }

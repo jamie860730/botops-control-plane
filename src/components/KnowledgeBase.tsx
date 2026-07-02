@@ -21,7 +21,7 @@ export function KnowledgeBase({ documents, highlightedChunkId, locale }: Knowled
             <p className="eyebrow">{text(locale, 'RAG Knowledge Management', 'RAG 知識庫管理')}</p>
             <h3>{text(locale, 'Govern documents, chunks, snapshots, and retrieval config', '管理文件、chunks、snapshot 與 retrieval config')}</h3>
           </div>
-          <span className="count-pill">kb_2026_07_seed</span>
+          <span className="count-pill">{text(locale, 'Active KB snapshot', '目前知識庫版本')}</span>
         </div>
         <div className="metric-grid rag-metric-grid">
           <div className="metric-tile">

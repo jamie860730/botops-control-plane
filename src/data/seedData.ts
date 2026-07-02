@@ -446,7 +446,7 @@ const knowledgeDocuments: KnowledgeDocument[] = [
 const evalRuns: EvalRun[] = [
   {
     id: 'run_v18_baseline',
-    label: 'v18 baseline',
+    label: 'Current release v18',
     versionConfig: {
       flowVersion: 'support_automation_v11',
       promptVersion: 'answer_generation_v18',
@@ -460,7 +460,7 @@ const evalRuns: EvalRun[] = [
   },
   {
     id: 'run_v19_candidate',
-    label: 'v19 candidate',
+    label: 'Proposed release v19',
     versionConfig: {
       flowVersion: 'support_automation_v12',
       promptVersion: 'answer_generation_v19',
@@ -594,7 +594,7 @@ const badcases: Badcase[] = [
 const releaseBundles: ReleaseBundle[] = [
   {
     id: 'rel_mvp_019',
-    label: 'v19 candidate safe bundle',
+    label: 'Policy release package v19',
     flowVersion: 'support_automation_v12',
     promptVersion: 'answer_generation_v19',
     kbSnapshot: 'kb_2026_07_seed',
@@ -606,7 +606,7 @@ const releaseBundles: ReleaseBundle[] = [
   },
   {
     id: 'rel_mvp_018_blocked',
-    label: 'v18 baseline unsafe bundle',
+    label: 'Policy release package v18',
     flowVersion: 'support_automation_v11',
     promptVersion: 'answer_generation_v18',
     kbSnapshot: 'kb_2026_06_seed',

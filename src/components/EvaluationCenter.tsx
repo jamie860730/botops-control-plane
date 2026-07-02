@@ -49,7 +49,7 @@ export function EvaluationCenter({
         <div className="section-heading">
           <div>
             <p className="eyebrow">{text(locale, 'Evaluation Center', '評測中心')}</p>
-            <h3>{text(locale, 'Compare baseline and candidate on the same cases', '用同一批案例比較 baseline 與 candidate')}</h3>
+            <h3>{text(locale, 'Compare release configurations on the same approved cases', '用同一批核准案例比較發布設定')}</h3>
           </div>
           <div className="action-row">
             <button className="secondary-action" onClick={() => setIsCsvPreviewOpen(true)} type="button">
@@ -58,7 +58,7 @@ export function EvaluationCenter({
             </button>
             <button className="primary-action compact-action" onClick={onRunEval} type="button">
               <Play size={15} aria-hidden="true" />
-              {text(locale, 'Run offline eval', '執行離線評測')}
+              {text(locale, 'Run evaluation', '執行評測')}
             </button>
             <span className="count-pill">
               {text(locale, `${evalCases.length} eval cases`, `${evalCases.length} 個評測案例`)}
@@ -92,13 +92,13 @@ export function EvaluationCenter({
         <p>
           {text(
             locale,
-            'Offline runner output is deterministic in P1, so product and operations can review gates before live model traffic exists.',
-            'P1 的離線評測輸出具可重現性，可在接入正式模型流量前完成品質門檻審查。'
+            'Evaluation runs compare versioned prompts, retrieval settings, and knowledge snapshots before release actions are approved.',
+            '評測會比較版本化 prompt、檢索設定與知識庫 snapshot，作為發布核准前的依據。'
           )}
         </p>
       </div>
       <div className="panel">
-        <p className="eyebrow">{text(locale, 'Saved eval candidate', '評測候選案例')}</p>
+        <p className="eyebrow">{text(locale, 'Saved evaluation case', '已保存評測案例')}</p>
         <h3>{savedEvalCaseId ?? text(locale, 'No saved interaction yet', '尚未轉存互動紀錄')}</h3>
         <p>
           {text(

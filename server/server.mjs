@@ -104,7 +104,7 @@ async function routeRequest(request, url) {
       eventType: 'eval_runner_started',
       actor: 'Bot Ops',
       title: 'Started offline eval run',
-      detail: `Started seed-mode eval run ${runId}.`,
+      detail: `Started evaluation run ${runId}.`,
       entityRef: runId,
       createdAt: new Date().toISOString()
     });

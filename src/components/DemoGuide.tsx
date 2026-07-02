@@ -3,19 +3,19 @@ import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { ViewKey } from './Shell';
 
-interface DemoGuideProps {
+interface WorkflowGuideProps {
   activeView: ViewKey;
   locale: Locale;
   savedEvalCaseId: string | null;
 }
 
-const demoSteps: { view: ViewKey; title: string; titleZh: string; detail: string; detailZh: string }[] = [
+const workflowSteps: { view: ViewKey; title: string; titleZh: string; detail: string; detailZh: string }[] = [
   {
     view: 'overview',
-    title: 'Review operating model',
-    titleZh: '審查營運模型',
-    detail: 'Review quality gates, source distribution, and functional coverage.',
-    detailZh: '審查品質門檻、來源分布與功能覆蓋。'
+    title: 'Review dashboard status',
+    titleZh: '檢視總覽狀態',
+    detail: 'Review quality gates, source distribution, and operational queues.',
+    detailZh: '檢視品質門檻、來源分布與營運隊列。'
   },
   {
     view: 'intake',
@@ -33,10 +33,10 @@ const demoSteps: { view: ViewKey; title: string; titleZh: string; detail: string
   },
   {
     view: 'evaluation',
-    title: 'Run offline eval',
-    titleZh: '執行離線評測',
-    detail: 'Compare baseline and candidate, then export CSV evidence.',
-    detailZh: '比較 baseline / candidate，並匯出 CSV 依據。'
+    title: 'Run evaluation',
+    titleZh: '執行評測',
+    detail: 'Compare release configurations, then export CSV evidence.',
+    detailZh: '比較發布設定，並匯出 CSV 依據。'
   },
   {
     view: 'errors',
@@ -61,25 +61,25 @@ const demoSteps: { view: ViewKey; title: string; titleZh: string; detail: string
   }
 ];
 
-export function DemoGuide({ activeView, locale, savedEvalCaseId }: DemoGuideProps) {
+export function WorkflowGuide({ activeView, locale, savedEvalCaseId }: WorkflowGuideProps) {
   const activeIndex = Math.max(
     0,
-    demoSteps.findIndex((step) => step.view === activeView)
+    workflowSteps.findIndex((step) => step.view === activeView)
   );
 
   return (
-    <aside className="demo-guide" aria-label={text(locale, 'Operational workflow', '營運作業流程')}>
+    <aside className="workflow-guide" aria-label={text(locale, 'Operational workflow', '營運作業流程')}>
       <div>
         <p className="eyebrow">{text(locale, 'Operational workflow', '營運作業流程')}</p>
         <h3>{text(locale, 'Bot governance review sequence', '機器人治理審查序列')}</h3>
       </div>
-      <div className="demo-step-list">
-        {demoSteps.map((step, index) => {
+      <div className="workflow-step-list">
+        {workflowSteps.map((step, index) => {
           const isComplete = index < activeIndex || (step.view === 'chat' && Boolean(savedEvalCaseId));
           const isActive = index === activeIndex;
           const Icon = isComplete ? CheckCircle2 : Circle;
           return (
-            <article className={isActive ? 'demo-step active' : 'demo-step'} key={step.title}>
+            <article className={isActive ? 'workflow-step active' : 'workflow-step'} key={step.title}>
               <Icon size={15} aria-hidden="true" />
               <div>
                 <strong>{text(locale, step.title, step.titleZh)}</strong>

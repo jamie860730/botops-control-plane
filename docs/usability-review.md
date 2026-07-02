@@ -24,9 +24,9 @@
 ### 主要優點
 
 - 流程順序符合管理員作業模型：先檢視 live 訊號，再審查 bot 已送出回答與 retained trace，接著進行 eval、badcase、release、audit。
-- `Chat + Trace` 能同時看到回答與內部決策鏈，適合面試時說明「我不是只做 chatbot UI」。
+- `Chat + Trace` 能同時看到回答與內部決策鏈，避免產品只停留在 chatbot 對話框層級。
 - `Knowledge` 已補上 RAG 管理語意：KB snapshot、index status、retrieval config、citation chunks。
-- `Evaluation` 的 offline eval 與 CSV export 讓產品更像真實 PM/Ops 工作流。
+- `Evaluation` 的評測執行與 CSV export 符合真實 PM/Ops 工作流。
 - `Evaluation` 已加入 CSV preview，下載前可確認欄位與資料範圍。
 - 每頁的 compact page intent header 能快速說明該頁支援的管理決策。
 - `Release Center` 已可執行 Promote / Block / Request review，並將決策寫入 audit trail。
@@ -48,7 +48,7 @@
 
 | 優先級 | 建議 | 原因 |
 | --- | --- | --- |
-| P1 | 加入首次使用 walkthrough 或 demo mode stepper。 | 面試時可以更穩定地引導對方走完 7 步 demo。 |
+| P1 | 將產品 walkthrough 拆成獨立展示模式，不放入正式管理介面。 | 正式產品應以管理員任務為主；展示導覽應獨立承載。 |
 | P2 | Evaluation export 可改為後端 signed export job。 | 避免大型報表阻塞前端，並支援權限與到期時間。 |
 | P2 | Ops Log 可加入日期區間與 actor filter。 | 真實審查環境會需要按人員與時間調查。 |
 
@@ -64,6 +64,6 @@
 
 ## 結論
 
-目前產品已能支撐管理員完成核心審查任務：從多來源 live 訊號進入，審查 bot 已送出的 answer 與 retained trace，轉存 eval case，執行 offline eval，匯出結果，檢查 release gate，並透過 Audit Log 保留治理證據。
+目前產品已能支撐管理員完成核心審查任務：從多來源 live 訊號進入，審查 bot 已送出的 answer 與 retained trace，轉存 eval case，執行評測，匯出結果，檢查 release gate，並透過 Audit Log 保留治理證據。
 
-下一步應優先補「first-run walkthrough」，使面試展示能穩定走完整條 bot governance loop。
+下一步若需要展示情境，應另外建立 product walkthrough，不混入正式管理介面。

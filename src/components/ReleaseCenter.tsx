@@ -56,7 +56,7 @@ export function ReleaseCenter({ bundles, evalResults, locale, onReleaseDecision 
               {blockedReasons.length > 0 ? (
                 blockedReasons.map((reason) => <p key={reason}>{reason}</p>)
               ) : (
-                <p>{text(locale, 'All P0 release gates pass for seed-mode review.', '所有 P0 發布門檻皆已通過種子資料審查。')}</p>
+                <p>{text(locale, 'All required release gates are passing for this package.', '此發布套件已通過所有必要發布門檻。')}</p>
               )}
             </div>
             {decision && (

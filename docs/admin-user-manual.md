@@ -106,14 +106,14 @@ http://127.0.0.1:5173/
 - Repeat contact 是否指出回答不夠清楚。
 - Citation failure 是否暴露知識庫缺口。
 
-### 6. Evaluation：執行 offline eval 並匯出結果
+### 6. Evaluation：執行評測並匯出結果
 
-用途：用 saved live interactions / eval cases replay baseline 與 candidate，避免只靠人工主觀判斷。
+用途：用 saved live interactions / eval cases 比較版本化發布設定，避免只靠人工主觀判斷。
 
 操作：
 
 1. 點擊 `Evaluation`。
-2. 點擊 `Run offline eval`。
+2. 點擊 `Run evaluation`。
 3. 確認 Runner status 變成 `Completed`。
 4. 點擊 `Export CSV` 開啟匯出預覽。
 5. 確認欄位不包含客戶識別資訊、私人訊息或帳戶資料。
@@ -121,7 +121,7 @@ http://127.0.0.1:5173/
 
 管理員判斷重點：
 
-- Candidate 是否優於 baseline。
+- Proposed release 是否優於目前 release。
 - Citation Support、Handoff Safety Recall 是否達標。
 - High-risk Auto-answer 是否為 `0.00`。
 
@@ -220,11 +220,11 @@ http://127.0.0.1:5173/
 6. `Error Analysis`：從失敗案例定位產品修正項目。
 7. `Ticket Center`：檢查客服工單、SLA、owner 與 next action。
 8. `Release Center`：依 release gate 執行 Promote / Block / Request review。
-9. `Audit Log`：檢視 governance 與後端稽核擴充方向。
+9. `Audit Log`：檢視治理與稽核軌跡。
 
 ## 目前限制
 
-- P1 使用 deterministic seed data，不連接真實 channel、ticket system 或 LLM。
-- localStorage 僅供本機展示與流程驗證，不是正式資料儲存。
+- 本機開發版本使用 local development data，不連接真實 channel、ticket system 或 LLM。
+- localStorage 僅供本機流程驗證，不是正式資料儲存。
 - CSV export 是前端產生，未來應由後端提供 signed export 或 report job。
 - 後端 API、資料表與 eval runner job flow 請參考 `docs/backend-api-contract.md`。

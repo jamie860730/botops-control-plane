@@ -1,26 +1,28 @@
 import { expect, type Page, test } from '@playwright/test';
 
-test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
+test('support quality operations flow works end to end', async ({ page }) => {
   await page.goto('/');
 
   await expect(page.getByRole('heading', { name: /BotOps Control Plane/i })).toBeVisible();
   await expect(page.getByText('Stable IDs enforced')).toHaveCount(0);
   await expect(page.getByText('Offline eval ready')).toHaveCount(0);
   await expect(page.getByText('Live Bot P2')).toHaveCount(0);
-  await expect(page.getByTestId('support-signal-list')).toContainText('Telegram');
+  await expectOverviewFirstAndActive(page);
+  await expect(page.getByText('Queues requiring operational attention')).toBeVisible();
 
   await page.getByRole('button', { name: '切換語言為繁體中文' }).click();
   await expect(page.getByRole('heading', { name: '客服機器人營運品質控管' })).toBeVisible();
   await expectLocalizedNav(page);
-  await expect(page.getByRole('button', { name: /檢視 FR cross-border payment policy hold 的回覆與 trace/i })).toBeVisible();
+  await expect(page.getByText('需要營運處理的隊列')).toBeVisible();
   await page.getByRole('button', { name: 'Switch language to English' }).click();
 
   await navigateTo(page, 'Overview');
-  await expect(page.getByText('Review quality gates and coverage before entering case-level work.')).toBeVisible();
-  await expect(page.getByText('Functional coverage across the bot governance loop')).toBeVisible();
-  await expect(page.getByText('Supports governance and backend audit logging readiness')).toBeVisible();
+  await expect(page.getByText('Monitor bot quality, support workload, and release risk.')).toBeVisible();
+  await expect(page.getByText('Signals awaiting review')).toBeVisible();
+  await expect(page.getByText('Blocked releases')).toBeVisible();
 
   await navigateTo(page, 'Signal Intake');
+  await expect(page.getByTestId('support-signal-list')).toContainText('Telegram');
   await page.getByRole('button', { name: 'Telegram' }).click();
   await expect(page.getByTestId('scenario-list')).toContainText('FR cross-border payment policy hold');
 
@@ -46,9 +48,9 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await expect(page.getByTestId('cs-bot-kpi')).toContainText('Keep high-risk auto-answer at zero');
 
   await navigateTo(page, 'Evaluation');
-  await expect(page.getByTestId('evaluation-center')).toContainText('v19 candidate');
+  await expect(page.getByTestId('evaluation-center')).toContainText('Proposed release v19');
   await expect(page.getByTestId('evaluation-center')).toContainText('Handoff Safety Recall');
-  await page.getByRole('button', { name: /Run offline eval/i }).click();
+  await page.getByRole('button', { name: /Run evaluation/i }).click();
   await expect(page.getByTestId('eval-runner-status')).toContainText('Completed');
 
   await page.getByRole('button', { name: /Export CSV/i }).click();
@@ -71,13 +73,13 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
 
   await navigateTo(page, 'Release Center');
   await expect(page.getByText('Promote, block, or request review based on visible release gates.')).toBeVisible();
-  await expect(page.getByTestId('release-center')).toContainText('v18 baseline unsafe bundle');
+  await expect(page.getByTestId('release-center')).toContainText('Policy release package v18');
   await expect(page.getByTestId('release-center')).toContainText('High-risk auto-answer rate must be 0');
-  await expect(page.getByRole('button', { name: /Promote v19 candidate safe bundle/i })).toBeEnabled();
-  await page.getByRole('button', { name: /Promote v19 candidate safe bundle/i }).click();
+  await expect(page.getByRole('button', { name: /Promote Policy release package v19/i })).toBeEnabled();
+  await page.getByRole('button', { name: /Promote Policy release package v19/i }).click();
   await expect(page.getByTestId('release-decision-rel_mvp_019')).toContainText('Promoted to canary review');
-  await expect(page.getByRole('button', { name: /Promote v18 baseline unsafe bundle/i })).toBeDisabled();
-  await page.getByRole('button', { name: /Block release v18 baseline unsafe bundle/i }).click();
+  await expect(page.getByRole('button', { name: /Promote Policy release package v18/i })).toBeDisabled();
+  await page.getByRole('button', { name: /Block release Policy release package v18/i }).click();
   await expect(page.getByTestId('release-decision-rel_mvp_018_blocked')).toContainText('Release blocked');
 
   await navigateTo(page, 'Signal Intake');
@@ -116,4 +118,20 @@ async function expectLocalizedNav(page: Page) {
     return;
   }
   await expect(page.getByRole('button', { name: '訊號受理' })).toBeVisible();
+}
+
+async function expectOverviewFirstAndActive(page: Page) {
+  const menuButton = page.getByRole('button', { name: /Open navigation menu|開啟導覽選單/ });
+  if (await menuButton.isVisible().catch(() => false)) {
+    await menuButton.click();
+    const navItems = page.locator('.sidebar.open .nav-button');
+    await expect(navItems.first()).toContainText('Overview');
+    await expect(page.getByRole('button', { name: 'Overview' })).toHaveAttribute('aria-current', 'page');
+    await page.getByRole('button', { name: /Close navigation menu|關閉導覽選單/ }).first().click();
+    return;
+  }
+
+  const navItems = page.locator('.sidebar .nav-button');
+  await expect(navItems.first()).toContainText('Overview');
+  await expect(page.getByRole('button', { name: 'Overview' })).toHaveAttribute('aria-current', 'page');
 }

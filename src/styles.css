@@ -1083,7 +1083,7 @@ p {
   margin-top: 14px;
 }
 
-.demo-guide {
+.workflow-guide {
   width: 100%;
   margin-top: 16px;
   padding: 14px;
@@ -1094,11 +1094,11 @@ p {
   box-shadow: 0 18px 48px rgba(17, 24, 28, 0.24);
 }
 
-.demo-guide .eyebrow {
+.workflow-guide .eyebrow {
   color: #a9ae94;
 }
 
-.demo-step-list {
+.workflow-step-list {
   display: grid;
   grid-template-columns: repeat(7, minmax(128px, 1fr));
   gap: 8px;
@@ -1106,7 +1106,7 @@ p {
   overflow-x: auto;
 }
 
-.demo-step {
+.workflow-step {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr);
   gap: 8px;
@@ -1117,17 +1117,17 @@ p {
   border-radius: 7px;
 }
 
-.demo-step.active {
+.workflow-step.active {
   border-color: #4fc4cf;
   box-shadow: inset 3px 0 0 #4fc4cf;
 }
 
-.demo-step strong {
+.workflow-step strong {
   display: block;
   font-size: 0.86rem;
 }
 
-.demo-step p {
+.workflow-step p {
   margin-bottom: 0;
   color: #b8c5c8;
   font-size: 0.78rem;
@@ -1259,7 +1259,7 @@ p {
     min-width: 0;
   }
 
-  .demo-step-list {
+  .workflow-step-list {
     grid-template-columns: 1fr;
     overflow-x: visible;
   }

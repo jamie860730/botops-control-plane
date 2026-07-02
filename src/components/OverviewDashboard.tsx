@@ -14,6 +14,31 @@ export function OverviewDashboard({ data, locale }: OverviewDashboardProps) {
     counts[signal.sourceChannel] = (counts[signal.sourceChannel] ?? 0) + 1;
     return counts;
   }, {});
+  const activeTicketCount = data.supportTickets.filter((ticket) => ticket.status !== 'Resolved').length;
+  const reindexCount = data.knowledgeDocuments.filter((document) => document.indexStatus === 'Needs re-index').length;
+  const blockedReleaseCount = data.releaseBundles.filter((bundle) => bundle.status === 'Blocked').length;
+  const operations = [
+    {
+      name: text(locale, 'Signals awaiting review', '待審訊號'),
+      value: data.supportSignals.length,
+      detail: text(locale, 'Prioritize channels with repeated post-reply issues.', '優先處理重複出現回覆後問題的渠道。')
+    },
+    {
+      name: text(locale, 'Active support tickets', '進行中工單'),
+      value: activeTicketCount,
+      detail: text(locale, 'Track escalated queues, owners, and SLA exposure.', '追蹤升級隊列、負責人與 SLA 風險。')
+    },
+    {
+      name: text(locale, 'Knowledge items to re-index', '需重建索引文件'),
+      value: reindexCount,
+      detail: text(locale, 'Refresh retrieval evidence before expanding automation.', '擴大自動化前先更新檢索依據。')
+    },
+    {
+      name: text(locale, 'Blocked releases', '阻擋發布'),
+      value: blockedReleaseCount,
+      detail: text(locale, 'Resolve failed gates before rollout.', '修正未通過門檻後才可 rollout。')
+    }
+  ];
 
   return (
     <section className="screen-grid overview-grid">
@@ -21,7 +46,7 @@ export function OverviewDashboard({ data, locale }: OverviewDashboardProps) {
         <div className="section-heading">
           <div>
             <p className="eyebrow">KPI Dashboard</p>
-            <h3>{text(locale, 'Offline quality gates for candidate support flows', '候選客服流程離線品質門檻')}</h3>
+            <h3>{text(locale, 'Quality gates for support automation', '客服自動化品質門檻')}</h3>
           </div>
         </div>
         <div className="metric-grid">
@@ -50,15 +75,16 @@ export function OverviewDashboard({ data, locale }: OverviewDashboardProps) {
       <div className="panel overview-map">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">{text(locale, 'Operating model', '營運模型')}</p>
-            <h3>{text(locale, 'Functional coverage across the bot governance loop', '機器人治理流程功能覆蓋')}</h3>
+            <p className="eyebrow">{text(locale, 'Work status', '工作狀態')}</p>
+            <h3>{text(locale, 'Queues requiring operational attention', '需要營運處理的隊列')}</h3>
           </div>
         </div>
         <div className="page-purpose-grid">
-          {pagePurposes.map((page) => (
-            <article className="page-purpose" key={page.name}>
-              <strong>{text(locale, page.name, page.nameZh)}</strong>
-              <p>{text(locale, page.purpose, page.purposeZh)}</p>
+          {operations.map((operation) => (
+            <article className="page-purpose" key={operation.name}>
+              <strong>{operation.value}</strong>
+              <p>{operation.name}</p>
+              <p>{operation.detail}</p>
             </article>
           ))}
         </div>
@@ -66,57 +92,6 @@ export function OverviewDashboard({ data, locale }: OverviewDashboardProps) {
     </section>
   );
 }
-
-const pagePurposes = [
-  {
-    name: 'Intake',
-    nameZh: '訊號受理',
-    purpose: 'Monitor live support signals from Web/App Chat, X, LINE, Telegram, Discord, and internal reports after the bot has replied.',
-    purposeZh: '彙整 Web/App Chat、X、LINE、Telegram、Discord 與內部通報等回覆後訊號。'
-  },
-  {
-    name: 'Chat + Trace',
-    nameZh: '回覆稽核',
-    purpose: 'Review the live bot answer and retained trace: source, retrieval, citation, safety, verification, and handoff decisions.',
-    purposeZh: '檢視已送出回覆，以及來源、檢索、引用、風險、驗證與交接 trace。'
-  },
-  {
-    name: 'Knowledge',
-    nameZh: '知識治理',
-    purpose: 'Manage RAG documents, chunks, KB snapshots, index status, retrieval config, and highlighted evidence from the trace.',
-    purposeZh: '管理 RAG 文件、chunks、KB snapshot、索引狀態、retrieval config 與引用依據。'
-  },
-  {
-    name: 'Evaluation',
-    nameZh: '評測中心',
-    purpose: 'Replay saved interactions against candidate and baseline flows, then export summary metrics for product review.',
-    purposeZh: '以已保存互動重播 baseline / candidate，並匯出審查指標。'
-  },
-  {
-    name: 'Error Analysis',
-    nameZh: '錯誤分析',
-    purpose: 'Turn failed eval cases into actionable PM, bot ops, knowledge, or compliance fixes.',
-    purposeZh: '將失敗 eval cases 轉換為 PM、Bot Ops、知識庫或法遵修正項目。'
-  },
-  {
-    name: 'Handoff',
-    nameZh: '人工交接',
-    purpose: 'Package high-risk cases for human queues with required fields, summary, and explicit safety warnings.',
-    purposeZh: '將高風險案例封裝為人工隊列所需欄位、摘要與安全警示。'
-  },
-  {
-    name: 'Release Center',
-    nameZh: '發布中心',
-    purpose: 'Block unsafe bot versions when regression, citation, or high-risk auto-answer gates fail.',
-    purposeZh: '當 regression、引用或高風險自動回覆門檻未達標時阻擋發布。'
-  },
-  {
-    name: 'Ops Log',
-    nameZh: '稽核紀錄',
-    purpose: 'Supports governance and backend audit logging readiness.',
-    purposeZh: '記錄 trace review、eval、release decision 與 export，形成稽核軌跡。'
-  }
-];
 
 function Metric({ label, value, danger = false }: { label: string; value: string; danger?: boolean }) {
   return (
