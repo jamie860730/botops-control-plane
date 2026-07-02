@@ -67,6 +67,7 @@ export function ReleaseCenter({ bundles, evalResults, locale, onReleaseDecision 
             )}
             <div className="release-actions">
               <button
+                aria-label={text(locale, `Promote ${bundle.label}`, `推進 ${bundle.label}`)}
                 className="primary-action compact-action"
                 disabled={blockedReasons.length > 0}
                 onClick={() => recordDecision(bundle, 'promoted')}
@@ -81,6 +82,7 @@ export function ReleaseCenter({ bundles, evalResults, locale, onReleaseDecision 
                 {text(locale, 'Promote', '推進')}
               </button>
               <button
+                aria-label={text(locale, `Block release ${bundle.label}`, `阻擋發布 ${bundle.label}`)}
                 className="secondary-action"
                 onClick={() => recordDecision(bundle, 'blocked')}
                 type="button"
@@ -89,6 +91,7 @@ export function ReleaseCenter({ bundles, evalResults, locale, onReleaseDecision 
                 {text(locale, 'Block release', '阻擋發布')}
               </button>
               <button
+                aria-label={text(locale, `Request review for ${bundle.label}`, `請求審查 ${bundle.label}`)}
                 className="tertiary-action"
                 onClick={() => recordDecision(bundle, 'review_requested')}
                 type="button"

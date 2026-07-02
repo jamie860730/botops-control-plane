@@ -31,6 +31,10 @@ export function OpsLog({ events, locale }: OpsLogProps) {
   const [selectedFilter, setSelectedFilter] = useState<AuditEventType | 'All'>('All');
   const filteredEvents =
     selectedFilter === 'All' ? events : events.filter((event) => event.eventType === selectedFilter);
+  const eventCountLabel =
+    locale === 'zh-TW'
+      ? `${filteredEvents.length} 筆事件`
+      : `${filteredEvents.length} ${filteredEvents.length === 1 ? 'event' : 'events'}`;
 
   return (
     <section className="screen-grid" data-testid="ops-log">
@@ -40,11 +44,12 @@ export function OpsLog({ events, locale }: OpsLogProps) {
             <p className="eyebrow">{text(locale, 'Ops Log', '操作紀錄')}</p>
             <h3>{text(locale, 'Persistent action history for product and operations review', '產品與營運審查操作紀錄')}</h3>
           </div>
-          <span className="count-pill">{text(locale, `${filteredEvents.length} events`, `${filteredEvents.length} 筆事件`)}</span>
+          <span className="count-pill">{eventCountLabel}</span>
         </div>
         <div className="source-tabs" aria-label={text(locale, 'Audit event filters', '稽核事件篩選')}>
           {eventFilters.map((filter) => (
             <button
+              aria-pressed={selectedFilter === filter.value}
               className={selectedFilter === filter.value ? 'chip selected' : 'chip'}
               key={filter.value}
               onClick={() => setSelectedFilter(filter.value)}

@@ -42,10 +42,11 @@ export function Intake({
             {text(locale, `${signals.length} signals`, `${signals.length} 筆訊號`)}
           </span>
         </div>
-        <div className="source-tabs" aria-label="Source filters">
+        <div className="source-tabs" aria-label={text(locale, 'Source filters', '來源篩選')}>
           {sourceChannels.map((source) => (
             <button
               key={source}
+              aria-pressed={selectedSource === source}
               className={selectedSource === source ? 'chip selected' : 'chip'}
               onClick={() => onSourceChange(source)}
               type="button"

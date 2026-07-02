@@ -1,6 +1,5 @@
 import {
   AlertTriangle,
-  ArrowUpRight,
   Activity,
   Bot,
   ChartNoAxesCombined,
@@ -166,15 +165,18 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
             <h1>BotOps Control Plane</h1>
           </div>
         </div>
-        <button
-          aria-expanded={isNavOpen}
-          aria-label={text(locale, 'Open navigation menu', '開啟導覽選單')}
-          className="mobile-menu-button"
-          onClick={() => setIsNavOpen(true)}
-          type="button"
-        >
-          <Menu size={20} aria-hidden="true" />
-        </button>
+        <div className="mobile-topbar-actions">
+          <LocaleToggle locale={locale} onLocaleChange={onLocaleChange} />
+          <button
+            aria-expanded={isNavOpen}
+            aria-label={text(locale, 'Open navigation menu', '開啟導覽選單')}
+            className="mobile-menu-button"
+            onClick={() => setIsNavOpen(true)}
+            type="button"
+          >
+            <Menu size={20} aria-hidden="true" />
+          </button>
+        </div>
       </header>
       {isNavOpen && (
         <button
@@ -206,6 +208,7 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
             return (
               <button
                 key={item.key}
+                aria-current={activeView === item.key ? 'page' : undefined}
                 className={activeView === item.key ? 'nav-button active' : 'nav-button'}
                 onClick={() => handleViewChange(item.key)}
                 type="button"
@@ -234,29 +237,8 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
               <p className="eyebrow">{text(locale, 'Policy-aware support automation', '政策感知客服自動化')}</p>
               <h2>{text(locale, 'Operational quality control for support bots', '客服機器人營運品質控管')}</h2>
             </div>
-            <div className="header-status">
-              <span>{text(locale, 'Stable IDs enforced', '穩定 ID 管控')}</span>
-              <span>{text(locale, 'Offline eval ready', '離線評測可用')}</span>
-              <span>{text(locale, 'Live Bot P2', '即時 Bot P2')}</span>
-              <div className="locale-toggle" aria-label={text(locale, 'Language switcher', '語言切換')}>
-                <button
-                  aria-label="Switch language to English"
-                  className={locale === 'en' ? 'active' : ''}
-                  onClick={() => onLocaleChange('en')}
-                  type="button"
-                >
-                  EN
-                </button>
-                <button
-                  aria-label="切換語言為繁體中文"
-                  className={locale === 'zh-TW' ? 'active' : ''}
-                  onClick={() => onLocaleChange('zh-TW')}
-                  type="button"
-                >
-                  繁中
-                </button>
-              </div>
-              <ArrowUpRight size={16} aria-hidden="true" />
+            <div className="desktop-header-actions">
+              <LocaleToggle locale={locale} onLocaleChange={onLocaleChange} />
             </div>
           </header>
           <section className="page-intent" aria-label={text(locale, 'Current page intent', '目前頁面目的')}>
@@ -271,6 +253,35 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
           </div>
         </div>
       </main>
+    </div>
+  );
+}
+
+function LocaleToggle({
+  locale,
+  onLocaleChange
+}: {
+  locale: Locale;
+  onLocaleChange: (locale: Locale) => void;
+}) {
+  return (
+    <div className="locale-toggle" role="group" aria-label={text(locale, 'Language switcher', '語言切換')}>
+      <button
+        aria-label="Switch language to English"
+        className={locale === 'en' ? 'active' : ''}
+        onClick={() => onLocaleChange('en')}
+        type="button"
+      >
+        EN
+      </button>
+      <button
+        aria-label="切換語言為繁體中文"
+        className={locale === 'zh-TW' ? 'active' : ''}
+        onClick={() => onLocaleChange('zh-TW')}
+        type="button"
+      >
+        繁中
+      </button>
     </div>
   );
 }

@@ -76,7 +76,8 @@ button {
 .workspace-header,
 .page-intent,
 .section-heading,
-.header-status,
+.desktop-header-actions,
+.mobile-topbar-actions,
 .row-title,
 .profile-strip,
 .source-tabs,
@@ -219,6 +220,12 @@ p {
   margin-bottom: 14px;
 }
 
+.desktop-header-actions,
+.mobile-topbar-actions {
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
 .page-intent {
   justify-content: space-between;
   gap: 24px;
@@ -247,14 +254,6 @@ p {
   gap: 18px;
 }
 
-.header-status {
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
-  color: #2f3324;
-}
-
-.header-status span,
 .count-pill,
 .chip,
 .risk-pill {
@@ -262,7 +261,6 @@ p {
   white-space: nowrap;
 }
 
-.header-status span,
 .count-pill {
   padding: 7px 10px;
   background: #f8fbfc;
@@ -291,6 +289,21 @@ p {
 }
 
 .locale-toggle button.active {
+  color: #11181c;
+  background: #4fc4cf;
+}
+
+.mobile-topbar .locale-toggle {
+  background: #17252b;
+  border-color: #2d4b54;
+}
+
+.mobile-topbar .locale-toggle button {
+  min-height: 34px;
+  color: #d6dac7;
+}
+
+.mobile-topbar .locale-toggle button.active {
   color: #11181c;
   background: #4fc4cf;
 }
@@ -492,6 +505,7 @@ p {
 
 .risk-pill {
   align-self: start;
+  justify-self: start;
   padding: 5px 8px;
   font-size: 0.72rem;
   font-weight: 900;
@@ -1209,6 +1223,10 @@ p {
     flex-direction: column;
   }
 
+  .desktop-header-actions {
+    display: none;
+  }
+
   .screen-grid,
   .intake-grid,
   .chat-grid,
@@ -1335,7 +1353,4 @@ p {
     grid-column: 2;
   }
 
-  .header-status {
-    justify-content: flex-start;
-  }
 }

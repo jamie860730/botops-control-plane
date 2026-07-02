@@ -4,6 +4,9 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.goto('/');
 
   await expect(page.getByRole('heading', { name: /BotOps Control Plane/i })).toBeVisible();
+  await expect(page.getByText('Stable IDs enforced')).toHaveCount(0);
+  await expect(page.getByText('Offline eval ready')).toHaveCount(0);
+  await expect(page.getByText('Live Bot P2')).toHaveCount(0);
   await expect(page.getByTestId('support-signal-list')).toContainText('Telegram');
 
   await page.getByRole('button', { name: '切換語言為繁體中文' }).click();
@@ -70,11 +73,11 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await expect(page.getByText('Promote, block, or request review based on visible release gates.')).toBeVisible();
   await expect(page.getByTestId('release-center')).toContainText('v18 baseline unsafe bundle');
   await expect(page.getByTestId('release-center')).toContainText('High-risk auto-answer rate must be 0');
-  await expect(page.getByRole('button', { name: 'Promote' }).first()).toBeEnabled();
-  await page.getByRole('button', { name: 'Promote' }).first().click();
+  await expect(page.getByRole('button', { name: /Promote v19 candidate safe bundle/i })).toBeEnabled();
+  await page.getByRole('button', { name: /Promote v19 candidate safe bundle/i }).click();
   await expect(page.getByTestId('release-decision-rel_mvp_019')).toContainText('Promoted to canary review');
-  await expect(page.getByRole('button', { name: 'Promote' }).nth(1)).toBeDisabled();
-  await page.getByRole('button', { name: /Block release/i }).nth(1).click();
+  await expect(page.getByRole('button', { name: /Promote v18 baseline unsafe bundle/i })).toBeDisabled();
+  await page.getByRole('button', { name: /Block release v18 baseline unsafe bundle/i }).click();
   await expect(page.getByTestId('release-decision-rel_mvp_018_blocked')).toContainText('Release blocked');
 
   await navigateTo(page, 'Signal Intake');
