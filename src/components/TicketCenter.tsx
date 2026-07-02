@@ -34,11 +34,11 @@ export function TicketCenter({ locale, tickets }: TicketCenterProps) {
         <div className="ticket-list">
           {tickets.map((ticket) => (
             <article className="ticket-row" key={ticket.id}>
-              <div className="row-icon">
-                <TicketCheck size={15} aria-hidden="true" />
-              </div>
               <div>
                 <div className="ticket-meta-line">
+                  <span className="row-icon">
+                    <TicketCheck size={15} aria-hidden="true" />
+                  </span>
                   <span className="sla-pill">
                     <Clock size={13} aria-hidden="true" />
                     {new Date(ticket.slaDueAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

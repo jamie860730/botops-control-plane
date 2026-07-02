@@ -108,7 +108,7 @@ button {
   place-items: center;
   color: #11120c;
   background: #4fc4cf;
-  font-weight: 900;
+  font-weight: 850;
   border-radius: 6px;
   box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.18);
 }
@@ -117,7 +117,7 @@ button {
   margin: 0 0 4px;
   color: #7f836d;
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 750;
   letter-spacing: 0;
   text-transform: uppercase;
 }
@@ -242,7 +242,7 @@ p {
   background: #f8fbfc;
   border: 1px solid #cfdbdd;
   font-size: 0.78rem;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .locale-toggle {
@@ -261,7 +261,7 @@ p {
   border: 0;
   border-radius: 999px;
   font-size: 0.76rem;
-  font-weight: 850;
+  font-weight: 750;
 }
 
 .locale-toggle button.active {
@@ -357,7 +357,7 @@ p {
   background: #edf8f9;
   border: 1px solid #b9dfe3;
   font-size: 0.83rem;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .chip.selected {
@@ -398,14 +398,10 @@ p {
 
 .ticket-row {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) minmax(220px, 0.36fr);
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.36fr);
   gap: 16px;
   align-items: start;
   padding: 16px;
-}
-
-.ticket-row .row-icon {
-  margin-top: 2px;
 }
 
 .ticket-row .row-title {
@@ -486,7 +482,7 @@ p {
 .ticket-meta-list dt {
   color: #7a7e64;
   font-size: 0.68rem;
-  font-weight: 900;
+  font-weight: 750;
   text-transform: uppercase;
 }
 
@@ -494,13 +490,13 @@ p {
   margin: 0;
   color: #4d503b;
   font-size: 0.83rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
-.ticket-row > div:nth-child(2) > p {
+.ticket-row > div:first-child > p {
   margin-bottom: 0;
   color: #232517;
-  font-size: 0.94rem;
+  font-size: 0.9rem;
   line-height: 1.55;
 }
 
@@ -521,7 +517,7 @@ p {
 .ticket-status-panel label > span {
   color: #7a7e64;
   font-size: 0.68rem;
-  font-weight: 900;
+  font-weight: 750;
   text-transform: uppercase;
 }
 
@@ -534,7 +530,7 @@ p {
   border: 1px solid #cfdbdd;
   border-radius: 6px;
   font-size: 0.92rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .sla-pill {
@@ -548,7 +544,7 @@ p {
   border: 1px solid #cfdbdd;
   border-radius: 999px;
   font-size: 0.86rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .ticket-summary-list {
@@ -573,7 +569,7 @@ p {
   min-height: 30px;
   padding: 5px 9px;
   font-size: 0.72rem;
-  font-weight: 900;
+  font-weight: 800;
   text-transform: uppercase;
 }
 
@@ -607,7 +603,7 @@ p {
 .detail-list dt {
   color: #7a7e64;
   font-size: 0.7rem;
-  font-weight: 850;
+  font-weight: 750;
   text-transform: uppercase;
 }
 
@@ -629,7 +625,7 @@ p {
   justify-content: center;
   gap: 8px;
   border-radius: 6px;
-  font-weight: 850;
+  font-weight: 800;
 }
 
 .primary-action {
@@ -667,7 +663,7 @@ p {
   border: 1px solid #cfdbdd;
   border-radius: 6px;
   font-size: 0.86rem;
-  font-weight: 850;
+  font-weight: 750;
 }
 
 .icon-button {
@@ -707,19 +703,20 @@ p {
   background: #edf8f9;
   border: 1px solid #e1d5b9;
   border-radius: 5px;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .profile-strip small {
   color: #7a7e64;
   font-size: 0.64rem;
-  font-weight: 850;
+  font-weight: 750;
   text-transform: uppercase;
 }
 
 .profile-strip strong {
   color: #253236;
   font-size: 0.84rem;
+  font-weight: 700;
 }
 
 .message {
@@ -738,7 +735,7 @@ p {
   margin-bottom: 5px;
   color: #74785d;
   font-size: 0.72rem;
-  font-weight: 900;
+  font-weight: 750;
   text-transform: uppercase;
 }
 
@@ -755,6 +752,7 @@ p {
   background: #e7f7f9;
   border: 1px solid #9bdde4;
   font-size: 0.78rem;
+  font-weight: 700;
 }
 
 .eval-save-status,
@@ -780,7 +778,7 @@ p {
   padding: 4px 7px;
   border-radius: 5px;
   font-size: 0.72rem;
-  font-weight: 900;
+  font-weight: 750;
   text-transform: uppercase;
 }
 
@@ -817,7 +815,7 @@ p {
   display: block;
   color: #b8bda4;
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .metric-tile strong {
@@ -889,7 +887,7 @@ p {
   margin-top: 3px;
   color: #74785d;
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .cs-kpi-row p {
@@ -936,7 +934,7 @@ p {
   gap: 4px;
   color: #7a7e64;
   font-size: 0.7rem;
-  font-weight: 850;
+  font-weight: 750;
   text-transform: uppercase;
 }
 
@@ -948,7 +946,7 @@ p {
   background: #f8fbfc;
   border: 1px solid #cfdbdd;
   border-radius: 6px;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: none;
 }
 
@@ -1011,7 +1009,7 @@ p {
 .table-head {
   color: #61664e;
   background: #e8f6f8;
-  font-weight: 900;
+  font-weight: 750;
   text-transform: uppercase;
   font-size: 0.72rem;
 }
@@ -1160,7 +1158,7 @@ p {
 .audit-row time {
   color: #74785d;
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 700;
   white-space: nowrap;
 }
 
