@@ -400,7 +400,22 @@ p {
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr) minmax(220px, 0.36fr);
   gap: 16px;
+  align-items: start;
   padding: 16px;
+}
+
+.ticket-row .row-icon {
+  margin-top: 2px;
+}
+
+.ticket-row .row-title {
+  margin-bottom: 6px;
+}
+
+.ticket-row .row-title strong {
+  color: #14150f;
+  font-size: 1rem;
+  line-height: 1.25;
 }
 
 .row-icon {
@@ -427,18 +442,23 @@ p {
 
 .ticket-next-action {
   display: grid;
-  gap: 3px;
+  gap: 4px;
   margin-top: 10px;
-  padding: 9px 10px;
+  padding: 10px 12px;
   color: #28343a;
   background: #edf8f9;
   border: 1px solid #b9e5ea;
   border-radius: 6px;
-  font-size: 0.84rem;
+  font-size: 0.88rem;
 }
 
 .ticket-next-action strong {
   color: #11181c;
+  font-size: 0.86rem;
+}
+
+.ticket-next-action span {
+  line-height: 1.45;
 }
 
 .ticket-meta-line {
@@ -446,7 +466,8 @@ p {
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
+  min-height: 30px;
+  margin-bottom: 10px;
 }
 
 .ticket-meta-list {
@@ -474,6 +495,13 @@ p {
   color: #4d503b;
   font-size: 0.83rem;
   font-weight: 800;
+}
+
+.ticket-row > div:nth-child(2) > p {
+  margin-bottom: 0;
+  color: #232517;
+  font-size: 0.94rem;
+  line-height: 1.55;
 }
 
 .ticket-status-panel {
@@ -505,6 +533,7 @@ p {
   background: #f8fbfc;
   border: 1px solid #cfdbdd;
   border-radius: 6px;
+  font-size: 0.92rem;
   font-weight: 800;
 }
 
@@ -512,11 +541,13 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 8px;
+  min-height: 30px;
+  padding: 4px 9px;
   color: #253236;
   background: #f8fbfc;
   border: 1px solid #cfdbdd;
   border-radius: 999px;
+  font-size: 0.86rem;
   font-weight: 800;
 }
 
@@ -537,9 +568,10 @@ p {
 }
 
 .risk-pill {
-  align-self: start;
+  align-self: center;
   justify-self: start;
-  padding: 5px 8px;
+  min-height: 30px;
+  padding: 5px 9px;
   font-size: 0.72rem;
   font-weight: 900;
   text-transform: uppercase;
