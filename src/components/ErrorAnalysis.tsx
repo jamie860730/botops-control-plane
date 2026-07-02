@@ -63,7 +63,7 @@ export function ErrorAnalysis({ badcases, locale }: ErrorAnalysisProps) {
                     <option value="Fixed">{formatBadcaseText(locale, 'Fixed')}</option>
                   </select>
                 </label>
-                <button className="secondary-action" onClick={() => setSelectedBadcaseId(badcase.id)} type="button">
+                <button className="inline-action" onClick={() => setSelectedBadcaseId(badcase.id)} type="button">
                   {text(locale, 'View detail', '查看詳情')}
                 </button>
               </div>

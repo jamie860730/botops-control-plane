@@ -538,7 +538,9 @@ p {
 .primary-action,
 .secondary-action,
 .tertiary-action,
+.inline-action,
 .citation-button {
+  min-height: 40px;
   justify-content: center;
   gap: 8px;
   border-radius: 6px;
@@ -548,7 +550,7 @@ p {
 .primary-action {
   width: 100%;
   padding: 10px 12px;
-  color: #11120c;
+  color: #ffffff;
   background: #4fc4cf;
   border: 1px solid #2699a6;
 }
@@ -572,6 +574,17 @@ p {
   border: 1px solid #cfdbdd;
 }
 
+.inline-action {
+  min-height: 38px;
+  padding: 7px 10px;
+  color: #253236;
+  background: #f8fbfc;
+  border: 1px solid #cfdbdd;
+  border-radius: 6px;
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
 .icon-button {
   width: 34px;
   height: 34px;
@@ -584,7 +597,8 @@ p {
 
 .primary-action:disabled,
 .secondary-action:disabled,
-.tertiary-action:disabled {
+.tertiary-action:disabled,
+.inline-action:disabled {
   cursor: not-allowed;
   opacity: 0.48;
 }
@@ -826,6 +840,7 @@ p {
   grid-column: 2;
   grid-row: 1 / span 2;
   display: flex;
+  align-items: flex-end;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
@@ -1390,7 +1405,7 @@ p {
     justify-content: stretch;
   }
 
-  .badcase-controls .secondary-action,
+  .badcase-controls .inline-action,
   .badcase-controls label,
   .badcase-controls select {
     width: 100%;
