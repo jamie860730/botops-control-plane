@@ -64,6 +64,14 @@ test('support quality operations flow works end to end', async ({ page }) => {
 
   await navigateTo(page, 'Error Analysis');
   await expect(page.getByTestId('error-analysis')).toContainText('Account takeover case auto-answered');
+  await expect(page.getByTestId('error-analysis')).toContainText('Generated from low-scoring evaluation rows');
+  await expect(page.getByTestId('error-analysis')).not.toContainText('Region filter was missing from retrieval config.');
+  await page.getByLabel(/Admin status for Account takeover case auto-answered/i).selectOption('Open');
+  await expect(page.getByLabel(/Admin status for Account takeover case auto-answered/i)).toHaveValue('Open');
+  await page.getByRole('button', { name: 'View detail' }).first().click();
+  await expect(page.getByTestId('badcase-detail-modal')).toContainText('Region filter was missing from retrieval config.');
+  await page.getByRole('button', { name: /Close failure detail/i }).click();
+  await expect(page.getByTestId('badcase-detail-modal')).toHaveCount(0);
 
   await navigateTo(page, 'Ticket Center');
   await expect(page.getByTestId('ticket-center')).toContainText('Security-L2');

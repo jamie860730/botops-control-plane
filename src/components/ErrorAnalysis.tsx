@@ -1,3 +1,5 @@
+import { X } from 'lucide-react';
+import { useState } from 'react';
 import type { Badcase } from '../types';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
@@ -9,10 +11,14 @@ interface ErrorAnalysisProps {
 }
 
 export function ErrorAnalysis({ badcases, locale }: ErrorAnalysisProps) {
-  const selectedBadcase = badcases[0];
+  const [selectedBadcaseId, setSelectedBadcaseId] = useState<string | null>(null);
+  const [statusById, setStatusById] = useState<Record<string, Badcase['status']>>(() =>
+    Object.fromEntries(badcases.map((badcase) => [badcase.id, badcase.status]))
+  );
+  const selectedBadcase = badcases.find((badcase) => badcase.id === selectedBadcaseId);
 
   return (
-    <section className="screen-grid" data-testid="error-analysis">
+    <section className="screen-grid error-grid" data-testid="error-analysis">
       <div className="panel">
         <div className="section-heading">
           <div>
@@ -20,49 +26,107 @@ export function ErrorAnalysis({ badcases, locale }: ErrorAnalysisProps) {
             <h3>{text(locale, 'Failed cases requiring product fixes', '需要修正的失敗案例')}</h3>
           </div>
         </div>
+        <p className="panel-note">
+          {text(
+            locale,
+            'Generated from low-scoring evaluation rows. Each case links an observed failure to the trace node, owner, and retest metric that need follow-up.',
+            '由評測中心的低分案例產生。每筆失敗案例會對應到觀察到的問題、處理節點、負責單位與重測指標。'
+          )}
+        </p>
         <div className="stacked-list">
           {badcases.map((badcase) => (
-            <article className="badcase-row" key={badcase.id}>
+            <article className="badcase-row badcase-action-row" key={badcase.id}>
               <div className="row-title">
                 <strong>{formatBadcaseText(locale, badcase.title)}</strong>
                 <span>{formatBadcaseText(locale, badcase.failureLabel)}</span>
-                <span>{formatBadcaseText(locale, badcase.status)}</span>
               </div>
               <p>{formatBadcaseText(locale, badcase.observedCase)}</p>
+              <div className="badcase-controls">
+                <label>
+                  <span>{text(locale, 'Status', '狀態')}</span>
+                  <select
+                    aria-label={text(
+                      locale,
+                      `Admin status for ${badcase.title}`,
+                      `${formatBadcaseText(locale, badcase.title)} 管理員狀態`
+                    )}
+                    onChange={(event) =>
+                      setStatusById((current) => ({
+                        ...current,
+                        [badcase.id]: event.target.value as Badcase['status']
+                      }))
+                    }
+                    value={statusById[badcase.id] ?? badcase.status}
+                  >
+                    <option value="Open">{formatBadcaseText(locale, 'Open')}</option>
+                    <option value="In review">{formatBadcaseText(locale, 'In review')}</option>
+                    <option value="Fixed">{formatBadcaseText(locale, 'Fixed')}</option>
+                  </select>
+                </label>
+                <button className="secondary-action" onClick={() => setSelectedBadcaseId(badcase.id)} type="button">
+                  {text(locale, 'View detail', '查看詳情')}
+                </button>
+              </div>
             </article>
           ))}
         </div>
       </div>
-      <div className="panel span-2">
-        <p className="eyebrow">{text(locale, 'Failure detail', '失敗案例詳情')}</p>
-        <h3>{selectedBadcase ? formatBadcaseText(locale, selectedBadcase.title) : ''}</h3>
-        <dl className="detail-list">
-          <div>
-            <dt>{text(locale, 'Low-score dimension', '低分項目')}</dt>
-            <dd>{selectedBadcase ? formatBadcaseText(locale, selectedBadcase.lowScoreDimension) : ''}</dd>
+      {selectedBadcase && (
+        <div
+          aria-labelledby="badcase-detail-title"
+          aria-modal="true"
+          className="modal-backdrop"
+          data-testid="badcase-detail-modal"
+          role="dialog"
+        >
+          <div className="modal-panel">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">{text(locale, 'Failure detail', '失敗案例詳情')}</p>
+                <h3 id="badcase-detail-title">{formatBadcaseText(locale, selectedBadcase.title)}</h3>
+              </div>
+              <button
+                aria-label={text(locale, 'Close failure detail', '關閉失敗案例詳情')}
+                className="icon-button"
+                onClick={() => setSelectedBadcaseId(null)}
+                type="button"
+              >
+                <X size={17} aria-hidden="true" />
+              </button>
+            </div>
+            <dl className="detail-list">
+              <div>
+                <dt>{text(locale, 'Low-score dimension', '低分項目')}</dt>
+                <dd>{formatBadcaseText(locale, selectedBadcase.lowScoreDimension)}</dd>
+              </div>
+              <div>
+                <dt>{text(locale, 'Trace diagnosis', '追蹤診斷')}</dt>
+                <dd>{formatBadcaseText(locale, selectedBadcase.traceDiagnosis)}</dd>
+              </div>
+              <div>
+                <dt>{text(locale, 'Chain node to change', '需調整節點')}</dt>
+                <dd>{formatBadcaseText(locale, selectedBadcase.chainNodeToChange)}</dd>
+              </div>
+              <div>
+                <dt>{text(locale, 'Modification', '調整方式')}</dt>
+                <dd>{formatBadcaseText(locale, selectedBadcase.modification)}</dd>
+              </div>
+              <div>
+                <dt>{text(locale, 'Retest metric', '重測指標')}</dt>
+                <dd>{formatBadcaseText(locale, selectedBadcase.retestMetric)}</dd>
+              </div>
+              <div>
+                <dt>{text(locale, 'Owner', '負責單位')}</dt>
+                <dd>{formatBadcaseText(locale, selectedBadcase.owner)}</dd>
+              </div>
+              <div>
+                <dt>{text(locale, 'Status', '狀態')}</dt>
+                <dd>{formatBadcaseText(locale, statusById[selectedBadcase.id] ?? selectedBadcase.status)}</dd>
+              </div>
+            </dl>
           </div>
-          <div>
-            <dt>{text(locale, 'Trace diagnosis', '追蹤診斷')}</dt>
-            <dd>{selectedBadcase ? formatBadcaseText(locale, selectedBadcase.traceDiagnosis) : ''}</dd>
-          </div>
-          <div>
-            <dt>{text(locale, 'Chain node to change', '需調整節點')}</dt>
-            <dd>{selectedBadcase ? formatBadcaseText(locale, selectedBadcase.chainNodeToChange) : ''}</dd>
-          </div>
-          <div>
-            <dt>{text(locale, 'Modification', '調整方式')}</dt>
-            <dd>{selectedBadcase ? formatBadcaseText(locale, selectedBadcase.modification) : ''}</dd>
-          </div>
-          <div>
-            <dt>{text(locale, 'Retest metric', '重測指標')}</dt>
-            <dd>{selectedBadcase ? formatBadcaseText(locale, selectedBadcase.retestMetric) : ''}</dd>
-          </div>
-          <div>
-            <dt>{text(locale, 'Owner', '負責單位')}</dt>
-            <dd>{selectedBadcase ? formatBadcaseText(locale, selectedBadcase.owner) : ''}</dd>
-          </div>
-        </dl>
-      </div>
+        </div>
+      )}
     </section>
   );
 }

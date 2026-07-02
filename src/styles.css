@@ -322,6 +322,10 @@ p {
   grid-template-columns: minmax(0, 1.75fr) minmax(280px, 0.7fr);
 }
 
+.error-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .span-2 {
   grid-column: span 2;
 }
@@ -799,6 +803,53 @@ p {
 .distribution-row,
 .badcase-row {
   padding: 12px;
+}
+
+.panel-note {
+  margin-bottom: 14px;
+  color: #4d503b;
+  font-size: 0.9rem;
+}
+
+.badcase-action-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.badcase-action-row p {
+  grid-column: 1;
+}
+
+.badcase-controls {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.badcase-controls label {
+  display: grid;
+  gap: 4px;
+  color: #7a7e64;
+  font-size: 0.7rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.badcase-controls select {
+  min-width: 128px;
+  min-height: 38px;
+  padding: 7px 10px;
+  color: #253236;
+  background: #f8fbfc;
+  border: 1px solid #cfdbdd;
+  border-radius: 6px;
+  font-weight: 800;
+  text-transform: none;
 }
 
 .distribution-row {
@@ -1323,6 +1374,26 @@ p {
 
   .signal-row {
     grid-template-columns: 1fr;
+  }
+
+  .badcase-action-row {
+    grid-template-columns: 1fr;
+  }
+
+  .badcase-action-row p,
+  .badcase-controls {
+    grid-column: 1;
+  }
+
+  .badcase-controls {
+    grid-row: auto;
+    justify-content: stretch;
+  }
+
+  .badcase-controls .secondary-action,
+  .badcase-controls label,
+  .badcase-controls select {
+    width: 100%;
   }
 
   .ticket-row {

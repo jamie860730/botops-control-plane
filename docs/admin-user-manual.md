@@ -132,7 +132,9 @@ http://127.0.0.1:5173/
 操作：
 
 1. 點擊 `Error Analysis`。
-2. 查看 failure label、low score dimension、trace diagnosis、modification。
+2. 查看失敗案例來源、failure label、目前狀態與觀察到的問題。
+3. 以管理員身分調整狀態：`Open`、`In review` 或 `Fixed`。
+4. 點擊 `View detail` 開啟失敗案例詳情，查看 low score dimension、trace diagnosis、modification 與 retest metric。
 
 管理員判斷重點：
 
