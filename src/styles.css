@@ -74,7 +74,6 @@ button {
 .brand-block,
 .mobile-topbar,
 .workspace-header,
-.page-intent,
 .section-heading,
 .desktop-header-actions,
 .mobile-topbar-actions,
@@ -224,29 +223,6 @@ p {
 .mobile-topbar-actions {
   flex: 0 0 auto;
   gap: 8px;
-}
-
-.page-intent {
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 18px;
-  padding: 12px 14px;
-  background: rgba(248, 251, 252, 0.72);
-  border: 1px solid #d7e3e5;
-  border-radius: 8px;
-}
-
-.page-intent h3 {
-  font-size: 0.98rem;
-}
-
-.page-intent p:last-child {
-  max-width: 420px;
-  margin: 0;
-  color: #4d503b;
-  font-size: 0.86rem;
-  font-weight: 720;
-  line-height: 1.45;
 }
 
 .view-surface {
@@ -1217,7 +1193,6 @@ p {
   }
 
   .workspace-header,
-  .page-intent,
   .section-heading {
     align-items: flex-start;
     flex-direction: column;

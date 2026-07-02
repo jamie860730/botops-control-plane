@@ -17,7 +17,7 @@ test('support quality operations flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: 'Switch language to English' }).click();
 
   await navigateTo(page, 'Overview');
-  await expect(page.getByText('Monitor bot quality, support workload, and release risk.')).toBeVisible();
+  await expect(page.getByText('Quality gates for support automation')).toBeVisible();
   await expect(page.getByText('Signals awaiting review')).toBeVisible();
   await expect(page.getByText('Blocked releases')).toBeVisible();
 
@@ -72,7 +72,7 @@ test('support quality operations flow works end to end', async ({ page }) => {
   await expect(page.getByTestId('ticket-center')).toContainText('SLA watch');
 
   await navigateTo(page, 'Release Center');
-  await expect(page.getByText('Promote, block, or request review based on visible release gates.')).toBeVisible();
+  await expect(page.getByTestId('release-center')).toContainText('Policy release package v19');
   await expect(page.getByTestId('release-center')).toContainText('Policy release package v18');
   await expect(page.getByTestId('release-center')).toContainText('High-risk auto-answer rate must be 0');
   await expect(page.getByRole('button', { name: /Promote Policy release package v19/i })).toBeEnabled();

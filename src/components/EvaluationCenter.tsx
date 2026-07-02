@@ -121,7 +121,7 @@ export function EvaluationCenter({
               <div>
                 <p className="eyebrow">{text(locale, 'CSV Preview', 'CSV 預覽')}</p>
                 <h3 id="csv-preview-title">
-                  {text(locale, 'Review export fields before download', '下載前確認匯出欄位')}
+                  {text(locale, 'Export fields and data scope', '匯出欄位與資料範圍')}
                 </h3>
               </div>
               <button

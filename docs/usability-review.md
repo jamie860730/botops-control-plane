@@ -28,7 +28,6 @@
 - `Knowledge` 已補上 RAG 管理語意：KB snapshot、index status、retrieval config、citation chunks。
 - `Evaluation` 的評測執行與 CSV export 符合真實 PM/Ops 工作流。
 - `Evaluation` 已加入 CSV preview，下載前可確認欄位與資料範圍。
-- 每頁的 compact page intent header 能快速說明該頁支援的管理決策。
 - `Release Center` 已可執行 Promote / Block / Request review，並將決策寫入 audit trail。
 - `Ops Log` 已支援 event type filter，事件量增加後仍能快速定位發布、評測與匯出紀錄。
 - `Ops Log` 補足治理與 auditability，對後端設計也有延伸價值。
@@ -39,7 +38,7 @@
 | 嚴重度 | 問題 | 影響 | 修正 |
 | --- | --- | --- | --- |
 | P2 | 窄視窗下左側導覽攤平成大型頂部區塊，主工作區進入視野前需要過多捲動。 | 管理員在手機、平板或窄桌面操作時，主要內容呈現延遲。 | 窄版改為 sticky top bar + hamburger drawer，保留 44px touch target，關閉時不進入 accessibility tree。 |
-| P1 | 每頁缺少 compact page intent header。 | 管理員切頁後需要自行推論本頁決策目的。 | Shell 層加入 page intent，標示本頁支援的決策。 |
+| P1 | 全域頁面說明文字偏 walkthrough。 | 正式產品介面看起來像展示流程，而非管理工作台。 | 移除 Shell 層 page intent，由各頁資料 panel 承擔上下文。 |
 | P2 | Release Center 缺少明確 CTA。 | 管理員只能看 gate，無法留下發布決策。 | 加入 Promote / Block / Request review，並寫入 Ops Log。 |
 | P2 | CSV export 沒有 preview。 | 管理員下載前無法確認欄位與是否含敏感資訊。 | 加入 CSV preview modal，確認後才下載。 |
 | P2 | Ops Log 無法按事件類型篩選。 | 事件增加後不易快速定位發布或匯出紀錄。 | 加入 event type chips 與空狀態。 |

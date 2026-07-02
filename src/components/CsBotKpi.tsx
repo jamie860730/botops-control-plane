@@ -47,13 +47,13 @@ export function CsBotKpi({ locale, metrics, segments }: CsBotKpiProps) {
         </div>
       </div>
       <div className="panel">
-        <p className="eyebrow">{text(locale, 'Review focus', '審查重點')}</p>
+        <p className="eyebrow">{text(locale, 'KPI watchlist', 'KPI 關注清單')}</p>
         <h3>{text(locale, 'User cases behind the KPI movement', 'KPI 變動背後的用戶案例')}</h3>
         <p>
           {text(
             locale,
-            'This view links bot KPIs to source channels and case clusters so PM, CS Ops, and Knowledge owners can decide where to improve next.',
-            '此頁將 Bot KPI 連到來源渠道與案例群，協助 PM、客服營運與知識庫 owner 判斷下一個改善重點。'
+            'Segment movement by source channel, case cluster, and accountable owner.',
+            '依來源渠道、案例群與負責 owner 追蹤分群變化。'
           )}
         </p>
       </div>

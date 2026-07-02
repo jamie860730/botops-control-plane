@@ -88,13 +88,13 @@ export function OpsLog({ events, locale }: OpsLogProps) {
         </div>
       </div>
       <div className="panel">
-        <p className="eyebrow">{text(locale, 'Why this page exists', '為什麼需要此頁')}</p>
-        <h3>{text(locale, 'Governance evidence beyond answer quality', '回答品質之外的治理證據')}</h3>
+        <p className="eyebrow">{text(locale, 'Audit scope', '稽核範圍')}</p>
+        <h3>{text(locale, 'Trace, evaluation, export, and release events', 'Trace、評測、匯出與發布事件')}</h3>
         <p>
           {text(
             locale,
-            'Bot management needs a review trail for trace reviews, saved evaluation cases, evaluation runs, exports, and release decisions.',
-            'Bot 管理需記錄 trace review、評測案例、評測執行、匯出與發布決策。'
+            'Append-only activity history for product and operations governance.',
+            '產品與營運治理使用的 append-only 活動紀錄。'
           )}
         </p>
       </div>

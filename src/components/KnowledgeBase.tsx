@@ -44,20 +44,20 @@ export function KnowledgeBase({ documents, highlightedChunkId, locale }: Knowled
       </div>
 
       <div className="panel">
-        <p className="eyebrow">{text(locale, 'Retrieval controls', '檢索控制')}</p>
-        <h3>{text(locale, 'What this page manages', '此頁管理項目')}</h3>
+        <p className="eyebrow">{text(locale, 'Retrieval policy', '檢索政策')}</p>
+        <h3>{text(locale, 'Active grounding rules', '目前 grounding 規則')}</h3>
         <dl className="detail-list">
           <div>
             <dt>Snapshot</dt>
-            <dd>{text(locale, 'Versioned KB state used by eval and release gates.', '評測與發布門檻使用的版本化知識庫狀態。')}</dd>
+            <dd>{text(locale, 'Versioned KB state for evaluation and release gates.', '評測與發布門檻使用的版本化知識庫狀態。')}</dd>
           </div>
           <div>
             <dt>{text(locale, 'Indexing', '索引')}</dt>
-            <dd>{text(locale, 'Tracks whether published docs are embedded and searchable.', '追蹤已發布文件是否完成 embedding 並可被搜尋。')}</dd>
+            <dd>{text(locale, 'Published docs must be embedded and searchable.', '已發布文件必須完成 embedding 並可被搜尋。')}</dd>
           </div>
           <div>
             <dt>{text(locale, 'Citation policy', '引用政策')}</dt>
-            <dd>{text(locale, 'Only citation-allowed chunks can support bot answers.', '只有允許引用的 chunks 可以支撐 Bot 回答。')}</dd>
+            <dd>{text(locale, 'Only citation-allowed chunks support bot answers.', '只有允許引用的 chunks 可以支撐 Bot 回答。')}</dd>
           </div>
         </dl>
       </div>

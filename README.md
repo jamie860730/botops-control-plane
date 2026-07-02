@@ -17,7 +17,6 @@ The product covers post-reply signal intake, retained response trace review, RAG
 - Handoff Preview for high-risk support cases.
 - Release Center with Promote / Block / Request review decisions based on visible release gates.
 - Ops Log with local persistence for trace reviews, saved eval cases, evaluation runs, release decisions, and CSV exports.
-- Compact page intent headers so reviewers know the decision each page supports.
 - Local API server for signals, scenario review, knowledge, eval, release decisions, and audit events.
 - English / Traditional Chinese UI switcher with persisted locale preference.
 
