@@ -171,7 +171,7 @@ const displayTextZh: Record<string, string> = {
   'Clarify FR cross-border payment policy answer and monitor repeat contacts.':
     '釐清法國跨境付款政策回答，並監控重複進線。',
   'Keep high-risk auto-answer at zero and validate Security-L2 ticket packaging.':
-    '維持高風險自動回覆為零，並確認 Security-L2 工單內容完整。',
+    '維持高風險自動回覆為零，並確認安全二線工單內容完整。',
   'Improve rejection-reason clarification and localize next-step guidance.':
     '改善被拒原因釐清方式，並在地化下一步指引。',
   'Create localized policy article before expanding automated answers.':
@@ -189,7 +189,7 @@ const displayTextZh: Record<string, string> = {
   Draft: '草稿',
   'Possible account takeover with transfer on hold.': '疑似帳戶遭盜用且轉帳暫停。',
   'Customer reports account compromise and a transfer hold. Bot refused account-specific resolution and routed to Security-L2.':
-    '客戶回報帳戶可能遭盜用且轉帳暫停。Bot 未提供帳戶層級結論，並已轉交 Security-L2。',
+    '客戶回報帳戶可能遭盜用且轉帳暫停。Bot 未提供帳戶層級結論，並已轉交安全二線。',
   'Verify non-sensitive timeline, confirm security queue intake, and prevent automated unlock guidance.':
     '確認非敏感時間線、確認安全隊列已受理，並避免自動提供解鎖指引。',
   'FR users report transfer holds after cross-border payment policy prompts.':
@@ -205,10 +205,12 @@ const displayTextZh: Record<string, string> = {
     '允許引用式自動回答前，先建立或審查日本政策文件。',
   Escalated: '已升級',
   'Pending review': '待審查',
+  Resolved: '已解決',
   HIGH: '高',
   MEDIUM: '中',
   LOW: '低',
   'General Support': '一般客服',
+  'Security-L2': '安全二線',
   'Compliance Support': '法遵客服',
   'Knowledge Ops': '知識營運',
   'Support Ops': '客服營運',
@@ -293,4 +295,12 @@ export function formatBadcaseText(locale: Locale, value: string) {
 
 export function formatDisplayText(locale: Locale, value: string) {
   return text(locale, value, displayTextZh[value] ?? value);
+}
+
+export function formatTicketId(value: string) {
+  return value
+    .replace(/^ticket_/, '')
+    .split('_')
+    .map((part, index) => (index === 0 ? part.toUpperCase() : part))
+    .join('-');
 }

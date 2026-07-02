@@ -1,8 +1,9 @@
-import { Clock, ShieldAlert, TicketCheck } from 'lucide-react';
+import { Clock, TicketCheck } from 'lucide-react';
+import { useState } from 'react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { SupportTicket } from '../types';
-import { formatDisplayText, formatRiskLevel } from '../utils/display';
+import { formatDisplayText, formatRiskLevel, formatTicketId } from '../utils/display';
 
 interface TicketCenterProps {
   locale: Locale;
@@ -10,6 +11,12 @@ interface TicketCenterProps {
 }
 
 export function TicketCenter({ locale, tickets }: TicketCenterProps) {
+  const [statusById, setStatusById] = useState<Record<string, SupportTicket['status']>>(() =>
+    Object.fromEntries(tickets.map((ticket) => [ticket.id, ticket.status]))
+  );
+  const [ownerById, setOwnerById] = useState<Record<string, SupportTicket['owner']>>(() =>
+    Object.fromEntries(tickets.map((ticket) => [ticket.id, ticket.owner]))
+  );
   const highPriorityCount = tickets.filter((ticket) => ticket.priority === 'High').length;
   const escalatedCount = tickets.filter((ticket) => ticket.status === 'Escalated').length;
   const slaRiskCount = tickets.filter((ticket) => new Date(ticket.slaDueAt).getTime() <= Date.parse('2026-07-01T12:00:00.000Z')).length;
@@ -28,14 +35,31 @@ export function TicketCenter({ locale, tickets }: TicketCenterProps) {
           {tickets.map((ticket) => (
             <article className="ticket-row" key={ticket.id}>
               <div className="row-icon">
-                {ticket.priority === 'High' ? <ShieldAlert size={15} aria-hidden="true" /> : <TicketCheck size={15} aria-hidden="true" />}
+                <TicketCheck size={15} aria-hidden="true" />
               </div>
               <div>
+                <div className="ticket-meta-line">
+                  <span className="sla-pill">
+                    <Clock size={13} aria-hidden="true" />
+                    {new Date(ticket.slaDueAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                  <span className={`risk-pill ${ticket.priority.toLowerCase()}`}>
+                    {formatRiskLevel(locale, ticket.priority)}
+                  </span>
+                </div>
                 <div className="row-title">
                   <strong>{formatDisplayText(locale, ticket.summary)}</strong>
-                  <span>{ticket.id}</span>
-                  <span>{formatDisplayText(locale, ticket.queue)}</span>
                 </div>
+                <dl className="ticket-meta-list">
+                  <div>
+                    <dt>{text(locale, 'Ticket ID', '工單編號')}</dt>
+                    <dd>{formatTicketId(ticket.id)}</dd>
+                  </div>
+                  <div>
+                    <dt>{text(locale, 'Queue', '隊列')}</dt>
+                    <dd>{formatDisplayText(locale, ticket.queue)}</dd>
+                  </div>
+                </dl>
                 <p>{formatDisplayText(locale, ticket.caseSummary)}</p>
                 <div className="ticket-next-action">
                   <strong>{text(locale, 'Next action', '下一步')}</strong>
@@ -43,15 +67,47 @@ export function TicketCenter({ locale, tickets }: TicketCenterProps) {
                 </div>
               </div>
               <aside className="ticket-status-panel">
-                <span className={`risk-pill ${ticket.priority.toLowerCase()}`}>
-                  {formatRiskLevel(locale, ticket.priority)}
-                </span>
-                <strong>{formatDisplayText(locale, ticket.status)}</strong>
-                <span>{formatDisplayText(locale, ticket.owner)}</span>
-                <span className="sla-pill">
-                  <Clock size={13} aria-hidden="true" />
-                  {new Date(ticket.slaDueAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </span>
+                <label>
+                  <span>{text(locale, 'Status', '處理狀態')}</span>
+                  <select
+                    aria-label={text(
+                      locale,
+                      `Status for ${formatTicketId(ticket.id)}`,
+                      `${formatTicketId(ticket.id)} 處理狀態`
+                    )}
+                    onChange={(event) =>
+                      setStatusById((current) => ({
+                        ...current,
+                        [ticket.id]: event.target.value as SupportTicket['status']
+                      }))
+                    }
+                    value={statusById[ticket.id] ?? ticket.status}
+                  >
+                    <option value="Open">{formatDisplayText(locale, 'Open')}</option>
+                    <option value="Pending review">{formatDisplayText(locale, 'Pending review')}</option>
+                    <option value="Escalated">{formatDisplayText(locale, 'Escalated')}</option>
+                    <option value="Resolved">{formatDisplayText(locale, 'Resolved')}</option>
+                  </select>
+                </label>
+                <label>
+                  <span>PIC</span>
+                  <select
+                    aria-label={text(locale, `PIC for ${formatTicketId(ticket.id)}`, `${formatTicketId(ticket.id)} PIC`)}
+                    onChange={(event) =>
+                      setOwnerById((current) => ({
+                        ...current,
+                        [ticket.id]: event.target.value as SupportTicket['owner']
+                      }))
+                    }
+                    value={ownerById[ticket.id] ?? ticket.owner}
+                  >
+                    <option value="Support Ops">{formatDisplayText(locale, 'Support Ops')}</option>
+                    <option value="Security Ops">{formatDisplayText(locale, 'Security Ops')}</option>
+                    <option value="KYC Ops">{formatDisplayText(locale, 'KYC Ops')}</option>
+                    <option value="Knowledge Owner">{formatDisplayText(locale, 'Knowledge Owner')}</option>
+                    <option value="Compliance">{formatDisplayText(locale, 'Compliance')}</option>
+                  </select>
+                </label>
               </aside>
             </article>
           ))}

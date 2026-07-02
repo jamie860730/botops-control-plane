@@ -265,7 +265,7 @@ p {
 }
 
 .locale-toggle button.active {
-  color: #11181c;
+  color: #ffffff;
   background: #4fc4cf;
 }
 
@@ -280,7 +280,7 @@ p {
 }
 
 .mobile-topbar .locale-toggle button.active {
-  color: #11181c;
+  color: #ffffff;
   background: #4fc4cf;
 }
 
@@ -361,7 +361,7 @@ p {
 }
 
 .chip.selected {
-  color: #13140d;
+  color: #ffffff;
   background: #4fc4cf;
   border-color: #2699a6;
 }
@@ -398,9 +398,9 @@ p {
 
 .ticket-row {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) 150px;
-  gap: 12px;
-  padding: 13px;
+  grid-template-columns: 34px minmax(0, 1fr) minmax(220px, 0.36fr);
+  gap: 16px;
+  padding: 16px;
 }
 
 .row-icon {
@@ -408,7 +408,7 @@ p {
   height: 30px;
   display: grid;
   place-items: center;
-  color: #11181c;
+  color: #ffffff;
   background: #4fc4cf;
   border-radius: 6px;
 }
@@ -441,18 +441,71 @@ p {
   color: #11181c;
 }
 
-.ticket-status-panel {
-  display: grid;
-  justify-items: end;
-  align-content: start;
+.ticket-meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
-  color: #4d503b;
-  font-size: 0.82rem;
-  text-align: right;
+  margin-bottom: 8px;
 }
 
-.ticket-status-panel strong {
-  color: #11181c;
+.ticket-meta-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin: 0 0 8px;
+}
+
+.ticket-meta-list div {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.ticket-meta-list dt {
+  color: #7a7e64;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.ticket-meta-list dd {
+  margin: 0;
+  color: #4d503b;
+  font-size: 0.83rem;
+  font-weight: 800;
+}
+
+.ticket-status-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 10px;
+  color: #4d503b;
+  font-size: 0.82rem;
+}
+
+.ticket-status-panel label {
+  display: grid;
+  gap: 5px;
+}
+
+.ticket-status-panel label > span {
+  color: #7a7e64;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.ticket-status-panel select {
+  width: 100%;
+  min-height: 38px;
+  padding: 7px 9px;
+  color: #253236;
+  background: #f8fbfc;
+  border: 1px solid #cfdbdd;
+  border-radius: 6px;
+  font-weight: 800;
 }
 
 .sla-pill {
@@ -1325,6 +1378,15 @@ p {
 }
 
 @media (max-width: 760px) {
+  .ticket-row {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .ticket-status-panel {
+    grid-column: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .data-table:has(.cs-kpi-row) {
     overflow-x: visible;
   }
@@ -1388,6 +1450,15 @@ p {
   }
 
   .signal-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ticket-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ticket-status-panel {
+    grid-column: 1;
     grid-template-columns: 1fr;
   }
 
