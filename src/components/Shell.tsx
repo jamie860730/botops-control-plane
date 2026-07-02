@@ -141,7 +141,6 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
         <div className="workspace-inner">
           <header className="workspace-header">
             <div>
-              <p className="eyebrow">{text(locale, 'Workspace', '功能頁')}</p>
               <h2>{text(locale, activeNavItem.labelEn, activeNavItem.labelZh)}</h2>
             </div>
             <div className="desktop-header-actions">
