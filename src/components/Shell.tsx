@@ -67,7 +67,7 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
         <div className="brand-block">
           <div className="brand-mark">BO</div>
           <div>
-            <p className="eyebrow">{text(locale, 'Bot management platform', '機器人治理平台')}</p>
+            <p className="eyebrow">{text(locale, 'Bot management platform', '機器人管理平台')}</p>
             <h1>BotOps Control Plane</h1>
           </div>
         </div>
@@ -96,7 +96,7 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
         <div className="brand-block">
           <div className="brand-mark">BO</div>
           <div>
-            <p className="eyebrow">{text(locale, 'Bot management platform', '機器人治理平台')}</p>
+            <p className="eyebrow">{text(locale, 'Bot management platform', '機器人管理平台')}</p>
             <h1>BotOps Control Plane</h1>
           </div>
         </div>
