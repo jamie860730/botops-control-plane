@@ -292,6 +292,54 @@ export const supportTickets = [
   }
 ];
 
+export const csBotKpiMetrics = [
+  {
+    id: 'kpi_auto_resolution_rate',
+    label: 'Auto-resolution rate',
+    value: '62%',
+    target: '>= 60%',
+    status: 'healthy',
+    trend: 'up',
+    insight: 'Candidate flow resolves low-risk policy questions without increasing high-risk automation.'
+  },
+  {
+    id: 'kpi_repeat_contact_rate',
+    label: 'Repeat contact rate',
+    value: '9%',
+    target: '<= 8%',
+    status: 'watch',
+    trend: 'down',
+    insight: 'FR transfer policy cluster still shows repeated customer clarification after first bot answer.'
+  }
+];
+
+export const csBotKpiSegments = [
+  {
+    id: 'segment_all_policy_transfer',
+    segment: 'Transfer policy questions',
+    sourceChannel: 'All',
+    volume: 1840,
+    autoResolutionRate: 0.68,
+    handoffRate: 0.12,
+    citationFailureRate: 0.03,
+    repeatContactRate: 0.08,
+    slaRiskCount: 4,
+    reviewFocus: 'Clarify FR cross-border payment policy answer and monitor repeat contacts.'
+  },
+  {
+    id: 'segment_web_security',
+    segment: 'Account security cases',
+    sourceChannel: 'Web/App Chat',
+    volume: 420,
+    autoResolutionRate: 0.21,
+    handoffRate: 0.74,
+    citationFailureRate: 0.01,
+    repeatContactRate: 0.06,
+    slaRiskCount: 9,
+    reviewFocus: 'Keep high-risk auto-answer at zero and validate Security-L2 ticket packaging.'
+  }
+];
+
 export const handoffPreviews = [
   {
     id: 'handoff_security_l2_001',

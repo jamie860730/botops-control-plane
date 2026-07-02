@@ -3,6 +3,7 @@ import { seedData } from './data/seedData';
 import { SeedBackendAdapter } from './services/seedBackendAdapter';
 import type { AuditEvent, SourceChannel } from './types';
 import { ChatPlayground } from './components/ChatPlayground';
+import { CsBotKpi } from './components/CsBotKpi';
 import { ErrorAnalysis } from './components/ErrorAnalysis';
 import { EvaluationCenter } from './components/EvaluationCenter';
 import { HandoffPreview } from './components/HandoffPreview';
@@ -161,6 +162,13 @@ export function App() {
       )}
       {activeView === 'knowledge' && (
         <KnowledgeBase documents={backend.listDocuments()} highlightedChunkId={highlightedChunkId} locale={locale} />
+      )}
+      {activeView === 'csKpi' && (
+        <CsBotKpi
+          locale={locale}
+          metrics={backend.listCsBotKpiMetrics()}
+          segments={backend.listCsBotKpiSegments()}
+        />
       )}
       {activeView === 'evaluation' && (
         <EvaluationCenter

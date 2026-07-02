@@ -68,4 +68,13 @@ describe('BotOps seed API server', () => {
     assert.equal(body[0].id, 'ticket_sec_20260701_001');
     assert.equal(body[0].status, 'Escalated');
   });
+
+  it('returns CS bot KPI metrics and segment drilldowns', async () => {
+    const response = await fetch(`${baseUrl}/api/kpis/cs-bot`);
+    const body = await response.json();
+
+    assert.equal(response.status, 200);
+    assert.ok(body.metrics.some((metric) => metric.id === 'kpi_auto_resolution_rate'));
+    assert.ok(body.segments.some((segment) => segment.id === 'segment_web_security'));
+  });
 });

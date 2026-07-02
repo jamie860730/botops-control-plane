@@ -3,6 +3,8 @@ import { fileURLToPath } from 'node:url';
 import {
   auditEvents,
   conversationMessages,
+  csBotKpiMetrics,
+  csBotKpiSegments,
   evalCases,
   evalResults,
   evalRuns,
@@ -173,6 +175,15 @@ async function routeRequest(request, url) {
         const matchesStatus = status ? ticket.status === status : true;
         return matchesQueue && matchesStatus;
       })
+    };
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/kpis/cs-bot') {
+    return {
+      body: {
+        metrics: csBotKpiMetrics,
+        segments: csBotKpiSegments
+      }
     };
   }
 

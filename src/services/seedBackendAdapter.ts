@@ -1,6 +1,8 @@
 import { seedData } from '../data/seedData';
 import type {
   Badcase,
+  CsBotKpiMetric,
+  CsBotKpiSegment,
   EvalCase,
   EvalResult,
   HandoffPreview,
@@ -84,6 +86,14 @@ export class SeedBackendAdapter {
 
   listSupportTickets(): SupportTicket[] {
     return seedData.supportTickets;
+  }
+
+  listCsBotKpiMetrics(): CsBotKpiMetric[] {
+    return seedData.csBotKpiMetrics;
+  }
+
+  listCsBotKpiSegments(): CsBotKpiSegment[] {
+    return seedData.csBotKpiSegments;
   }
 }
 

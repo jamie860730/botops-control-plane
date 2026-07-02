@@ -88,7 +88,25 @@ http://127.0.0.1:5173/
 - chunk 是否足夠具體，能支撐回答。
 - 是否有 Needs re-index 的文件會影響 release confidence。
 
-### 5. Evaluation：執行 offline eval 並匯出結果
+### 5. CS Bot KPI：審查客服營運指標
+
+用途：定期檢視 bot 對客服營運的影響，例如 auto-resolution、handoff、repeat contact、citation failure 與 SLA risk，並連回實際用戶案例群。
+
+操作：
+
+1. 點擊 `CS Bot KPI`。
+2. 檢查上方 KPI cards，確認每個指標是否達標或進入 watch。
+3. 在 Segment Drilldown 檢查不同渠道與案例類型。
+4. 根據 review focus 判斷下一步應改善 prompt、知識文件、handoff 或客服流程。
+
+管理員判斷重點：
+
+- Auto-resolution 是否提升但沒有犧牲高風險安全性。
+- Handoff rate 是否落在合理區間。
+- Repeat contact 是否指出回答不夠清楚。
+- Citation failure 是否暴露知識庫缺口。
+
+### 6. Evaluation：執行 offline eval 並匯出結果
 
 用途：用 saved live interactions / eval cases replay baseline 與 candidate，避免只靠人工主觀判斷。
 
@@ -107,7 +125,7 @@ http://127.0.0.1:5173/
 - Citation Support、Handoff Safety Recall 是否達標。
 - High-risk Auto-answer 是否為 `0.00`。
 
-### 6. Error Analysis：將失敗案例轉為修正任務
+### 7. Error Analysis：將失敗案例轉為修正任務
 
 用途：將低分 eval rows 轉換為 PM / Bot Ops / Knowledge Owner / Compliance 可處理的 badcase。
 
@@ -121,7 +139,7 @@ http://127.0.0.1:5173/
 - 問題是 prompt、retrieval、knowledge、risk routing 還是 handoff。
 - 是否有 owner 和 retest metric。
 
-### 7. Ticket Center：管理客服工單隊列
+### 8. Ticket Center：管理客服工單隊列
 
 用途：將 bot 已處理或已審查的案例放入客服工單隊列，追蹤 queue、owner、priority、SLA、case summary 與 next action。
 
@@ -139,7 +157,7 @@ http://127.0.0.1:5173/
 - SLA watch 數量是否需要升級處理。
 - next action 是否具體且不要求 bot 做帳戶層級決策。
 
-### 8. Handoff：檢查人工交接品質
+### 9. Handoff：檢查人工交接品質
 
 用途：高風險案例不能只讓 bot 自動回答，必須包裝成可交接給人工隊列的資訊。
 
@@ -155,7 +173,7 @@ http://127.0.0.1:5173/
 - 是否要求必要欄位。
 - 是否禁止 bot 做不該做的帳戶操作或安全結論。
 
-### 9. Release Center：執行發布決策
+### 10. Release Center：執行發布決策
 
 用途：將 eval 結果轉換為 release gate，並對每個 bundle 做出可稽核的發布決策。
 
@@ -175,7 +193,7 @@ http://127.0.0.1:5173/
 - 決策後是否出現 bundle 內的 decision banner。
 - `Audit Log` 是否留下對應的 release decision event。
 
-### 10. Audit Log：檢查操作稽核紀錄
+### 11. Audit Log：檢查操作稽核紀錄
 
 用途：確認重要管理動作皆已留存紀錄，包含 trace review、eval case saved、offline eval、CSV export 與 release decision。
 
@@ -197,11 +215,12 @@ http://127.0.0.1:5173/
 1. `Overview`：確認產品定位為 bot management control plane，而非單一 chatbot UI。
 2. `Signal Intake`：檢視多來源訊號與互動紀錄。
 3. `Response Trace`：審查回覆、引用、trace 與 eval case 轉存。
-4. `Evaluation`：執行 offline eval 並匯出 CSV。
-5. `Error Analysis`：從失敗案例定位產品修正項目。
-6. `Ticket Center`：檢查客服工單、SLA、owner 與 next action。
-7. `Release Center`：依 release gate 執行 Promote / Block / Request review。
-8. `Audit Log`：檢視 governance 與後端稽核擴充方向。
+4. `CS Bot KPI`：檢查客服營運指標與 user case segment。
+5. `Evaluation`：執行 offline eval 並匯出 CSV。
+6. `Error Analysis`：從失敗案例定位產品修正項目。
+7. `Ticket Center`：檢查客服工單、SLA、owner 與 next action。
+8. `Release Center`：依 release gate 執行 Promote / Block / Request review。
+9. `Audit Log`：檢視 governance 與後端稽核擴充方向。
 
 ## 目前限制
 

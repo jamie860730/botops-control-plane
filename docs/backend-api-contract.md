@@ -7,6 +7,7 @@ This document defines the backend shape required to move BotOps Control Plane fr
 - Ingest support signals from Web/App Chat, X, LINE, Telegram, Discord, and internal reports.
 - Store delivered bot messages and retained trace events after the bot replies.
 - Manage RAG documents, chunks, snapshots, index state, and retrieval configuration.
+- Review CS bot KPI metrics and segment-level user case trends.
 - Save reviewed interactions as eval cases.
 - Run offline eval jobs against baseline and candidate versions.
 - Convert eval failures into badcases and release gates.
@@ -24,6 +25,8 @@ This document defines the backend shape required to move BotOps Control Plane fr
 | `trace_event` | Retained runtime event for source normalization, retrieval, generation, verification, and handoff. | `evt_transfer_retrieval_004` |
 | `knowledge_document` | Governed source document for RAG. | `doc_payment_policy_eu` |
 | `knowledge_chunk` | Citeable retrieval unit attached to a document and snapshot. | `chunk_payment_policy_eu_001` |
+| `cs_bot_kpi_metric` | Top-level support impact metric for bot operations. | `kpi_auto_resolution_rate` |
+| `cs_bot_kpi_segment` | Segment drilldown by channel or case cluster. | `segment_web_security` |
 | `eval_case` | Replayable quality test case generated from curated incidents or saved traces. | `eval_saved_scn_cross_border_payment_fr` |
 | `eval_run` | Offline run for one version config against a dataset. | `run_v19_candidate` |
 | `eval_result` | Per-case scoring output for an eval run. | `eval_result_v19_case_001` |
@@ -42,6 +45,7 @@ This document defines the backend shape required to move BotOps Control Plane fr
 | `POST` | `/api/eval-cases` | Save a reviewed scenario or trace as an eval case. |
 | `GET` | `/api/knowledge/documents` | List RAG documents with index and citation metadata. |
 | `GET` | `/api/knowledge/chunks/{chunk_id}` | Fetch a citeable chunk from the active snapshot. |
+| `GET` | `/api/kpis/cs-bot` | Return CS bot KPI cards and segment drilldowns. |
 | `GET` | `/api/eval/runs` | List eval runs and version configs. |
 | `POST` | `/api/eval/runs` | Start an offline eval job. |
 | `GET` | `/api/eval/runs/{run_id}/results` | List per-case eval results. |
@@ -194,6 +198,8 @@ Supported event types:
 | `trace_events` | `id`, `trace_id`, `scenario_id`, `event_type`, `status` | Used for replay, debugging, and audit. |
 | `knowledge_documents` | `id`, `status`, `effective_from`, `vector_index` | Document lifecycle and ownership live here. |
 | `knowledge_chunks` | `id`, `document_id`, `citation_allowed` | Retrieval units must map back to documents. |
+| `cs_bot_kpi_metrics` | `id`, `value`, `target`, `status`, `trend` | Review-level support impact metrics. |
+| `cs_bot_kpi_segments` | `id`, `source_channel`, `volume`, `repeat_contact_rate`, `sla_risk_count` | User case and channel drilldown. |
 | `eval_cases` | `id`, `dataset_id`, `risk_tag`, `must_handoff` | Curated replay set. |
 | `eval_runs` | `id`, `dataset_id`, `status`, `started_at` | Long-running job parent. |
 | `eval_results` | `id`, `run_id`, `case_id`, `failure_label` | Per-case scoring output. |

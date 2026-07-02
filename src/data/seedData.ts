@@ -1,6 +1,8 @@
 import type {
   Badcase,
   ConversationMessage,
+  CsBotKpiMetric,
+  CsBotKpiSegment,
   EvalCase,
   EvalResult,
   EvalRun,
@@ -674,6 +676,96 @@ const supportTickets: SupportTicket[] = [
   }
 ];
 
+const csBotKpiMetrics: CsBotKpiMetric[] = [
+  {
+    id: 'kpi_auto_resolution_rate',
+    label: 'Auto-resolution rate',
+    value: '62%',
+    target: '>= 60%',
+    status: 'healthy',
+    trend: 'up',
+    insight: 'Candidate flow resolves low-risk policy questions without increasing high-risk automation.'
+  },
+  {
+    id: 'kpi_handoff_rate',
+    label: 'Human handoff rate',
+    value: '18%',
+    target: '15-22%',
+    status: 'healthy',
+    trend: 'flat',
+    insight: 'Security and account-specific cases are routed to human queues instead of being auto-resolved.'
+  },
+  {
+    id: 'kpi_repeat_contact_rate',
+    label: 'Repeat contact rate',
+    value: '9%',
+    target: '<= 8%',
+    status: 'watch',
+    trend: 'down',
+    insight: 'FR transfer policy cluster still shows repeated customer clarification after first bot answer.'
+  },
+  {
+    id: 'kpi_citation_failure_rate',
+    label: 'Citation failure rate',
+    value: '4%',
+    target: '<= 3%',
+    status: 'watch',
+    trend: 'down',
+    insight: 'JP policy exception questions should abstain until a localized source document is available.'
+  }
+];
+
+const csBotKpiSegments: CsBotKpiSegment[] = [
+  {
+    id: 'segment_all_policy_transfer',
+    segment: 'Transfer policy questions',
+    sourceChannel: 'All',
+    volume: 1840,
+    autoResolutionRate: 0.68,
+    handoffRate: 0.12,
+    citationFailureRate: 0.03,
+    repeatContactRate: 0.08,
+    slaRiskCount: 4,
+    reviewFocus: 'Clarify FR cross-border payment policy answer and monitor repeat contacts.'
+  },
+  {
+    id: 'segment_web_security',
+    segment: 'Account security cases',
+    sourceChannel: 'Web/App Chat',
+    volume: 420,
+    autoResolutionRate: 0.21,
+    handoffRate: 0.74,
+    citationFailureRate: 0.01,
+    repeatContactRate: 0.06,
+    slaRiskCount: 9,
+    reviewFocus: 'Keep high-risk auto-answer at zero and validate Security-L2 ticket packaging.'
+  },
+  {
+    id: 'segment_line_kyc_tw',
+    segment: 'TW KYC questions',
+    sourceChannel: 'LINE',
+    volume: 690,
+    autoResolutionRate: 0.57,
+    handoffRate: 0.2,
+    citationFailureRate: 0.04,
+    repeatContactRate: 0.1,
+    slaRiskCount: 3,
+    reviewFocus: 'Improve rejection-reason clarification and localize next-step guidance.'
+  },
+  {
+    id: 'segment_discord_jp_kb_gap',
+    segment: 'JP KB gap reports',
+    sourceChannel: 'Discord',
+    volume: 95,
+    autoResolutionRate: 0.08,
+    handoffRate: 0.46,
+    citationFailureRate: 0.18,
+    repeatContactRate: 0.14,
+    slaRiskCount: 2,
+    reviewFocus: 'Create localized policy article before expanding automated answers.'
+  }
+];
+
 export const seedData: SeedData = {
   supportSignals,
   scenarios,
@@ -686,5 +778,7 @@ export const seedData: SeedData = {
   badcases,
   releaseBundles,
   handoffPreviews,
-  supportTickets
+  supportTickets,
+  csBotKpiMetrics,
+  csBotKpiSegments
 };

@@ -10,6 +10,7 @@ The current P0 version runs in seed-data mode, so the product can be reviewed wi
 - Live interaction review for cross-border payment policy, account takeover, KYC, missing KB, and incident spike cases.
 - Chat + Trace review with stable message IDs, citations, and retained runtime events.
 - RAG knowledge management with document lifecycle, chunk metadata, KB snapshot, index status, and highlighted citations.
+- CS Bot KPI drilldown for auto-resolution, handoff, repeat contact, citation failure, SLA risk, and user case segments.
 - Evaluation Center comparing v18 baseline and v19 candidate runs.
 - Error Analysis with badcase attribution and retest metrics.
 - Ticket Center with queue, owner, priority, SLA, AI case summary, and next action.
@@ -28,6 +29,7 @@ The current P0 version runs in seed-data mode, so the product can be reviewed wi
 | Overview | Summarize quality gates, source distribution, and the full bot management workflow. | Defines the operating model before detailed review. |
 | Response Trace | Review the live bot answer and retained trace: citations, retrieval, verification, and handoff decisions. | Provides post-reply accountability and traceability. |
 | Knowledge | Manage RAG documents, chunks, snapshots, index status, and retrieval config. | Explains how PMs and knowledge owners control answer grounding. |
+| CS Bot KPI | Review support impact metrics and the case clusters behind them. | Matches the JD requirement to review CS bot KPIs and user cases regularly. |
 | Evaluation | Replay saved interactions against baseline and candidate flows, run offline eval, and export CSV. | Supports evidence-based release assessment. |
 | Error Analysis | Convert failed eval rows into fixable badcases with owner and expected metric movement. | Links failures to accountable remediation work. |
 | Ticket Center | Track bot-reviewed support cases by queue, priority, owner, SLA, summary, and next action. | Makes the JD's ticket center requirement explicit. |

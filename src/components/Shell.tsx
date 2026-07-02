@@ -3,6 +3,7 @@ import {
   ArrowUpRight,
   Activity,
   Bot,
+  ChartNoAxesCombined,
   ClipboardCheck,
   Database,
   GitBranch,
@@ -23,6 +24,7 @@ export type ViewKey =
   | 'overview'
   | 'chat'
   | 'knowledge'
+  | 'csKpi'
   | 'evaluation'
   | 'errors'
   | 'tickets'
@@ -35,6 +37,7 @@ const navItems: { key: ViewKey; labelEn: string; labelZh: string; icon: typeof R
   { key: 'overview', labelEn: 'Overview', labelZh: '總覽', icon: LayoutDashboard },
   { key: 'chat', labelEn: 'Response Trace', labelZh: '回覆稽核', icon: Bot },
   { key: 'knowledge', labelEn: 'Knowledge Governance', labelZh: '知識治理', icon: Database },
+  { key: 'csKpi', labelEn: 'CS Bot KPI', labelZh: '客服 KPI', icon: ChartNoAxesCombined },
   { key: 'evaluation', labelEn: 'Evaluation', labelZh: '評測中心', icon: ClipboardCheck },
   { key: 'errors', labelEn: 'Error Analysis', labelZh: '錯誤分析', icon: AlertTriangle },
   { key: 'tickets', labelEn: 'Ticket Center', labelZh: '工單中心', icon: Tickets },
@@ -78,6 +81,14 @@ const viewIntents: Record<
     titleZh: '確認檢索依據是否有效、已索引且可引用。',
     decisionEn: 'Decision: inspect the source document, chunk, snapshot, and retrieval config.',
     decisionZh: '決策：檢查來源文件、chunk、snapshot 與 retrieval config。'
+  },
+  csKpi: {
+    labelEn: 'KPI review',
+    labelZh: 'KPI 審查',
+    titleEn: 'Review CS bot impact metrics and the user cases behind them.',
+    titleZh: '檢視客服 Bot 影響指標，以及背後的用戶案例。',
+    decisionEn: 'Decision: choose the channel, case cluster, or owner that needs improvement.',
+    decisionZh: '決策：選擇需要改善的渠道、案例群或負責 owner。'
   },
   evaluation: {
     labelEn: 'Quality gate',

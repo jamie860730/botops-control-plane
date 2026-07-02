@@ -230,6 +230,29 @@ export interface SupportTicket {
   nextAction: string;
 }
 
+export interface CsBotKpiMetric {
+  id: string;
+  label: string;
+  value: string;
+  target: string;
+  status: 'healthy' | 'watch' | 'risk';
+  trend: 'up' | 'down' | 'flat';
+  insight: string;
+}
+
+export interface CsBotKpiSegment {
+  id: string;
+  segment: string;
+  sourceChannel: SourceChannel | 'All';
+  volume: number;
+  autoResolutionRate: number;
+  handoffRate: number;
+  citationFailureRate: number;
+  repeatContactRate: number;
+  slaRiskCount: number;
+  reviewFocus: string;
+}
+
 export interface AuditEvent {
   id: string;
   eventType: AuditEventType;
@@ -253,6 +276,8 @@ export interface SeedData {
   releaseBundles: ReleaseBundle[];
   handoffPreviews: HandoffPreview[];
   supportTickets: SupportTicket[];
+  csBotKpiMetrics: CsBotKpiMetric[];
+  csBotKpiSegments: CsBotKpiSegment[];
 }
 
 export interface EvaluationSummary {

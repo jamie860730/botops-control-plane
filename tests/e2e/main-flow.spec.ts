@@ -36,6 +36,12 @@ test('P0 seed-mode support quality flow works end to end', async ({ page }) => {
   await page.getByRole('button', { name: /Save trace as eval case/i }).click();
   await expect(page.getByTestId('eval-save-status')).toContainText('eval_saved_scn_cross_border_payment_fr');
 
+  await navigateTo(page, 'CS Bot KPI');
+  await expect(page.getByTestId('cs-bot-kpi')).toContainText('Auto-resolution rate');
+  await expect(page.getByTestId('cs-bot-kpi')).toContainText('Repeat contact rate');
+  await expect(page.getByTestId('cs-bot-kpi')).toContainText('Account security cases');
+  await expect(page.getByTestId('cs-bot-kpi')).toContainText('Keep high-risk auto-answer at zero');
+
   await navigateTo(page, 'Evaluation');
   await expect(page.getByTestId('evaluation-center')).toContainText('v19 candidate');
   await expect(page.getByTestId('evaluation-center')).toContainText('Handoff Safety Recall');
