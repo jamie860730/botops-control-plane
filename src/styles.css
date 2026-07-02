@@ -398,10 +398,14 @@ p {
 
 .ticket-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.36fr);
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
   align-items: start;
   padding: 16px;
+}
+
+.ticket-row > div:first-child {
+  min-width: 0;
 }
 
 .ticket-row .row-title {
@@ -502,11 +506,12 @@ p {
 
 .ticket-status-panel {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
   align-content: start;
   gap: 10px;
   color: #4d503b;
   font-size: 0.82rem;
+  padding-top: 2px;
 }
 
 .ticket-status-panel label {
@@ -1408,12 +1413,7 @@ p {
 }
 
 @media (max-width: 760px) {
-  .ticket-row {
-    grid-template-columns: 34px minmax(0, 1fr);
-  }
-
   .ticket-status-panel {
-    grid-column: 2;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1438,7 +1438,7 @@ p {
     content: attr(data-label);
     color: #61664e;
     font-size: 0.68rem;
-    font-weight: 900;
+    font-weight: 750;
     letter-spacing: 0.02em;
     text-transform: uppercase;
   }
@@ -1517,7 +1517,7 @@ p {
   }
 
   .ticket-status-panel {
-    justify-items: start;
+    justify-items: stretch;
     text-align: left;
   }
 

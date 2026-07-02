@@ -41,7 +41,10 @@ export function TicketCenter({ locale, tickets }: TicketCenterProps) {
                   </span>
                   <span className="sla-pill">
                     <Clock size={13} aria-hidden="true" />
-                    {new Date(ticket.slaDueAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {new Date(ticket.slaDueAt).toLocaleTimeString(locale === 'zh-TW' ? 'zh-TW' : 'en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
                   </span>
                   <span className={`risk-pill ${ticket.priority.toLowerCase()}`}>
                     {formatRiskLevel(locale, ticket.priority)}
