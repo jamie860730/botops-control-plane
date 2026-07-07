@@ -1,7 +1,35 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { OverviewDashboard } from './OverviewDashboard';
 import { seedData } from '../data/seedData';
+
+describe('OverviewDashboard metric card drill-through', () => {
+  it('navigates each metric card to its owning module', () => {
+    const onNavigate = vi.fn();
+    render(<OverviewDashboard data={seedData} locale="en" onNavigate={onNavigate} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open Conversations for reviewed interactions' }));
+    expect(onNavigate).toHaveBeenLastCalledWith('conversations');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open KPI detail for auto-resolution quality' }));
+    expect(onNavigate).toHaveBeenLastCalledWith('quality', {
+      qualityTab: 'kpi',
+      kpiMetricId: 'kpi_auto_resolution_rate'
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open Knowledge for gap review' }));
+    expect(onNavigate).toHaveBeenLastCalledWith('knowledge');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open Tickets & Handoff' }));
+    expect(onNavigate).toHaveBeenLastCalledWith('tickets');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open Quality badcases' }));
+    expect(onNavigate).toHaveBeenLastCalledWith('quality', { qualityTab: 'badcases' });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open release gates' }));
+    expect(onNavigate).toHaveBeenLastCalledWith('quality', { qualityTab: 'release' });
+  });
+});
 
 describe('OverviewDashboard operating economics', () => {
   it('renders the three estimated economics cards with the seed-mode disclaimer', () => {

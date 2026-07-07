@@ -92,6 +92,12 @@ export function Intake({
           ))}
         </div>
         <div className="signal-list" data-testid="support-signal-list">
+          {signals.length === 0 && (
+            <div className="empty-state">
+              <strong>{text(locale, 'No signals from this source', '此來源目前沒有訊號')}</strong>
+              <p>{text(locale, 'Try another source filter.', '請改用其他來源篩選。')}</p>
+            </div>
+          )}
           {signals.map((signal) => {
             const isExpanded = expandedSignalId === signal.id;
             const relatedScenario = findRelatedScenario(signal, allScenarios);
@@ -178,6 +184,12 @@ export function Intake({
           </span>
         </div>
         <div className="scenario-list" data-testid="scenario-list">
+          {scenarios.length === 0 && (
+            <div className="empty-state">
+              <strong>{text(locale, 'No delivered replies from this source', '此來源目前沒有已送出回覆')}</strong>
+              <p>{text(locale, 'Try another source filter.', '請改用其他來源篩選。')}</p>
+            </div>
+          )}
           {scenarios.map((scenario) => (
             <article className="scenario-row" data-testid={`scenario-row-${scenario.id}`} key={scenario.id}>
               <div className="scenario-row-main">

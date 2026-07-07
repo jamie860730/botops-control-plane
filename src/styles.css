@@ -956,6 +956,23 @@ p {
   box-shadow: inset 4px 0 0 #ff8c7e;
 }
 
+/* Metric cards drill through to their owning module. */
+button.pm-metric-card {
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 130ms ease;
+}
+
+button.pm-metric-card:hover {
+  border-color: #2aa6b2;
+}
+
+button.pm-metric-card:focus-visible {
+  outline: 2px solid #4fc4cf;
+  outline-offset: 1px;
+}
+
 .pm-metric-card span {
   color: #61664e;
   font-size: 0.73rem;

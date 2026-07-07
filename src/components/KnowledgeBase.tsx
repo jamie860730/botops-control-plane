@@ -309,7 +309,7 @@ function KnowledgeInventory({
           selectedDoc && (
             <>
               <button className="secondary-action compact-action" onClick={openChunks} type="button">
-                {text(locale, 'Open chunks', '查看 chunks')}
+                {text(locale, 'Open chunks', '檢視 chunks')}
               </button>
               <button
                 aria-pressed={isCitationReviewRequested}

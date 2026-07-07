@@ -63,6 +63,7 @@ export function App() {
   const [qualityTab, setQualityTab] = useState<QualityTab>('release');
   const [badcases, setBadcases] = useState<Badcase[]>(() => backend.listBadcases());
   const [pendingKnowledgeDocId, setPendingKnowledgeDocId] = useState<string | null>(null);
+  const [pendingKpiMetricId, setPendingKpiMetricId] = useState<string | null>(null);
   const [selectedTicketId, setSelectedTicketId] = useState(() => backend.listSupportTickets()[0]?.id ?? '');
   const [focusTicketDetail, setFocusTicketDetail] = useState(false);
   // Progressive disclosure for Conversations: 'list' shows intake + delivered replies,
@@ -244,8 +245,10 @@ export function App() {
 
   function changeView(view: ViewKey, target?: NavigationTarget) {
     if (view === 'quality') {
-      setQualityTab('release');
+      // Dashboard KPI cards land on a specific tab (and metric); default stays release gates.
+      setQualityTab(target?.qualityTab ?? 'release');
     }
+    setPendingKpiMetricId(target?.kpiMetricId ?? null);
     if (target?.ticketId) {
       setSelectedTicketId(target.ticketId);
     }
@@ -439,6 +442,7 @@ export function App() {
             )}
             {qualityTab === 'kpi' && (
               <CsBotKpi
+                initialFocusMetricId={pendingKpiMetricId}
                 locale={locale}
                 metrics={backend.listCsBotKpiMetrics()}
                 segments={backend.listCsBotKpiSegments()}

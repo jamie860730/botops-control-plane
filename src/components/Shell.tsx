@@ -31,6 +31,10 @@ export interface NavigationTarget {
   sourceChannel?: SourceChannel | 'All';
   /** Opens the Conversations review layer directly for this scenario. */
   scenarioId?: string;
+  /** Lands Quality & Release on a specific tab instead of the default release gates. */
+  qualityTab?: 'release' | 'kpi' | 'eval' | 'badcases' | 'audit';
+  /** Focuses this metric card after landing on the Quality KPI tab (dashboard card drill-through). */
+  kpiMetricId?: string;
 }
 
 const navItems: {

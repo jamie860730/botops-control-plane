@@ -202,33 +202,45 @@ export function OverviewDashboard({ data, locale, onNavigate }: OverviewDashboar
             label={text(locale, 'Reviewed interactions', '已審互動')}
             value={data.scenarios.length.toString()}
             detail={text(locale, 'Retained trace records', '保留 trace 的互動紀錄')}
+            openLabel={text(locale, 'Open Conversations for reviewed interactions', '開啟已審互動的對話審查')}
+            onOpen={() => onNavigate('conversations')}
           />
           <PmMetric
             label={text(locale, 'Auto-resolution quality', '自動解決品質')}
             value={summary.overallQualityScore.toFixed(2)}
             detail={text(locale, 'Approved eval set', '核准評測集')}
+            openLabel={text(locale, 'Open KPI detail for auto-resolution quality', '開啟自動解決品質的 KPI 詳情')}
+            onOpen={() => onNavigate('quality', { qualityTab: 'kpi', kpiMetricId: 'kpi_auto_resolution_rate' })}
           />
           <PmMetric
             label={text(locale, 'Knowledge gaps', '知識缺口')}
             value={reindexCount.toString()}
             detail={text(locale, 'Needs re-index or missing source review', '需重建索引或補來源')}
+            openLabel={text(locale, 'Open Knowledge for gap review', '開啟知識治理檢視缺口')}
+            onOpen={() => onNavigate('knowledge')}
           />
           <PmMetric
             label={text(locale, 'Bot-created tickets', 'Bot 造成工單')}
             value={activeTicketCount.toString()}
             detail={text(locale, `${highRiskTicketCount} high-risk cases`, `${highRiskTicketCount} 件高風險案例`)}
             danger={highRiskTicketCount > 0}
+            openLabel={text(locale, 'Open Tickets & Handoff', '開啟工單與交接')}
+            onOpen={() => onNavigate('tickets')}
           />
           <PmMetric
             label={text(locale, 'Open badcases', '未結失敗案例')}
             value={openBadcaseCount.toString()}
             detail={text(locale, 'Assigned repair backlog', '已指派修正 backlog')}
+            openLabel={text(locale, 'Open Quality badcases', '開啟品質失敗案例')}
+            onOpen={() => onNavigate('quality', { qualityTab: 'badcases' })}
           />
           <PmMetric
             label={text(locale, 'Release readiness', '發布狀態')}
             value={blockedReleaseCount > 0 ? text(locale, 'Blocked', '阻擋') : text(locale, 'Ready', '可發布')}
             detail={text(locale, 'Release gate result', '發布門檻結果')}
             danger={blockedReleaseCount > 0}
+            openLabel={text(locale, 'Open release gates', '開啟發布門檻')}
+            onOpen={() => onNavigate('quality', { qualityTab: 'release' })}
           />
         </div>
       </div>
@@ -512,19 +524,29 @@ function PmMetric({
   label,
   value,
   detail,
-  danger = false
+  danger = false,
+  openLabel,
+  onOpen
 }: {
   label: string;
   value: string;
   detail: string;
   danger?: boolean;
+  /** Accessible name describing where the card drill-through lands. */
+  openLabel: string;
+  onOpen: () => void;
 }) {
   return (
-    <article className={danger ? 'pm-metric-card danger' : 'pm-metric-card'}>
+    <button
+      aria-label={openLabel}
+      className={danger ? 'pm-metric-card danger' : 'pm-metric-card'}
+      onClick={onOpen}
+      type="button"
+    >
       <span>{label}</span>
       <strong>{value}</strong>
       <p>{detail}</p>
-    </article>
+    </button>
   );
 }
 

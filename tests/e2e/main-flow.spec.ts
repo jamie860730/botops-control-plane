@@ -472,18 +472,19 @@ async function navigateTo(page: Page, name: string | RegExp, exact = false) {
   if (await menuButton.isVisible().catch(() => false)) {
     await menuButton.click();
   }
-  await page.getByRole('button', { name, exact }).click();
+  // Scoped to the sidebar: dashboard metric cards carry module names in their labels.
+  await page.locator('.sidebar').getByRole('button', { name, exact }).click();
 }
 
 async function expectLocalizedNav(page: Page) {
   const menuButton = page.getByRole('button', { name: /Open navigation menu|開啟導覽選單/ });
   if (await menuButton.isVisible().catch(() => false)) {
     await menuButton.click();
-    await expect(page.getByRole('button', { name: '對話審查' })).toBeVisible();
+    await expect(page.locator('.sidebar').getByRole('button', { name: '對話審查' })).toBeVisible();
     await page.getByRole('button', { name: /Close navigation menu|關閉導覽選單/ }).first().click();
     return;
   }
-  await expect(page.getByRole('button', { name: '對話審查' })).toBeVisible();
+  await expect(page.locator('.sidebar').getByRole('button', { name: '對話審查' })).toBeVisible();
 }
 
 async function expectOverviewFirstAndActive(page: Page) {

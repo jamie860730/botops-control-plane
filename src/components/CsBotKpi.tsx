@@ -1,11 +1,13 @@
 import { ArrowDownRight, ArrowRight, ArrowUpRight, BarChart3 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { CsBotKpiMetric, CsBotKpiSegment, SourceChannel } from '../types';
 import { formatDisplayText, formatSourceChannel } from '../utils/display';
 
 interface CsBotKpiProps {
+  /** Metric to focus on mount (dashboard KPI card drill-through). */
+  initialFocusMetricId?: string | null;
   locale: Locale;
   metrics: CsBotKpiMetric[];
   segments: CsBotKpiSegment[];
@@ -13,9 +15,17 @@ interface CsBotKpiProps {
   onViewConversations: (sourceChannel: SourceChannel | 'All') => void;
 }
 
-export function CsBotKpi({ locale, metrics, segments, onViewConversations }: CsBotKpiProps) {
-  const [focusedMetricId, setFocusedMetricId] = useState<string | null>(null);
+export function CsBotKpi({ initialFocusMetricId = null, locale, metrics, segments, onViewConversations }: CsBotKpiProps) {
+  const [focusedMetricId, setFocusedMetricId] = useState<string | null>(initialFocusMetricId);
   const metricGridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (initialFocusMetricId) {
+      focusMetric(initialFocusMetricId);
+    }
+    // Cross-view focus target only applies when the view lands.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialFocusMetricId]);
   const watchlistMetrics = metrics.filter((metric) => metric.status === 'risk' || metric.status === 'watch');
   const labels = {
     segment: text(locale, 'Segment', '分群'),
