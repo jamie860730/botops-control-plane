@@ -225,7 +225,19 @@ async function routeRequest(request, url) {
 
   if (request.method === 'GET' && url.pathname === '/api/audit-events') {
     const eventType = url.searchParams.get('event_type');
-    return { body: eventType ? auditEvents.filter((event) => event.eventType === eventType) : auditEvents };
+    const actor = url.searchParams.get('actor');
+    const createdFrom = url.searchParams.get('created_from');
+    const createdTo = url.searchParams.get('created_to');
+    return {
+      body: auditEvents.filter((event) => {
+        const createdAt = Date.parse(event.createdAt);
+        const matchesType = eventType ? event.eventType === eventType : true;
+        const matchesActor = actor ? event.actor === actor : true;
+        const matchesFrom = createdFrom ? createdAt >= Date.parse(createdFrom) : true;
+        const matchesTo = createdTo ? createdAt <= Date.parse(createdTo) : true;
+        return matchesType && matchesActor && matchesFrom && matchesTo;
+      })
+    };
   }
 
   return { status: 404, body: { error: 'not_found' } };

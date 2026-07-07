@@ -59,6 +59,35 @@ describe('BotOps seed API server', () => {
     assert.match(body.auditEventId, /^audit_release_decision_/);
   });
 
+  it('filters audit events by event type, actor, and created time range', async () => {
+    const decisionResponse = await fetch(`${baseUrl}/api/release/bundles/rel_mvp_019/decisions`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        decision: 'review_requested',
+        actor: 'PM',
+        reason: 'Needs one more policy owner review.'
+      })
+    });
+    const decision = await decisionResponse.json();
+    const futureFrom = encodeURIComponent(new Date(Date.now() + 60_000).toISOString());
+
+    const actorResponse = await fetch(`${baseUrl}/api/audit-events?event_type=release_decision&actor=System`);
+    const actorBody = await actorResponse.json();
+    const futureResponse = await fetch(`${baseUrl}/api/audit-events?event_type=release_decision&created_from=${futureFrom}`);
+    const futureBody = await futureResponse.json();
+    const matchingResponse = await fetch(`${baseUrl}/api/audit-events?event_type=release_decision&actor=PM`);
+    const matchingBody = await matchingResponse.json();
+
+    assert.equal(decisionResponse.status, 201);
+    assert.equal(actorResponse.status, 200);
+    assert.equal(futureResponse.status, 200);
+    assert.equal(matchingResponse.status, 200);
+    assert.equal(actorBody.length, 0);
+    assert.equal(futureBody.length, 0);
+    assert.ok(matchingBody.some((event) => event.id === decision.auditEventId));
+  });
+
   it('lists ticket center queue records', async () => {
     const response = await fetch(`${baseUrl}/api/tickets?queue=Security-L2`);
     const body = await response.json();
