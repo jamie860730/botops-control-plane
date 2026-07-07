@@ -13,51 +13,37 @@ const workflowSteps: { view: ViewKey; title: string; titleZh: string; detail: st
   {
     view: 'overview',
     title: 'Review dashboard status',
-    titleZh: '檢視總覽狀態',
-    detail: 'Review quality gates, source distribution, and operational queues.',
-    detailZh: '檢視品質門檻、來源分布與營運隊列。'
+    titleZh: '檢視儀表板',
+    detail: 'Review bot KPI, knowledge gaps, handoff risk, and release readiness.',
+    detailZh: '檢視 Bot KPI、知識缺口、交接風險與發布狀態。'
   },
   {
-    view: 'intake',
-    title: 'Select interaction record',
-    titleZh: '選取互動紀錄',
-    detail: 'Filter by channel and inspect the retained response trace.',
-    detailZh: '依來源篩選並檢視保留的回覆 trace。'
+    view: 'conversations',
+    title: 'Review conversations',
+    titleZh: '審查對話',
+    detail: 'Filter source signals, inspect delivered replies, and save eval cases.',
+    detailZh: '篩選來源訊號、審查已送出回覆並保存評測案例。'
   },
   {
-    view: 'chat',
-    title: 'Audit response trace',
-    titleZh: '稽核回覆 trace',
-    detail: 'Review response, citation, risk guard, retrieval, and verification.',
-    detailZh: '審查回覆、引用、風險守門、檢索與驗證。'
+    view: 'knowledge',
+    title: 'Check knowledge coverage',
+    titleZh: '檢查知識覆蓋',
+    detail: 'Review FAQ, SOP, RAG sources, index state, and citation chunks.',
+    detailZh: '檢視 FAQ、SOP、RAG 來源、索引狀態與引用 chunks。'
   },
   {
-    view: 'evaluation',
-    title: 'Run evaluation',
-    titleZh: '執行評測',
-    detail: 'Compare release configurations, then export CSV evidence.',
-    detailZh: '比較發布設定，並匯出 CSV 依據。'
+    view: 'tickets',
+    title: 'Track tickets and handoff',
+    titleZh: '追蹤工單與交接',
+    detail: 'Scan bot-created ticket pressure, owners, SLA, and handoff package.',
+    detailZh: '掃描 Bot 造成的工單壓力、owner、SLA 與交接包。'
   },
   {
-    view: 'errors',
-    title: 'Review badcases',
-    titleZh: '審查失敗案例',
-    detail: 'Turn failures into owner-specific improvement tasks.',
-    detailZh: '將失敗案例轉換為責任歸屬明確的改善項目。'
-  },
-  {
-    view: 'release',
-    title: 'Make a release decision',
-    titleZh: '執行發布決策',
-    detail: 'Block unsafe versions or mark safe bundles ready for review.',
-    detailZh: '阻擋不合規版本，或標記合格版本進入審查。'
-  },
-  {
-    view: 'opsLog',
-    title: 'Verify audit trail',
-    titleZh: '核對稽核軌跡',
-    detail: 'Confirm admin actions are persisted for governance.',
-    detailZh: '確認管理操作已持久化並可供稽核。'
+    view: 'quality',
+    title: 'Decide quality and release',
+    titleZh: '決定品質與發布',
+    detail: 'Run eval, inspect badcases, decide release gates, and verify audit trail.',
+    detailZh: '執行評測、檢查失敗案例、決定發布門檻並核對稽核軌跡。'
   }
 ];
 
@@ -75,7 +61,7 @@ export function WorkflowGuide({ activeView, locale, savedEvalCaseId }: WorkflowG
       </div>
       <div className="workflow-step-list">
         {workflowSteps.map((step, index) => {
-          const isComplete = index < activeIndex || (step.view === 'chat' && Boolean(savedEvalCaseId));
+          const isComplete = index < activeIndex || (step.view === 'conversations' && Boolean(savedEvalCaseId));
           const isActive = index === activeIndex;
           const Icon = isComplete ? CheckCircle2 : Circle;
           return (

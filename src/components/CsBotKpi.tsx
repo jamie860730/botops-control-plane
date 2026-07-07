@@ -1,16 +1,22 @@
 import { ArrowDownRight, ArrowRight, ArrowUpRight, BarChart3 } from 'lucide-react';
+import { useRef, useState } from 'react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
-import type { CsBotKpiMetric, CsBotKpiSegment } from '../types';
+import type { CsBotKpiMetric, CsBotKpiSegment, SourceChannel } from '../types';
 import { formatDisplayText, formatSourceChannel } from '../utils/display';
 
 interface CsBotKpiProps {
   locale: Locale;
   metrics: CsBotKpiMetric[];
   segments: CsBotKpiSegment[];
+  /** Opens the Conversations view pre-filtered to the segment's source channel. */
+  onViewConversations: (sourceChannel: SourceChannel | 'All') => void;
 }
 
-export function CsBotKpi({ locale, metrics, segments }: CsBotKpiProps) {
+export function CsBotKpi({ locale, metrics, segments, onViewConversations }: CsBotKpiProps) {
+  const [focusedMetricId, setFocusedMetricId] = useState<string | null>(null);
+  const metricGridRef = useRef<HTMLDivElement>(null);
+  const watchlistMetrics = metrics.filter((metric) => metric.status === 'risk' || metric.status === 'watch');
   const labels = {
     segment: text(locale, 'Segment', '分群'),
     volume: text(locale, 'Volume', '量體'),
@@ -19,7 +25,17 @@ export function CsBotKpi({ locale, metrics, segments }: CsBotKpiProps) {
     citationFail: text(locale, 'Citation fail', '引用失敗'),
     repeatContact: text(locale, 'Repeat contact', '重複進線'),
     slaRisk: text(locale, 'SLA risk', 'SLA 風險'),
+    action: text(locale, 'Action', '操作')
   };
+
+  function focusMetric(metricId: string) {
+    setFocusedMetricId(metricId);
+    requestAnimationFrame(() => {
+      metricGridRef.current
+        ?.querySelector(`[data-metric-id="${metricId}"]`)
+        ?.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+    });
+  }
 
   return (
     <section className="screen-grid kpi-grid" data-testid="cs-bot-kpi">
@@ -31,9 +47,16 @@ export function CsBotKpi({ locale, metrics, segments }: CsBotKpiProps) {
           </div>
           <BarChart3 size={26} aria-hidden="true" />
         </div>
-        <div className="cs-kpi-metric-grid">
+        <div className="cs-kpi-metric-grid" ref={metricGridRef}>
           {metrics.map((metric) => (
-            <article className={`cs-kpi-card ${metric.status}`} key={metric.id}>
+            <article
+              className={
+                metric.id === focusedMetricId ? `cs-kpi-card ${metric.status} focused` : `cs-kpi-card ${metric.status}`
+              }
+              data-metric-id={metric.id}
+              data-testid={`kpi-card-${metric.id}`}
+              key={metric.id}
+            >
               <div className="row-title">
                 <strong>{formatDisplayText(locale, metric.label)}</strong>
                 <span>{metric.target}</span>
@@ -47,16 +70,34 @@ export function CsBotKpi({ locale, metrics, segments }: CsBotKpiProps) {
           ))}
         </div>
       </div>
-      <div className="panel">
+      <div className="panel" data-testid="kpi-watchlist">
         <p className="eyebrow">{text(locale, 'KPI watchlist', 'KPI 關注清單')}</p>
-        <h3>{text(locale, 'User cases behind the KPI movement', 'KPI 變動背後的用戶案例')}</h3>
-        <p>
-          {text(
-            locale,
-            'Segment movement by source channel, case cluster, and accountable owner.',
-            '依來源、案例群與負責 owner 追蹤分群變化。'
-          )}
-        </p>
+        <h3>{text(locale, 'Metrics off target that need review', '偏離目標、需要追蹤的指標')}</h3>
+        {watchlistMetrics.length > 0 ? (
+          <div className="kpi-watchlist-list">
+            {watchlistMetrics.map((metric) => (
+              <button
+                className={
+                  metric.id === focusedMetricId ? 'kpi-watchlist-item selected' : 'kpi-watchlist-item'
+                }
+                data-testid={`kpi-watchlist-${metric.id}`}
+                key={metric.id}
+                onClick={() => focusMetric(metric.id)}
+                type="button"
+              >
+                <span className="row-title">
+                  <strong>{formatDisplayText(locale, metric.label)}</strong>
+                  <span className={metric.status === 'risk' ? 'risk-pill high' : 'risk-pill medium'}>
+                    {metric.status === 'risk' ? text(locale, 'Risk', '風險') : text(locale, 'Watch', '關注')}
+                  </span>
+                </span>
+                <p>{formatDisplayText(locale, metric.insight)}</p>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <p>{text(locale, 'All KPI metrics are currently on target.', '目前所有 KPI 指標皆在目標範圍內。')}</p>
+        )}
       </div>
       <div className="panel span-2">
         <div className="section-heading">
@@ -74,6 +115,7 @@ export function CsBotKpi({ locale, metrics, segments }: CsBotKpiProps) {
             <span>{labels.citationFail}</span>
             <span>{labels.repeatContact}</span>
             <span>{labels.slaRisk}</span>
+            <span>{labels.action}</span>
           </div>
           {segments.map((segment) => (
             <div className="table-row cs-kpi-row" key={segment.id}>
@@ -87,6 +129,21 @@ export function CsBotKpi({ locale, metrics, segments }: CsBotKpiProps) {
               <span data-label={labels.citationFail}>{formatRate(segment.citationFailureRate)}</span>
               <span data-label={labels.repeatContact}>{formatRate(segment.repeatContactRate)}</span>
               <span data-label={labels.slaRisk}>{segment.slaRiskCount}</span>
+              <span data-label={labels.action}>
+                <button
+                  aria-label={text(
+                    locale,
+                    `View conversations for ${segment.segment}`,
+                    `檢視 ${formatDisplayText(locale, segment.segment)} 的對話`
+                  )}
+                  className="table-action"
+                  data-testid={`segment-drilldown-${segment.id}`}
+                  onClick={() => onViewConversations(segment.sourceChannel)}
+                  type="button"
+                >
+                  {text(locale, 'View conversations', '檢視對話')}
+                </button>
+              </span>
               <p>{formatDisplayText(locale, segment.reviewFocus)}</p>
             </div>
           ))}

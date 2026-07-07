@@ -74,6 +74,7 @@ const traceNodeZh: Record<string, string> = {
   'Risk Guard': '風險檢查',
   'Metadata Retrieval': '資料檢索',
   'Answer Generation': '回覆產生',
+  Citation: '引用標註',
   'Verification Gate': '回覆驗證',
   'Human Handoff': '人工交接'
 };
@@ -143,6 +144,36 @@ const displayTextZh: Record<string, string> = {
   'Internal Report': '內部通報',
   'Current release v18': '目前版本 v18',
   'Proposed release v19': '候選版本 v19',
+  'Current release v17': '目前版本 v17',
+  'Proposed release v18': '候選版本 v18',
+  'Archived release v17': '封存版本 v17',
+  // Flow version diff module
+  'Adds account-takeover and asset-movement checks before any automated answer.':
+    '在任何自動回覆之前，加入帳戶盜用與資產移動檢查。',
+  'Region scope filter is now mandatory for policy intents.': '政策意圖現在必須套用地區範圍篩選。',
+  'Citations are limited to published, citation-allowed chunks only.': '引用僅限已發布且允許引用的內容區塊。',
+  'Latency optimization lets generation answer directly when confidence is high.':
+    '延遲最佳化讓回覆產生在高信心時直接回答。',
+  'Hard handoff for account takeover was removed, so high-risk cases were auto-answered.':
+    '帳戶盜用的強制人工交接被移除，導致高風險案例被自動回答。',
+  'Answer Generation policy scope': '回覆產生的政策範圍',
+  'Policy answers must abstain instead of guessing when no regional source exists.':
+    '缺少地區來源文件時，政策回答必須拒答而非猜測。',
+  'Answer transfer policy questions using the best available FAQ content.':
+    '使用現有最合適的 FAQ 內容回答轉帳政策問題。',
+  'Answer transfer policy questions only when a published regional policy article supports the claim; otherwise abstain and open a KB gap.':
+    '僅在已發布的地區政策文件可支撐說法時回答轉帳政策問題；否則拒答並建立知識缺口。',
+  'Answer Generation escalation rule': '回覆產生的升級規則',
+  'Escalation instruction was dropped, which caused the handoff safety regression.':
+    '升級指示被移除，造成人工交接安全性退化。',
+  'If account compromise or asset movement is suspected, stop and route to Security-L2.':
+    '若疑似帳戶遭盜用或涉及資產移動，停止回答並轉交安全二線。',
+  'Resolve the request directly whenever the retrieved context looks sufficient.':
+    '只要檢索到的內容看起來足夠，就直接解決該請求。',
+  'Adds the reviewed EU/FR cross-border policy article and retires the stale global FAQ chunk.':
+    '加入審核後的 EU/FR 跨境政策文件，並下架過期的全球 FAQ 區塊。',
+  'Adds region_scope as a hard retrieval filter for policy intents.':
+    '將 region_scope 設為政策意圖的強制檢索篩選。',
   'Policy release package v19': '政策發布套件 v19',
   'Policy release package v18': '政策發布套件 v18',
   Ready: '可發布',
@@ -184,6 +215,7 @@ const displayTextZh: Record<string, string> = {
   Published: '已發布',
   Indexed: '已索引',
   'Needs re-index': '需重建索引',
+  'Index queued': '已排入索引',
   Excluded: '已排除',
   Review: '審查中',
   Draft: '草稿',
@@ -232,7 +264,103 @@ const displayTextZh: Record<string, string> = {
   'Completed offline eval run': '離線評測已完成',
   'Exported eval summary CSV': '已匯出評測摘要 CSV',
   'Promoted release bundle': '已推進發布套件',
-  'Blocked release bundle': '已阻擋發布套件'
+  'Blocked release bundle': '已阻擋發布套件',
+  'Requested release review': '已請求發布審查',
+  'JP cross-border policy exception questions': '日本跨境付款政策例外問題',
+  'Transfer delay surge follow-ups': '轉帳延遲爆量追問',
+  'KYC rejection follow-up questions': '身分驗證被拒追問',
+  'New earn product FAQ blank': '新理財產品 FAQ 空白',
+  Observing: '觀察中',
+  'Candidate drafted': '已產候選草稿',
+  Adopted: '已採納',
+  Returned: '已退回重寫',
+  Rejected: '已拒絕',
+  'Not automatable': '不適合自動化',
+  'Is there a Japan-specific exception to the cross-border payment policy?':
+    '日本是否有跨境付款政策的例外規定？',
+  'Japan follows the same cross-border payment policy baseline as other regions, but localized exception rules are still under compliance review. Until a reviewed JP article is published, the bot should abstain from JP exception claims and route the question to support.':
+    '日本適用與其他地區相同的跨境付款政策基準，但在地化例外規則仍在法遵審查中。在審核後的日本文件發布前，Bot 不應回答日本例外相關問題，並轉交客服處理。',
+  'Draft reuses the EU baseline; Knowledge Owner must confirm the JP exception scope before adoption.':
+    '草稿沿用 EU 基準內容，採納前需由 Knowledge Owner 確認日本例外範圍。',
+  'Why is my transfer delayed and when should I contact support?':
+    '為什麼我的轉帳延遲？什麼時候該聯絡客服？',
+  'Transfer delays are usually caused by network congestion, missing information, or routine risk checks. Most delayed transfers complete without resubmission. If a transfer stays in processing beyond the expected window, contact support instead of sending it again.':
+    '轉帳延遲通常由網路壅塞、資訊缺漏或例行風險檢查造成。多數延遲的轉帳不需重送即可完成。若轉帳超過預期時間仍在處理中，請聯絡客服，不要重複送出。',
+  'Adopted after adding the delay-cause breakdown and an explicit no-resubmission warning.':
+    '補上延遲原因分類與「不要重複送出」提醒後採納入庫。',
+  'What should I do after my identity verification is rejected?': '身分驗證被拒絕後該怎麼辦？',
+  'First check the rejection type shown in the notification, then prepare the documents listed for that type and resubmit. The bot explains the general process only and never judges an individual account result.':
+    '請先確認通知中顯示的被拒類型，再依該類型準備所列文件重新送審。Bot 僅說明一般流程，不判斷個別帳戶結果。',
+  'Needs a localized zh-TW answer variant before it can be adopted for the LINE channel.':
+    '需先補上繁中在地化答案版本，才能採納用於 LINE 來源。',
+  'Adopted FAQ candidate into knowledge base': '已採納 FAQ 候選入庫',
+  'Returned FAQ candidate for rewrite': '已退回 FAQ 候選重寫',
+  'Marked FAQ candidate as not automatable': '已標記 FAQ 候選為不適合自動化',
+  faq_candidate_reviewed: 'FAQ 候選審核',
+  // Agent Assist module
+  'KYC Review': 'KYC 審查',
+  transfer_delay_faq: '轉帳延遲 FAQ',
+  cross_border_policy: '跨境政策說明',
+  kyc_rejection_followup: 'KYC 被拒追問',
+  assist_badcase_flagged: '座席輔助 badcase 標記',
+  knowledge_index_queued: '知識排入索引',
+  'Queued knowledge re-index': '已將知識文件排入重建索引',
+  'Flagged assist suggestion as badcase': '已將座席輔助建議標記為 badcase',
+  'Assist suggestion quality': '座席輔助建議品質',
+  'Assist suggestion adoption': '座席輔助建議採納',
+  'Suggestion adoption rate': '建議採納率',
+  'Your transfer is still processing. Delays are usually caused by network congestion or routine risk checks, and most delayed transfers complete without resubmission.':
+    '您的轉帳仍在處理中。延遲通常來自網路壅塞或例行風險檢查，多數延遲的轉帳不需重送即可完成。',
+  'Your transfer is still processing. Delays are usually caused by network congestion or routine risk checks. If it is still processing after 24 hours, reply here and we will escalate it.':
+    '您的轉帳仍在處理中。延遲通常來自網路壅塞或例行風險檢查。若 24 小時後仍在處理中，請回覆此訊息，我們會升級處理。',
+  'Cross-border transfers can be held until the required sender and beneficiary information is confirmed under EU payment policy. You can submit the missing details from the transfer page.':
+    '依 EU 付款政策，跨境轉帳可能在確認匯款人與收款人必要資訊前暫停。您可以在轉帳頁面補交缺少的資料。',
+  'Your identity verification was rejected. Please resubmit the same documents and wait for another review.':
+    '您的身分驗證被拒絕。請重新送出相同文件並等待再次審查。',
+  'The rejection was caused by an unreadable document photo. Please retake the ID photo in good lighting and resubmit; review usually completes within 24 hours.':
+    '被拒原因是證件照片無法辨識。請在光線充足處重拍證件照後重新送出，審查通常在 24 小時內完成。',
+  'Your transfer is held because the beneficiary bank details are incomplete under EU cross-border policy. Please add the missing beneficiary address; compliance review resumes automatically after submission.':
+    '依 EU 跨境政策，您的轉帳因收款銀行資料不完整而暫停。請補上缺少的收款人地址，送出後法遵審查會自動恢復。',
+  'Customer asked about a delayed transfer; agent shared the standard processing-window guidance.':
+    '客戶詢問轉帳延遲；座席提供標準處理時程說明。',
+  'Customer contacted support about KYC.': '客戶因 KYC 聯繫客服。',
+  'KYC was rejected twice for document quality; agent explained the rejection type and the resubmission steps.':
+    'KYC 因文件品質連續被拒兩次；座席說明被拒類型與重新送審步驟。',
+  'Customer asked about a held transfer.': '客戶詢問被暫停的轉帳。',
+  'Transfer held under EU cross-border policy; agent confirmed which beneficiary fields are missing and set review expectations.':
+    '轉帳因 EU 跨境政策暫停；座席確認缺少哪些收款人欄位並說明審查時程。',
+  // Judge calibration module
+  'Agreement dropped after the judge version swap; risk-handoff scores diverge most from human labels.':
+    'judge 換版後一致率下降；風險交接維度分數與人工標註落差最大。',
+  // SOP management module
+  Archived: '已封存',
+  'Account takeover freeze handling': '帳號盜用凍結處理',
+  'KYC rejection reply flow': 'KYC 被拒回覆流程',
+  'Policy update knowledge sync': '政策更新後知識同步流程',
+  'Incident spike escalation flow': '事故爆量升級流程',
+  'Customer reports account compromise while a transfer is on hold.': '客戶回報帳戶疑似遭盜用，且轉帳處於暫停狀態。',
+  'Customer asks what to do after an identity verification rejection.': '客戶詢問身分驗證被拒後該怎麼辦。',
+  'A compliance policy update changes customer-facing transfer rules.': '法遵政策更新改變了客戶可見的轉帳規則。',
+  'Multi-channel reports describe the same transfer delay surge.': '多來源回報描述同一波轉帳延遲爆量。',
+  'Collect non-sensitive fields: region, last visible error, incident timeline.':
+    '收集非敏感欄位：地區、使用者最後看到的錯誤、事件時間線。',
+  'Apply a temporary login and withdrawal freeze on the account.': '對帳戶施加暫時性登入與提領凍結。',
+  'Only when an active session shows a suspicious pending transfer.': '僅在活躍工作階段出現可疑待處理轉帳時。',
+  'Decide on asset movement: refund, unlock, or transfer approval.': '決定資產移動：退款、解鎖或核准轉帳。',
+  'Package the case summary and route it to the Security-L2 queue.': '打包案件摘要並轉交安全二線隊列。',
+  'Identify the rejection type shown in the customer notification.': '辨識客戶通知中顯示的被拒類型。',
+  'Send the general resubmission guidance with a KB citation.': '發送附知識庫引用的一般重新送審指引。',
+  'Escalate the drafted reply to a KYC reviewer before sending.': '發送前先將草擬回覆升級給 KYC 審查員。',
+  'When the account was rejected twice or document fraud is suspected.': '當帳戶連續被拒兩次或疑似文件偽造時。',
+  'Flag every KB document citing the updated policy for re-index.': '將引用該政策的知識文件全部標記為需重建索引。',
+  'Review and publish the updated article scope.': '審查並發布更新後的文件範圍。',
+  'When the update changes region scope or citation-allowed chunks.': '當更新改變地區範圍或可引用 chunks 時。',
+  'Queue re-index jobs and refresh the KB snapshot used by eval gates.':
+    '排入重建索引作業，並更新評測門檻使用的知識庫快照。',
+  'Cluster related signals into one duplicate cluster with a shared ID.': '將相關訊號歸入同一個重複案例群並共用 ID。',
+  'Declare an incident and switch the bot to the incident holding answer.': '宣告事故並將 bot 切換為事故等待回覆。',
+  'When cluster volume passes the incident threshold within one hour.': '當案例群量體在一小時內超過事故門檻時。',
+  'Promise refunds or compensation for delayed transfers.': '對延遲轉帳承諾退款或補償。'
 };
 
 export function formatSourceChannel(locale: Locale, value: SourceChannel | 'All') {

@@ -1,14 +1,20 @@
 import { seedData } from '../data/seedData';
 import type {
+  AssistSuggestion,
   Badcase,
   CsBotKpiMetric,
   CsBotKpiSegment,
   EvalCase,
   EvalResult,
+  FaqCandidate,
+  FlowVersionDiff,
+  GapCluster,
   HandoffPreview,
+  JudgeCalibration,
   KnowledgeDocument,
   ReleaseBundle,
   SeedData,
+  SopRecord,
   SourceChannel,
   SupportScenario,
   SupportSignal,
@@ -76,8 +82,16 @@ export class SeedBackendAdapter {
     return seedData.badcases;
   }
 
+  listJudgeCalibrations(): JudgeCalibration[] {
+    return seedData.judgeCalibrations;
+  }
+
   listReleaseBundles(): ReleaseBundle[] {
     return seedData.releaseBundles;
+  }
+
+  getFlowVersionDiff(bundleId: string): FlowVersionDiff | undefined {
+    return seedData.flowVersionDiffs.find((diff) => diff.bundleId === bundleId);
   }
 
   getHandoffPreview(scenarioId: string): HandoffPreview | undefined {
@@ -94,6 +108,24 @@ export class SeedBackendAdapter {
 
   listCsBotKpiSegments(): CsBotKpiSegment[] {
     return seedData.csBotKpiSegments;
+  }
+
+  listGapClusters(): GapCluster[] {
+    return seedData.gapClusters;
+  }
+
+  listAssistSuggestions(): AssistSuggestion[] {
+    return seedData.assistSuggestions;
+  }
+
+  listSopRecords(): SopRecord[] {
+    return seedData.sopRecords;
+  }
+
+  listFaqCandidates(clusterId?: string): FaqCandidate[] {
+    return clusterId
+      ? seedData.faqCandidates.filter((candidate) => candidate.clusterId === clusterId)
+      : seedData.faqCandidates;
   }
 }
 

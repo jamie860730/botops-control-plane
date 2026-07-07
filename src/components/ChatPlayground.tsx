@@ -53,7 +53,7 @@ export function ChatPlayground({
           </div>
           <button className="secondary-action" onClick={onSaveEvalCase} type="button">
             <BookmarkPlus size={15} aria-hidden="true" />
-            {text(locale, 'Save trace as eval case', '轉存為評測案例')}
+            {text(locale, 'Create eval case', '建立評測案例')}
           </button>
         </div>
         <div className="profile-strip">
@@ -99,11 +99,11 @@ export function ChatPlayground({
         </div>
         <div className="eval-save-status" data-testid="eval-save-status">
           {savedEvalCaseId
-            ? text(locale, `Saved ${savedEvalCaseId}`, `已轉存 ${savedEvalCaseId}`)
+            ? text(locale, `Eval case ${savedEvalCaseId}`, `評測案例 ${savedEvalCaseId}`)
             : text(
                 locale,
-                'This live interaction has not been saved as an eval case yet.',
-                '此互動紀錄尚未轉存為評測案例。'
+                'No eval case linked to this interaction record.',
+                '此互動紀錄尚未連結評測案例。'
               )}
         </div>
       </div>
@@ -111,8 +111,8 @@ export function ChatPlayground({
       <div className="panel" data-testid="trace-panel">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">{text(locale, 'Response processing log', '回覆處理紀錄')}</p>
-            <h3>{text(locale, 'Bot steps used for the delivered answer', '機器人送出回覆時採用的處理步驟')}</h3>
+            <p className="eyebrow">{text(locale, 'Response trace', '回覆 Trace')}</p>
+            <h3>{text(locale, 'Runtime events for the delivered answer', '已送出回覆的 runtime events')}</h3>
           </div>
         </div>
         <div className="trace-list">
@@ -127,7 +127,7 @@ export function ChatPlayground({
           ))}
         </div>
         <div className="highlighted-citation" data-testid="highlighted-citation">
-          <p className="eyebrow">{text(locale, 'Highlighted citation', '目前引用證據')}</p>
+          <p className="eyebrow">{text(locale, 'Citation evidence', '引用證據')}</p>
           {highlightedChunk && highlightedDoc ? (
             <>
               <strong>{highlightedDoc.title}</strong>

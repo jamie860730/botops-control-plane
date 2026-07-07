@@ -26,13 +26,6 @@ export function ErrorAnalysis({ badcases, locale }: ErrorAnalysisProps) {
             <h3>{text(locale, 'Failed cases requiring product fixes', '需要修正的失敗案例')}</h3>
           </div>
         </div>
-        <p className="panel-note">
-          {text(
-            locale,
-            'Generated from low-scoring evaluation rows. Each case links an observed failure to the trace node, owner, and retest metric that need follow-up.',
-            '由評測中心的低分案例產生。每筆失敗案例會對應到觀察到的問題、處理節點、負責單位與重測指標。'
-          )}
-        </p>
         <div className="stacked-list">
           {badcases.map((badcase) => (
             <article className="badcase-row badcase-action-row" key={badcase.id}>
@@ -47,8 +40,8 @@ export function ErrorAnalysis({ badcases, locale }: ErrorAnalysisProps) {
                   <select
                     aria-label={text(
                       locale,
-                      `Admin status for ${badcase.title}`,
-                      `${formatBadcaseText(locale, badcase.title)} 管理員狀態`
+                      `Status for ${badcase.title}`,
+                      `${formatBadcaseText(locale, badcase.title)} 狀態`
                     )}
                     onChange={(event) =>
                       setStatusById((current) => ({
@@ -64,7 +57,7 @@ export function ErrorAnalysis({ badcases, locale }: ErrorAnalysisProps) {
                   </select>
                 </label>
                 <button className="inline-action" onClick={() => setSelectedBadcaseId(badcase.id)} type="button">
-                  {text(locale, 'View detail', '查看詳情')}
+                  {text(locale, 'Open record', '開啟紀錄')}
                 </button>
               </div>
             </article>

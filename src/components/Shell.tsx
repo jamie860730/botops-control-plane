@@ -1,48 +1,95 @@
 import {
   AlertTriangle,
-  Activity,
   Bot,
-  ChartNoAxesCombined,
   ClipboardCheck,
   Database,
-  GitBranch,
+  Headset,
   LayoutDashboard,
   Menu,
   Tickets,
-  RadioTower,
-  ShieldCheck,
   X,
   Workflow
 } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
+import type { SourceChannel } from '../types';
 
 export type ViewKey =
-  | 'intake'
   | 'overview'
-  | 'chat'
+  | 'conversations'
   | 'knowledge'
-  | 'csKpi'
-  | 'evaluation'
-  | 'errors'
+  | 'assist'
   | 'tickets'
-  | 'handoff'
-  | 'release'
-  | 'opsLog';
+  | 'quality';
 
-const navItems: { key: ViewKey; labelEn: string; labelZh: string; icon: typeof RadioTower }[] = [
-  { key: 'overview', labelEn: 'Overview', labelZh: '總覽', icon: LayoutDashboard },
-  { key: 'intake', labelEn: 'Signal Intake', labelZh: '訊號受理', icon: RadioTower },
-  { key: 'chat', labelEn: 'Response Trace', labelZh: '回覆追蹤', icon: Bot },
-  { key: 'knowledge', labelEn: 'Knowledge Governance', labelZh: '知識治理', icon: Database },
-  { key: 'csKpi', labelEn: 'CS Bot KPI', labelZh: '客服 KPI', icon: ChartNoAxesCombined },
-  { key: 'evaluation', labelEn: 'Evaluation', labelZh: '評測中心', icon: ClipboardCheck },
-  { key: 'errors', labelEn: 'Error Analysis', labelZh: '錯誤分析', icon: AlertTriangle },
-  { key: 'tickets', labelEn: 'Ticket Center', labelZh: '工單中心', icon: Tickets },
-  { key: 'handoff', labelEn: 'Handoff', labelZh: '人工交接', icon: GitBranch },
-  { key: 'release', labelEn: 'Release Center', labelZh: '發布中心', icon: ShieldCheck },
-  { key: 'opsLog', labelEn: 'Audit Log', labelZh: '稽核紀錄', icon: Activity }
+/** Optional cross-view target so a navigation can pre-select a specific entity. */
+export interface NavigationTarget {
+  ticketId?: string;
+  knowledgeDocId?: string;
+  /** Pre-applies the Conversations source filter (KPI segment drilldown); lands on the list layer. */
+  sourceChannel?: SourceChannel | 'All';
+  /** Opens the Conversations review layer directly for this scenario. */
+  scenarioId?: string;
+}
+
+const navItems: {
+  key: ViewKey;
+  labelEn: string;
+  labelZh: string;
+  /** One-line task statement shown under the workspace title. */
+  taskEn: string;
+  taskZh: string;
+  icon: typeof LayoutDashboard;
+}[] = [
+  {
+    key: 'overview',
+    labelEn: 'Dashboard',
+    labelZh: '儀表板',
+    taskEn: 'See the current state of bot operations and decide what to handle first today.',
+    taskZh: '掌握 bot 營運現況，決定今天優先處理什麼。',
+    icon: LayoutDashboard
+  },
+  {
+    key: 'conversations',
+    labelEn: 'Conversations',
+    labelZh: '對話審查',
+    taskEn: 'Check the quality of replies the bot already sent and turn problems into eval cases.',
+    taskZh: '檢查 bot 已送出回覆的品質，把問題轉成評測案例。',
+    icon: Bot
+  },
+  {
+    key: 'knowledge',
+    labelEn: 'Knowledge',
+    labelZh: '知識治理',
+    taskEn: 'Manage the knowledge the bot answers from, its gaps, and the related SOPs.',
+    taskZh: '管理 bot 回答依據的知識、缺口與 SOP。',
+    icon: Database
+  },
+  {
+    key: 'assist',
+    labelEn: 'Agent Assist',
+    labelZh: '座席輔助',
+    taskEn: 'Measure AI assist quality through what agents actually do with each suggestion.',
+    taskZh: '用座席的實際行為量測 AI 輔助品質。',
+    icon: Headset
+  },
+  {
+    key: 'tickets',
+    labelEn: 'Tickets & Handoff',
+    labelZh: '工單與交接',
+    taskEn: 'Track tickets the bot created and the quality of each human handoff.',
+    taskZh: '追蹤 bot 建立的工單與交接品質。',
+    icon: Tickets
+  },
+  {
+    key: 'quality',
+    labelEn: 'Quality & Release',
+    labelZh: '品質與發布',
+    taskEn: 'Guard every release with evaluation evidence.',
+    taskZh: '用評測證據守住每一次發布。',
+    icon: ClipboardCheck
+  }
 ];
 
 interface ShellProps {
@@ -131,8 +178,8 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
           <span>
             {text(
               locale,
-              'Review signals, knowledge, evaluations, and releases from one control plane.',
-              '從同一個控制台審查訊號、知識、評測與發布。'
+              'Quality governance, knowledge operations, handoff control, release audit.',
+              '品質治理、知識營運、交接控管、發布稽核。'
             )}
           </span>
         </div>
@@ -142,6 +189,7 @@ export function Shell({ activeView, children, locale, onLocaleChange, onViewChan
           <header className="workspace-header">
             <div>
               <h2>{text(locale, activeNavItem.labelEn, activeNavItem.labelZh)}</h2>
+              <p className="workspace-task">{text(locale, activeNavItem.taskEn, activeNavItem.taskZh)}</p>
             </div>
             <div className="desktop-header-actions">
               <LocaleToggle locale={locale} onLocaleChange={onLocaleChange} />

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Activity, Download, PlayCircle, Save, ShieldCheck } from 'lucide-react';
+import { Activity, ClipboardCheck, Download, Flag, PlayCircle, RefreshCw, Save, ShieldCheck } from 'lucide-react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
 import type { AuditEvent, AuditEventType } from '../types';
@@ -16,7 +16,10 @@ const eventIconMap = {
   eval_runner_started: Activity,
   eval_runner_completed: ShieldCheck,
   csv_exported: Download,
-  release_decision: ShieldCheck
+  release_decision: ShieldCheck,
+  faq_candidate_reviewed: ClipboardCheck,
+  assist_badcase_flagged: Flag,
+  knowledge_index_queued: RefreshCw
 };
 
 const eventFilters: Array<{ value: AuditEventType | 'All'; labelEn: string; labelZh: string }> = [
@@ -25,13 +28,30 @@ const eventFilters: Array<{ value: AuditEventType | 'All'; labelEn: string; labe
   { value: 'eval_case_saved', labelEn: 'Eval case', labelZh: '評測案例' },
   { value: 'eval_runner_completed', labelEn: 'Eval completed', labelZh: '評測完成' },
   { value: 'csv_exported', labelEn: 'CSV export', labelZh: 'CSV 匯出' },
-  { value: 'release_decision', labelEn: 'Release decision', labelZh: '發布決策' }
+  { value: 'release_decision', labelEn: 'Release decision', labelZh: '發布決策' },
+  { value: 'faq_candidate_reviewed', labelEn: 'FAQ review', labelZh: 'FAQ 審核' },
+  { value: 'assist_badcase_flagged', labelEn: 'Assist badcase', labelZh: '座席輔助 badcase' },
+  { value: 'knowledge_index_queued', labelEn: 'Index queued', labelZh: '排入索引' }
 ];
+
+/**
+ * Renders an audit event's title/detail in the active locale. Events created after
+ * the bilingual format carry titleZh/detailZh; legacy localStorage events fall back
+ * to the static display map, then to their original English copy.
+ */
+function auditEventText(locale: Locale, en: string, zh: string | undefined) {
+  if (locale === 'zh-TW' && zh) {
+    return zh;
+  }
+  return formatDisplayText(locale, en);
+}
 
 export function OpsLog({ events, locale }: OpsLogProps) {
   const [selectedFilter, setSelectedFilter] = useState<AuditEventType | 'All'>('All');
+  const [selectedEventId, setSelectedEventId] = useState(events[0]?.id ?? '');
   const filteredEvents =
     selectedFilter === 'All' ? events : events.filter((event) => event.eventType === selectedFilter);
+  const selectedEvent = events.find((event) => event.id === selectedEventId) ?? filteredEvents[0];
   const eventCountLabel =
     locale === 'zh-TW'
       ? `${filteredEvents.length} 筆事件`
@@ -43,7 +63,7 @@ export function OpsLog({ events, locale }: OpsLogProps) {
         <div className="section-heading">
           <div>
             <p className="eyebrow">{text(locale, 'Ops Log', '操作紀錄')}</p>
-            <h3>{text(locale, 'Persistent action history for product and operations review', '產品與營運審查操作紀錄')}</h3>
+            <h3>{text(locale, 'Governance event ledger', '治理事件紀錄')}</h3>
           </div>
           <span className="count-pill">{eventCountLabel}</span>
         </div>
@@ -64,26 +84,36 @@ export function OpsLog({ events, locale }: OpsLogProps) {
           {filteredEvents.map((event) => {
             const Icon = eventIconMap[event.eventType] ?? Activity;
             return (
-              <article className="audit-row" key={event.id}>
+              <button
+                className={event.id === selectedEvent?.id ? 'audit-row interactive-row selected' : 'audit-row interactive-row'}
+                key={event.id}
+                onClick={() => setSelectedEventId(event.id)}
+                type="button"
+              >
                 <div className="row-icon">
                   <Icon size={15} aria-hidden="true" />
                 </div>
                 <div>
                   <div className="row-title">
-                    <strong>{formatDisplayText(locale, event.title)}</strong>
+                    <strong>{auditEventText(locale, event.title, event.titleZh)}</strong>
                     <span>{formatDisplayText(locale, event.actor)}</span>
                     <span>{event.entityRef}</span>
                   </div>
-                  <p>{formatDisplayText(locale, event.detail)}</p>
+                  <p>{auditEventText(locale, event.detail, event.detailZh)}</p>
                 </div>
-                <time>{new Date(event.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time>
-              </article>
+                <time>
+                  {new Date(event.createdAt).toLocaleTimeString(locale === 'zh-TW' ? 'zh-TW' : 'en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </time>
+              </button>
             );
           })}
           {filteredEvents.length === 0 && (
             <div className="empty-state">
               <strong>{text(locale, 'No events match this filter', '沒有符合此篩選的事件')}</strong>
-              <p>{text(locale, 'Run an operation or choose another event type.', '請執行操作或選擇其他事件類型。')}</p>
+              <p>{text(locale, 'No ledger entries for the selected event type.', '所選事件類型目前沒有稽核紀錄。')}</p>
             </div>
           )}
         </div>
@@ -91,13 +121,26 @@ export function OpsLog({ events, locale }: OpsLogProps) {
       <div className="panel">
         <p className="eyebrow">{text(locale, 'Audit scope', '稽核範圍')}</p>
         <h3>{text(locale, 'Trace, evaluation, export, and release events', 'Trace、評測、匯出與發布事件')}</h3>
-        <p>
-          {text(
-            locale,
-            'Append-only activity history for product and operations governance.',
-            '產品與營運治理使用的 append-only 活動紀錄。'
-          )}
-        </p>
+        {selectedEvent && (
+          <dl className="compact-detail-list">
+            <div>
+              <dt>{text(locale, 'Event type', '事件類型')}</dt>
+              <dd>{formatDisplayText(locale, selectedEvent.eventType)}</dd>
+            </div>
+            <div>
+              <dt>{text(locale, 'Actor', '操作者')}</dt>
+              <dd>{formatDisplayText(locale, selectedEvent.actor)}</dd>
+            </div>
+            <div>
+              <dt>{text(locale, 'Entity', '實體')}</dt>
+              <dd>{selectedEvent.entityRef}</dd>
+            </div>
+            <div>
+              <dt>{text(locale, 'Created at', '建立時間')}</dt>
+              <dd>{new Date(selectedEvent.createdAt).toLocaleString(locale === 'zh-TW' ? 'zh-TW' : 'en-US')}</dd>
+            </div>
+          </dl>
+        )}
       </div>
     </section>
   );

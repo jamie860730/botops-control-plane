@@ -1,21 +1,27 @@
 import { useMemo, useState } from 'react';
-import { Download, Play, X } from 'lucide-react';
+import { Download, Loader2, Play, ShieldAlert, X } from 'lucide-react';
 import type { Locale } from '../i18n';
 import { text } from '../i18n';
-import type { EvalCase, EvalResult, EvalRun } from '../types';
+import type { EvalCase, EvalResult, EvalRun, JudgeCalibration } from '../types';
 import { formatDisplayText } from '../utils/display';
 import { buildEvalSummaryRows, getEvalSummaryCsvHeader } from '../utils/export';
-import { calculateEvaluationSummary } from '../utils/metrics';
+import {
+  calculateEvaluationSummary,
+  getBelowThresholdJudgeVersions,
+  isJudgeBelowThreshold
+} from '../utils/metrics';
 
 interface EvaluationCenterProps {
   evalCases: EvalCase[];
   evalResults: EvalResult[];
   evalRuns: EvalRun[];
   evalRunnerStatus: string;
+  judgeCalibrations: JudgeCalibration[];
   locale: Locale;
   onExportCsv: () => void;
   onRunEval: () => void;
-  savedEvalCaseId: string | null;
+  /** Saved conversation eval cases keyed by scenario id. */
+  savedEvalCaseIds: Record<string, string>;
 }
 
 export function EvaluationCenter({
@@ -23,12 +29,14 @@ export function EvaluationCenter({
   evalResults,
   evalRuns,
   evalRunnerStatus,
+  judgeCalibrations,
   locale,
   onExportCsv,
   onRunEval,
-  savedEvalCaseId
+  savedEvalCaseIds
 }: EvaluationCenterProps) {
   const [isCsvPreviewOpen, setIsCsvPreviewOpen] = useState(false);
+  const [selectedRunId, setSelectedRunId] = useState(evalRuns[0]?.id ?? '');
   const rows = evalRuns.map((run) => ({
     run,
     summary: calculateEvaluationSummary(evalResults, run.id)
@@ -38,6 +46,25 @@ export function EvaluationCenter({
     () => buildEvalSummaryRows(evalRuns, evalResults, evalCases),
     [evalCases, evalResults, evalRuns]
   );
+  const savedEvalCaseList = Object.values(savedEvalCaseIds);
+  const selectedRun = evalRuns.find((run) => run.id === selectedRunId) ?? evalRuns[0];
+  const selectedSummary = selectedRun ? calculateEvaluationSummary(evalResults, selectedRun.id) : null;
+  const belowThresholdJudgeVersions = getBelowThresholdJudgeVersions(judgeCalibrations);
+  const isRunning = evalRunnerStatus === 'Running';
+  // Baseline (current release) vs candidate (proposed release) comparison shown after a run completes.
+  const baselineRun = evalRuns[0];
+  const candidateRun = evalRuns[1];
+  const runComparison =
+    evalRunnerStatus === 'Completed' && baselineRun && candidateRun
+      ? {
+          baselineLabel: baselineRun.label,
+          candidateLabel: candidateRun.label,
+          baselineOverall: calculateEvaluationSummary(evalResults, baselineRun.id).overallQualityScore,
+          candidateOverall: calculateEvaluationSummary(evalResults, candidateRun.id).overallQualityScore
+        }
+      : null;
+  const overallDelta = runComparison ? runComparison.candidateOverall - runComparison.baselineOverall : 0;
+  const overallDeltaLabel = `${overallDelta >= 0 ? '+' : ''}${overallDelta.toFixed(2)}`;
 
   function confirmCsvExport() {
     onExportCsv();
@@ -46,20 +73,32 @@ export function EvaluationCenter({
 
   return (
     <section className="screen-grid" data-testid="evaluation-center">
-      <div className="panel span-2">
+      <div className="panel span-3">
         <div className="section-heading">
           <div>
             <p className="eyebrow">{text(locale, 'Evaluation Center', '評測中心')}</p>
-            <h3>{text(locale, 'Compare release configurations on the same approved cases', '用同一批核准案例比較發布設定')}</h3>
+            <h3>{text(locale, 'Release configuration evaluation runs', '發布設定評測批次')}</h3>
+            <p className="metric-scale-note">
+              {text(locale, 'Scores range 0–1; 1.00 is a full pass.', '分數區間 0–1，1 為滿分。')}
+            </p>
           </div>
           <div className="action-row">
             <button className="secondary-action" onClick={() => setIsCsvPreviewOpen(true)} type="button">
               <Download size={15} aria-hidden="true" />
               {text(locale, 'Export CSV', '匯出 CSV')}
             </button>
-            <button className="primary-action compact-action" onClick={onRunEval} type="button">
-              <Play size={15} aria-hidden="true" />
-              {text(locale, 'Run evaluation', '執行評測')}
+            <button
+              className="primary-action compact-action"
+              disabled={isRunning}
+              onClick={onRunEval}
+              type="button"
+            >
+              {isRunning ? (
+                <Loader2 className="spinning" size={15} aria-hidden="true" />
+              ) : (
+                <Play size={15} aria-hidden="true" />
+              )}
+              {isRunning ? text(locale, 'Running…', '評測中…') : text(locale, 'Start eval run', '啟動評測')}
             </button>
             <span className="count-pill">
               {text(locale, `${evalCases.length} eval cases`, `${evalCases.length} 個評測案例`)}
@@ -76,39 +115,175 @@ export function EvaluationCenter({
             <span>{text(locale, 'Regressions', '退化')}</span>
           </div>
           {rows.map(({ run, summary }) => (
-            <div className="table-row eval-row" key={run.id}>
-              <span>{formatDisplayText(locale, run.label)}</span>
-              <span>{summary.overallQualityScore.toFixed(2)}</span>
-              <span>{summary.citationSupportRate.toFixed(2)}</span>
-              <span>{summary.handoffSafetyRecall.toFixed(2)}</span>
-              <span>{summary.highRiskAutoAnswerRate.toFixed(2)}</span>
-              <span>{summary.regressionCount}</span>
-            </div>
+            <button
+              className={run.id === selectedRun?.id ? 'table-row eval-row interactive-row selected' : 'table-row eval-row interactive-row'}
+              key={run.id}
+              onClick={() => setSelectedRunId(run.id)}
+              type="button"
+            >
+              <span data-label={text(locale, 'Run', '評測批次')}>
+                {formatDisplayText(locale, run.label)}
+                {belowThresholdJudgeVersions.has(run.versionConfig.judgeVersion) && (
+                  <span className="risk-pill high pending-review-pill" data-testid={`pending-human-review-${run.id}`}>
+                    {text(locale, 'Pending human review', '待人工複核')}
+                  </span>
+                )}
+              </span>
+              <span data-label={text(locale, 'Overall', '整體')}>{summary.overallQualityScore.toFixed(2)}</span>
+              <span data-label={text(locale, 'Citation', '引用')}>{summary.citationSupportRate.toFixed(2)}</span>
+              <span data-label={text(locale, 'Handoff Safety Recall', '交接召回')}>{summary.handoffSafetyRecall.toFixed(2)}</span>
+              <span data-label={text(locale, 'Auto-answer', '自動回覆')}>{summary.highRiskAutoAnswerRate.toFixed(2)}</span>
+              <span data-label={text(locale, 'Regressions', '退化')}>{summary.regressionCount}</span>
+            </button>
           ))}
+        </div>
+      </div>
+      <div className="panel span-3" data-testid="judge-calibration-panel">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">{text(locale, 'Judge calibration', 'Judge 校準')}</p>
+            <h3>{text(locale, 'Can the LLM judge itself be trusted?', 'LLM judge 本身可不可信？')}</h3>
+          </div>
+          <span className="count-pill">
+            {text(locale, `Agreement threshold ${judgeCalibrations[0]?.threshold ?? '—'}`, `一致率門檻 ${judgeCalibrations[0]?.threshold ?? '—'}`)}
+          </span>
+        </div>
+        <div className="judge-cal-grid">
+          {judgeCalibrations.map((calibration) => {
+            const belowThreshold = isJudgeBelowThreshold(calibration);
+            return (
+              <article
+                className={belowThreshold ? 'judge-cal-card below-threshold' : 'judge-cal-card'}
+                data-testid={`judge-cal-${calibration.judgeVersion}`}
+                key={calibration.id}
+              >
+                <div className="judge-cal-head">
+                  <strong>{calibration.judgeVersion}</strong>
+                  {belowThreshold ? (
+                    <span className="risk-pill high">{text(locale, 'Below threshold', '低於門檻')}</span>
+                  ) : (
+                    <span className="risk-pill low">{text(locale, 'Calibrated', '校準正常')}</span>
+                  )}
+                </div>
+                <dl className="judge-cal-metrics">
+                  <div>
+                    <dt>{text(locale, 'Human agreement', '與人工一致率')}</dt>
+                    <dd>
+                      {calibration.humanAgreementRate.toFixed(2)}
+                      <span className="judge-cal-threshold">
+                        {text(locale, ` / threshold ${calibration.threshold.toFixed(2)}`, ` ／ 門檻 ${calibration.threshold.toFixed(2)}`)}
+                      </span>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{text(locale, 'Sampled cases', '抽樣案例')}</dt>
+                    <dd>{calibration.sampledCases}</dd>
+                  </div>
+                  <div>
+                    <dt>{text(locale, 'Sampling review queue', '抽樣複核佇列')}</dt>
+                    <dd>{text(locale, `${calibration.pendingReviewCount} pending`, `${calibration.pendingReviewCount} 筆待複核`)}</dd>
+                  </div>
+                  <div>
+                    <dt>{text(locale, 'Version drift', '換版漂移')}</dt>
+                    <dd>
+                      {calibration.driftAlert
+                        ? text(locale, 'Drift alert', '漂移警示')
+                        : text(locale, 'No drift detected', '未偵測到漂移')}
+                    </dd>
+                  </div>
+                </dl>
+                {calibration.driftNote && <p className="judge-cal-note">{formatDisplayText(locale, calibration.driftNote)}</p>}
+                {belowThreshold && (
+                  <p className="inline-status danger" data-testid={`judge-review-warning-${calibration.judgeVersion}`}>
+                    <ShieldAlert size={15} aria-hidden="true" />
+                    {text(
+                      locale,
+                      'Eval results are pending human review and must not be used as a release basis.',
+                      '評測結果待人工複核，不得作為發布依據。'
+                    )}
+                  </p>
+                )}
+              </article>
+            );
+          })}
         </div>
       </div>
       <div className="panel">
         <p className="eyebrow">{text(locale, 'Runner status', '評測執行狀態')}</p>
-        <h3 data-testid="eval-runner-status">{text(locale, evalRunnerStatus, evalRunnerStatus === 'Completed' ? '已完成' : '待執行')}</h3>
+        <h3 data-testid="eval-runner-status">{runnerStatusLabel(locale, evalRunnerStatus)}</h3>
         <p>
           {text(
             locale,
-            'Evaluation runs compare versioned prompts, retrieval settings, and knowledge snapshots before release actions are approved.',
-            '評測會比較版本化 prompt、檢索設定與知識庫 snapshot，作為發布核准前的依據。'
+            'Latest runner state for release evaluation jobs.',
+            '發布評測工作的最新 runner 狀態。'
           )}
         </p>
+        {runComparison && (
+          <p className="inline-status" data-testid="eval-run-result-summary" role="status">
+            {text(
+              locale,
+              `${runComparison.candidateLabel} overall ${runComparison.candidateOverall.toFixed(2)} vs ${runComparison.baselineLabel} ${runComparison.baselineOverall.toFixed(2)} (${overallDeltaLabel} overall).`,
+              `${formatDisplayText(locale, runComparison.candidateLabel)} 整體 ${runComparison.candidateOverall.toFixed(2)}，對比 ${formatDisplayText(locale, runComparison.baselineLabel)} ${runComparison.baselineOverall.toFixed(2)}（整體 ${overallDeltaLabel}）。`
+            )}
+          </p>
+        )}
       </div>
       <div className="panel">
-        <p className="eyebrow">{text(locale, 'Saved evaluation case', '已保存評測案例')}</p>
-        <h3>{savedEvalCaseId ?? text(locale, 'No saved interaction yet', '尚未轉存互動紀錄')}</h3>
+        <p className="eyebrow">{text(locale, 'Linked eval cases', '連結評測案例')}</p>
+        {savedEvalCaseList.length > 0 ? (
+          <ul className="linked-eval-case-list" data-testid="linked-eval-case-list">
+            {savedEvalCaseList.map((evalCaseId) => (
+              <li key={evalCaseId}>{evalCaseId}</li>
+            ))}
+          </ul>
+        ) : (
+          <h3>{text(locale, 'No saved interaction yet', '尚未轉存互動紀錄')}</h3>
+        )}
         <p>
           {text(
             locale,
-            'Saved conversations keep the source signal, messages, trace events, and version config so they can be replayed in the eval runner.',
-            '轉存互動會保留來源訊號、訊息、trace events 與版本設定，後續可於評測 runner 中 replay。'
+            'Linked records retain source, messages, trace events, and version config.',
+            '連結紀錄保留來源、訊息、trace events 與版本設定。'
           )}
         </p>
       </div>
+      {selectedRun && selectedSummary && (
+        <div className="panel span-2" data-testid="eval-run-detail">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">{text(locale, 'Run detail', '評測批次詳情')}</p>
+              <h3>{formatDisplayText(locale, selectedRun.label)}</h3>
+            </div>
+            <span className="count-pill">{formatDisplayText(locale, selectedRun.status)}</span>
+          </div>
+          <dl className="compact-detail-list">
+            <div>
+              <dt>{text(locale, 'Evaluation dataset', '評測資料集')}</dt>
+              <dd>{selectedRun.datasetId}</dd>
+            </div>
+            <div>
+              <dt>{text(locale, 'Flow version', '流程版本')}</dt>
+              <dd>{selectedRun.versionConfig.flowVersion}</dd>
+            </div>
+            <div>
+              <dt>{text(locale, 'Prompt version', 'Prompt 版本')}</dt>
+              <dd>{selectedRun.versionConfig.promptVersion}</dd>
+            </div>
+            <div>
+              <dt>{text(locale, 'KB snapshot', '知識庫快照')}</dt>
+              <dd>{selectedRun.versionConfig.kbSnapshot}</dd>
+            </div>
+            <div>
+              <dt>{text(locale, 'Retrieval config', '檢索設定')}</dt>
+              <dd>{selectedRun.versionConfig.retrievalConfig}</dd>
+            </div>
+            <div>
+              <dt>{text(locale, 'Overall', '整體')}</dt>
+              <dd>{selectedSummary.overallQualityScore.toFixed(2)}</dd>
+            </div>
+          </dl>
+        </div>
+      )}
       {isCsvPreviewOpen && (
         <div
           aria-labelledby="csv-preview-title"
@@ -169,4 +344,14 @@ export function EvaluationCenter({
       )}
     </section>
   );
+}
+
+function runnerStatusLabel(locale: Locale, status: string) {
+  if (status === 'Running') {
+    return text(locale, 'Running', '評測中');
+  }
+  if (status === 'Completed') {
+    return text(locale, 'Completed', '已完成');
+  }
+  return text(locale, 'Idle', '待執行');
 }

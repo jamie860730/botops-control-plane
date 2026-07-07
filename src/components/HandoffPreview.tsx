@@ -9,23 +9,35 @@ interface HandoffPreviewProps {
   preview?: HandoffPreviewType;
 }
 
+/**
+ * Handoff-package block rendered inside the ticket detail drawer: the bot-generated
+ * context a human agent receives when a case is escalated.
+ */
 export function HandoffPreview({ locale, preview }: HandoffPreviewProps) {
   if (!preview) {
     return (
-      <section className="panel" data-testid="handoff-preview">
-        <h3>{text(locale, 'No handoff preview for this scenario', '此情境沒有人工交接預覽')}</h3>
+      <section className="record-detail-panel" data-testid="handoff-preview">
+        <p className="eyebrow">{text(locale, 'Human Handoff Preview', '人工交接預覽')}</p>
+        <h4>{text(locale, 'No handoff package for this ticket', '此工單無交接包')}</h4>
+        <p>
+          {text(
+            locale,
+            'The selected ticket was not escalated with a bot-generated handoff package.',
+            '所選工單沒有由 bot 產生的人工交接包。'
+          )}
+        </p>
       </section>
     );
   }
 
   return (
-    <section className="panel handoff-panel" data-testid="handoff-preview">
+    <section className="record-detail-panel handoff-panel" data-testid="handoff-preview">
       <div className="section-heading">
         <div>
           <p className="eyebrow">{text(locale, 'Human Handoff Preview', '人工交接預覽')}</p>
-          <h3>{preview.queue}</h3>
+          <h4>{preview.queue}</h4>
         </div>
-        <ShieldAlert size={28} aria-hidden="true" />
+        <ShieldAlert size={24} aria-hidden="true" />
       </div>
       <dl className="detail-list">
         <div>
