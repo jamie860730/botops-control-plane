@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BotOps Control Plane — 通用化完整頁面架構盤點</title>
+<style>
+  :root{
+    --ink:#1f2328; --muted:#57606a; --faint:#8b949e;
+    --line:#d8dde3; --bg:#ffffff; --panel:#f6f8fa;
+    --keep-bg:#eff1f3; --keep-tx:#57606a;
+    --mod-bg:#fff3d6; --mod-tx:#7a4f0b;
+    --new-bg:#dcf2ea; --new-tx:#0f6e56;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:32px 20px 80px;background:var(--bg);color:var(--ink);
+    font:15px/1.75 "PingFang TC","Noto Sans TC",system-ui,sans-serif}
+  main{max-width:960px;margin:0 auto}
+  h1{font-size:24px;font-weight:600;margin:0 0 4px}
+  h2{font-size:19px;font-weight:600;margin:44px 0 6px;padding-top:20px;border-top:2px solid var(--ink)}
+  h3{font-size:15.5px;font-weight:600;margin:24px 0 6px}
+  p{margin:6px 0}
+  .sub{color:var(--muted)}
+  .small{font-size:13px;color:var(--faint)}
+  .pill{display:inline-block;font-size:11.5px;font-weight:500;padding:0 8px;border-radius:999px;
+    vertical-align:1px;margin-left:6px;white-space:nowrap}
+  .keep{background:var(--keep-bg);color:var(--keep-tx)}
+  .mod{background:var(--mod-bg);color:var(--mod-tx)}
+  .new{background:var(--new-bg);color:var(--new-tx)}
+  .legend{display:flex;gap:18px;align-items:center;background:var(--panel);
+    border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin:18px 0 8px;font-size:13.5px}
+  ul{margin:4px 0 12px;padding-left:22px}
+  li{margin:3px 0}
+  li>ul{margin-top:2px}
+  .lv{font-size:12px;font-weight:600;color:var(--faint);letter-spacing:.04em;margin:16px 0 2px;text-transform:uppercase}
+  .box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin:10px 0}
+  .box p{margin:2px 0}
+  .scen li{color:var(--muted)}
+  table{border-collapse:collapse;width:100%;margin:10px 0 16px;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+  th{background:var(--panel);font-weight:600}
+  code{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:13px;font-family:ui-monospace,Menlo,monospace}
+  .toc{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 20px;margin:16px 0}
+  .toc ol{margin:4px 0;padding-left:20px}
+  .toc a{color:var(--ink)}
+</style>
+</head>
+<body>
+<main>
+
+<h1>BotOps Control Plane — 通用化完整頁面架構盤點</h1>
+<p class="sub">目的：將原加密貨幣交易所面試專案改造為通用型 CS Bot 營運平台——平台層通用、產業層以 domain pack 模組組織；示範資料沿用 crypto／fintech 場景作為 mock data，UI 不做 pack 切換器。本文件盤點全部三層頁面結構、每頁功能、使用情境與邊界狀態，供確認後執行。</p>
+<p class="small">層級定義 — L0：全域框架 ／ L1：主導覽模組（頁面）／ L2：頁內分頁、區塊 ／ L3：詳情面板、彈窗、抽屜與其中的操作。</p>
+
+<div class="legend">
+  <span><span class="pill keep">保留</span> 現有功能不動</span>
+  <span><span class="pill mod">調整</span> 去產業綁定／改設定驅動</span>
+  <span><span class="pill new">新增</span> 通用化新功能</span>
+</div>
+
+<div class="toc">
+  <strong>目錄</strong>
+  <ol>
+    <li><a href="#l0">L0 全域框架（Shell）</a></li>
+    <li><a href="#m1">Dashboard 營運總覽</a></li>
+    <li><a href="#m2">Conversations 對話與訊號審查</a></li>
+    <li><a href="#m3">Knowledge 知識治理</a></li>
+    <li><a href="#m4">Agent Assist 座席輔助治理（新模組）</a></li>
+    <li><a href="#m5">Tickets &amp; Handoff 工單與交接</a></li>
+    <li><a href="#m6">Quality &amp; Release 品質與發布</a></li>
+    <li><a href="#m7">Settings 設定（新模組）</a></li>
+    <li><a href="#data">附錄 A：資料實體清單</a></li>
+    <li><a href="#persona">附錄 B：角色 × 模組使用矩陣</a></li>
+  </ol>
+</div>
+
+<!-- ================= L0 ================= -->
+<h2 id="l0">L0 · 全域框架（Shell）</h2>
+<p class="sub">所有頁面共用的導覽與全域狀態。</p>
+
+<p class="lv">結構與功能</p>
+<ul>
+  <li>側邊導覽列：六個 L1 模組入口 <span class="pill keep">保留</span>（新增 Agent Assist、Settings 入口 <span class="pill new">新增</span>）</li>
+  <li>工作區標題列：顯示目前頁面標題 <span class="pill keep">保留</span></li>
+  <li>語系切換：EN ／ zh-TW，localStorage 持久化 <span class="pill keep">保留</span></li>
+  <li>Domain pack 僅存在於資料層：mock data 收攏為 <code>packs/crypto</code> 模組，UI 不顯示切換器；未來換產業＝換 pack 檔，不動平台層程式 <span class="pill new">新增</span></li>
+  <li>響應式：窄螢幕收合為抽屜導覽；表格 reflow 成 label／value 卡片 <span class="pill keep">保留</span></li>
+</ul>
+
+<p class="lv">狀態與邊界</p>
+<ul>
+  <li>出貨 pack：Crypto／Fintech（加密貨幣交易所類客服場景作為 mock data，KYC、Security-L2 等術語屬 pack 內容，予以保留）</li>
+</ul>
+
+<!-- ================= M1 ================= -->
+<h2 id="m1">1 · Dashboard 營運總覽</h2>
+<div class="box">
+  <p><strong>頁面定位</strong>：PM 每天的起點。30 秒內回答「bot 現在健康嗎？今天該先處理什麼？」</p>
+  <p><strong>主要使用者</strong>：AI Chatbot PM、Bot Ops、Support Lead</p>
+</div>
+
+<p class="lv">L2 · 區塊</p>
+<ul>
+  <li><strong>1.1 Priority queue 優先處理佇列</strong> <span class="pill keep">保留</span>
+    <ul>
+      <li>項目類型：被阻擋的發布套件、SLA 風險工單、待重建索引的知識、未結案 badcase、待審 trace</li>
+      <li>每項欄位：嚴重度、負責人、到期時間、原因摘要、CTA（點擊直達對應模組）</li>
+    </ul>
+  </li>
+  <li><strong>1.2 營運 KPI 卡片區</strong> <span class="pill keep">保留</span>
+    <ul>
+      <li>對話總量／已審查互動數、自動解決品質、交接與工單轉換率、知識庫規模、進行中 bot 工單數、知識缺口數、badcase 趨勢、發布就緒度</li>
+    </ul>
+  </li>
+  <li><strong>1.3 營運經濟學卡片</strong> <span class="pill new">新增</span>
+    <ul>
+      <li>每張自動解決工單成本 vs 人工處理成本</li>
+      <li>本期 deflection 折算節省人力時數</li>
+      <li>badcase 修復的量化回收（修復前後該案例簇的人工處理量差）</li>
+    </ul>
+  </li>
+  <li><strong>1.4 Top questions ／ 重複進線熱點</strong> <span class="pill keep">保留</span></li>
+  <li><strong>1.5 發布門檻速覽</strong>：解釋發布就緒度，不主導版面 <span class="pill keep">保留</span></li>
+</ul>
+
+<p class="lv">L3 · 詳情與操作</p>
+<ul>
+  <li>Priority queue 項目詳情：發生了什麼、為什麼重要、下一步做什麼（三問標準）<span class="pill keep">保留</span></li>
+  <li>KPI 卡片點擊 → 跳轉 Quality &amp; Release 的 KPI 分頁並帶入對應指標 <span class="pill mod">調整</span></li>
+  <li>經濟學卡片點擊 → 假設參數面板（人工單位成本、平均處理時長可調，展示計算透明度）<span class="pill new">新增</span></li>
+</ul>
+
+<p class="lv">狀態與邊界</p>
+<ul>
+  <li>佇列全空（一切健康）：顯示正向空狀態，不留白</li>
+  <li>資料未同步：顯示最後同步時間與重新整理入口</li>
+</ul>
+
+<p class="lv">核心情境</p>
+<ul class="scen">
+  <li>PM 早上巡檢：先看 priority queue，再掃 KPI 異動，10 分鐘決定今天的工作排序</li>
+  <li>事故爆量：多通路同類訊號激增 → queue 出現 incident 候選 → 直達 Conversations 聚類檢視</li>
+  <li>發布前檢查：從發布就緒度卡片直達 Release gates</li>
+  <li>季度匯報：用經濟學卡片的節省人時／成本數字對上級說明 bot 投資報酬</li>
+</ul>
+
+<!-- ================= M2 ================= -->
+<h2 id="m2">2 · Conversations 對話與訊號審查</h2>
+<div class="box">
+  <p><strong>頁面定位</strong>：回覆後（post-reply）的品質問責。不是客服回覆台，是 PM 的 QA 審查與 eval 素材來源。</p>
+  <p><strong>主要使用者</strong>：PM、Bot Ops</p>
+</div>
+
+<p class="lv">L2 · 區塊</p>
+<ul>
+  <li><strong>2.1 Intake 多通路訊號列表</strong> <span class="pill keep">保留</span>
+    <ul>
+      <li>通路篩選：Web/App Chat、X、LINE、Telegram、Discord、內部回報 <span class="pill keep">保留</span></li>
+      <li>欄位：回報者類型（客戶／社群版主／內部／法遵／公開貼文）、來源信任度、重複叢集 ID、地區、語言、產品線、優先級</li>
+    </ul>
+  </li>
+  <li><strong>2.2 互動審查區（Chat + Trace）</strong> <span class="pill keep">保留</span>
+    <ul>
+      <li>對話串：user／assistant／system 訊息、穩定訊息 ID、引用標記</li>
+      <li>Response trace 時間軸：來源正規化 → 意圖 → 風險 → 改寫 → 檢索 → 生成 → 引用 → 驗證 → 交接，每節點含狀態（pass／watch／blocked）與輸入輸出參照</li>
+      <li>引用證據面板：命中的 KB chunk 高亮顯示</li>
+    </ul>
+  </li>
+</ul>
+
+<p class="lv">L3 · 詳情與操作</p>
+<ul>
+  <li>審查 live trace（寫入 audit log）<span class="pill keep">保留</span></li>
+  <li>另存為 eval case：打包訊息、引用、trace、來源與預期行為 <span class="pill keep">保留</span></li>
+  <li>Trace 節點抽屜：單一節點的完整輸入輸出與診斷 <span class="pill new">新增</span>（原 PRD next batch）</li>
+  <li>跳轉：引用 chunk → Knowledge 對應文件；交接場景 → Tickets 的 handoff preview <span class="pill keep">保留</span></li>
+  <li>叢集檢視：同 <code>duplicateClusterId</code> 的訊號聚合顯示，判斷是否升級為 incident <span class="pill new">新增</span></li>
+</ul>
+
+<p class="lv">狀態與邊界</p>
+<ul>
+  <li>篩選後無訊號：空狀態附建議動作</li>
+  <li>trace 不完整（某節點缺漏）：明確標示缺漏而非留白</li>
+  <li>低信任來源（公開社群貼文）：顯著標記，提示查證後再採信</li>
+</ul>
+
+<p class="lv">核心情境（crypto mock pack）</p>
+<ul class="scen">
+  <li>跨境支付政策申訴、帳號盜用轉帳凍結、身分驗證（KYC）被拒、轉帳延遲爆量</li>
+  <li>共通情境（跨產業皆成立，面試時可口頭映射到對方領域）：KB 缺漏導致胡答、高風險問題未轉人工、多通路同題訊號需要聚類判斷</li>
+</ul>
+
+<!-- ================= M3 ================= -->
+<h2 id="m3">3 · Knowledge 知識治理</h2>
+<div class="box">
+  <p><strong>頁面定位</strong>：bot 回答的「根據」從哪來、品質如何、缺口在哪。FAQ／SOP／RAG 的完整生命週期管理。</p>
+  <p><strong>主要使用者</strong>：Knowledge Owner、PM</p>
+</div>
+
+<p class="lv">L2 · 分頁</p>
+<ul>
+  <li><strong>3.1 知識清冊（預設分頁）</strong> <span class="pill keep">保留</span>
+    <ul>
+      <li>總覽指標：已索引文件數、待重建索引數、chunk 總數、目前檢索設定</li>
+      <li>表格欄位：ID、標題、分類、標籤（地區／風險等級）、查詢量、生命週期狀態（Draft／Review／Published／Archived）、索引狀態、操作</li>
+      <li>檢索政策面板：KB snapshot 版本、索引政策、引用政策（僅 citation-allowed chunk 可支撐回答）</li>
+    </ul>
+  </li>
+  <li><strong>3.2 Gap mining 知識缺口挖掘</strong> <span class="pill new">新增</span>
+    <ul>
+      <li>新興問題簇列表：以未解決＋交接對話聚類，欄位：簇名、量體、週趨勢、樣本語句、關聯 KB（缺漏／薄弱）</li>
+      <li>FAQ 候選工作流：AI 起草答案草稿 → Knowledge Owner 審核（採納入庫／退回重寫／標記不適合自動化）</li>
+      <li>成效追蹤：候選入庫後該簇的 deflection 變化（before／after）</li>
+    </ul>
+  </li>
+  <li><strong>3.3 SOP 管理</strong> <span class="pill new">新增</span>
+    <ul>
+      <li>SOP 結構化檢視：步驟、分支條件、觸發情境、對應的 bot 行為（可自動執行／需人工確認／禁止自動化）</li>
+      <li>SOP 與 chat flow 節點的對應關係表</li>
+    </ul>
+  </li>
+</ul>
+
+<p class="lv">L3 · 詳情與操作</p>
+<ul>
+  <li>知識紀錄詳情：負責單位、語言、生效日、向量索引、檢索設定、最後索引時間、版本歷程 <span class="pill keep">保留</span></li>
+  <li>Chunk 證據面板：分段內文、token 數、citation 許可 <span class="pill keep">保留</span></li>
+  <li>操作（皆有可見回饋）：查看 chunks、審查引用範圍、排入重建索引 <span class="pill keep">保留</span></li>
+  <li>Chunk 索引工作紀錄（job log）<span class="pill new">新增</span>（原 PRD next batch）</li>
+  <li>Gap 候選詳情：樣本對話、AI 草稿、審核意見欄、決策按鈕 <span class="pill new">新增</span></li>
+</ul>
+
+<p class="lv">狀態與邊界</p>
+<ul>
+  <li>文件已發布但未索引 → 顯著警示（回答無法引用）</li>
+  <li>文件過期（effectiveTo 已過）→ 自動標示待下架</li>
+  <li>高查詢量＋低引用成功率的文件 → 標記為優先改寫對象</li>
+  <li>Gap 簇樣本不足（&lt; 門檻值）→ 顯示為觀察中，不產草稿</li>
+</ul>
+
+<p class="lv">核心情境</p>
+<ul class="scen">
+  <li>Knowledge Owner 週巡檢：從表格排序找出高查詢、低品質、待重建索引的文件</li>
+  <li>政策更新：改文件 → 走 Review → Published → 重建索引 → 確認新回答引用新版本</li>
+  <li>Gap 審核例會：過一遍本週新興問題簇，決定哪些寫 FAQ、哪些改 SOP、哪些保持人工</li>
+  <li>發布前 KB snapshot 凍結：確認 eval 用的 snapshot 與候選發布一致</li>
+</ul>
+
+<!-- ================= M4 ================= -->
+<h2 id="m4">4 · Agent Assist 座席輔助治理 <span class="pill new">新模組</span></h2>
+<div class="box">
+  <p><strong>頁面定位</strong>：管理「AI 幫人工座席」這條產品線的品質——建議回覆與 AI 摘要好不好，用座席的實際行為來量。不是回覆台，是治理面板。</p>
+  <p><strong>主要使用者</strong>：PM、Support Lead</p>
+</div>
+
+<p class="lv">L2 · 區塊</p>
+<ul>
+  <li><strong>4.1 指標總覽卡片</strong> <span class="pill new">新增</span>
+    <ul>
+      <li>建議回覆採納率（直接採納／修改後採納／棄用）</li>
+      <li>修改幅度分布（edit distance 分桶）</li>
+      <li>AI case summary 重寫率</li>
+      <li>採納 vs 未採納的平均處理時長差</li>
+    </ul>
+  </li>
+  <li><strong>4.2 建議回覆明細表</strong> <span class="pill new">新增</span>
+    <ul>
+      <li>欄位：案例、queue、建議內容摘要、座席動作、修改幅度、處理時長</li>
+      <li>篩選：queue、意圖類型、採納狀態、時間區間</li>
+    </ul>
+  </li>
+  <li><strong>4.3 Summary 品質比對</strong> <span class="pill new">新增</span>
+    <ul>
+      <li>AI 摘要 vs 座席最終摘要的並排 diff</li>
+      <li>常見改寫模式歸納（漏了什麼、多了什麼、語氣問題）</li>
+    </ul>
+  </li>
+</ul>
+
+<p class="lv">L3 · 詳情與操作</p>
+<ul>
+  <li>建議詳情抽屜：完整建議內容、座席最終版本 diff、關聯 trace 連結 <span class="pill new">新增</span></li>
+  <li>標記動作：將低品質建議標記為 badcase（流入 Quality 的 badcase 迴路）<span class="pill new">新增</span></li>
+  <li>政策建議：對高採納率＋低風險的意圖，提示「可評估開放自動送出」；對高棄用率意圖提示「檢討 prompt 或關閉建議」<span class="pill new">新增</span></li>
+</ul>
+
+<p class="lv">狀態與邊界</p>
+<ul>
+  <li>某 queue 未開通 assist：空狀態說明開通條件</li>
+  <li>樣本量不足的指標：顯示信賴區間警示，避免小樣本誤導</li>
+</ul>
+
+<p class="lv">核心情境</p>
+<ul class="scen">
+  <li>新 prompt 版本上線後，比較採納率與修改幅度是否改善</li>
+  <li>找出建議品質最差的 queue，決定優先修哪類意圖</li>
+  <li>用「摘要重寫率下降」向 CS Ops 證明 AI 摘要值得信任</li>
+  <li>決策哪些意圖從「建議」升級為「自動送出」——採納率、風險等級、修改幅度三條件同時滿足</li>
+</ul>
+
+<!-- ================= M5 ================= -->
+<h2 id="m5">5 · Tickets &amp; Handoff 工單與交接</h2>
+<div class="box">
+  <p><strong>頁面定位</strong>：bot 建立的工單消耗了多少人工容量、交接品質好不好。PM 的治理協調視角，不是座席的工作終點。</p>
+  <p><strong>主要使用者</strong>：Support Lead、PM、各 queue 負責單位</p>
+</div>
+
+<p class="lv">L2 · 區塊</p>
+<ul>
+  <li><strong>5.1 工單表格</strong> <span class="pill keep">保留</span>
+    <ul>
+      <li>欄位：工單 ID、問題摘要＋下一步、queue、優先級、SLA、處理狀態、PIC、操作</li>
+      <li>Queue 與 PIC 沿用 crypto mock 現值（KYC Review、Security-L2 等），型別定義移入 pack 模組 <span class="pill mod">調整</span></li>
+      <li>篩選：queue、優先級、狀態、SLA 風險 <span class="pill new">新增</span>（現況無篩選）</li>
+    </ul>
+  </li>
+  <li><strong>5.2 Queue health 風險摘要</strong>：高優先數、已升級數、SLA 關注數 <span class="pill keep">保留</span></li>
+  <li><strong>5.3 Handoff preview 交接包預覽</strong> <span class="pill keep">保留</span>
+    <ul>
+      <li>交接原因、目的地 queue、必填欄位清單、AI 摘要、風險警語</li>
+    </ul>
+  </li>
+</ul>
+
+<p class="lv">L3 · 詳情與操作</p>
+<ul>
+  <li>工單詳情：queue、狀態、PIC、SLA 到期、來源訊號、trace 參照、AI case summary、下一步、處理時間軸 <span class="pill keep">保留</span></li>
+  <li>操作（皆有可見回饋、本地持久化）：改狀態（Open／Pending review／Escalated／Resolved）、改 PIC <span class="pill keep">保留</span></li>
+  <li>交接品質標記：交接包欄位不完整 → 標記回 badcase 迴路 <span class="pill new">新增</span></li>
+</ul>
+
+<p class="lv">狀態與邊界</p>
+<ul>
+  <li>SLA 已逾期：紅色標示並浮到 Dashboard priority queue</li>
+  <li>同一事故產生的工單簇：以叢集標記聚合，避免逐張處理</li>
+  <li>交接必填欄位缺漏：明確列出缺什麼</li>
+</ul>
+
+<p class="lv">核心情境</p>
+<ul class="scen">
+  <li>Support Lead 晨會：按 queue 與 SLA 排序分派 PIC</li>
+  <li>SLA 逾期升級：狀態改 Escalated，追蹤升級後的處理時間軸</li>
+  <li>PM 月度回顧：bot 建單量與人工容量消耗趨勢，決定哪類交接該回頭改 bot</li>
+  <li>交接包品質抽查：高風險 queue 的 handoff preview 是否欄位齊全、風險警語正確</li>
+</ul>
+
+<!-- ================= M6 ================= -->
+<h2 id="m6">6 · Quality &amp; Release 品質與發布</h2>
+<div class="box">
+  <p><strong>頁面定位</strong>：整個產品的縱深所在——用 eval 證據守住發布，用 badcase 驅動迭代，用 audit 保證可回溯。五個分頁漸進揭露。</p>
+  <p><strong>主要使用者</strong>：PM、Bot Ops、Compliance</p>
+</div>
+
+<p class="lv">L2 · 分頁一：Release gates 發布門檻（預設）</p>
+<ul>
+  <li>發布套件列表：flow／prompt／KB snapshot／檢索設定／judge 五版本組合、關聯 eval run、退化數、狀態（Draft → Eval running → Blocked／Compliance review → Canary simulation → Ready → Rolled back）<span class="pill keep">保留</span></li>
+  <li>決策操作（寫入 audit）：Promote／Block／Request review，附決策理由欄 <span class="pill keep">保留</span></li>
+  <li><strong>Flow version diff 檢視</strong> <span class="pill new">新增</span>
+    <ul>
+      <li>候選 vs 現行版本的差異：改了哪些 flow 節點、哪段 prompt、換了哪個 KB snapshot、檢索參數異動</li>
+      <li>唯讀流程拓撲圖＋變更高亮（不做拖拉編輯器）</li>
+    </ul>
+  </li>
+  <li>發布核准歷程 <span class="pill new">新增</span>（原 PRD next batch）</li>
+</ul>
+
+<p class="lv">L2 · 分頁二：KPI</p>
+<ul>
+  <li>指標卡片：自動解決率、交接率、重複進線率、引用失敗率、SLA 風險，各含目標值、趨勢與洞察 <span class="pill keep">保留</span></li>
+  <li>分群下鑽表：來源通路 × 案例類型 <span class="pill keep">保留</span></li>
+  <li><strong>KPI → 案例穿透</strong>：點擊異常分群 → 直達 Conversations 帶入該分群篩選，從指標走到真實對話 <span class="pill new">新增</span></li>
+  <li><strong>語言 × 地區品質對等矩陣</strong>：熱力圖標出各語言／地區的自動解決與引用失敗落差 <span class="pill new">新增</span></li>
+</ul>
+
+<p class="lv">L2 · 分頁三：Eval runs 評測</p>
+<ul>
+  <li>評測批次表：整體分、引用支持率、交接安全召回、高風險自動回答率、退化數 <span class="pill keep">保留</span></li>
+  <li>批次詳情：資料集、五版本組合、七維度分數（意圖、來源正規化、檢索、引用、可行動性、風險交接、可追溯）<span class="pill keep">保留</span></li>
+  <li>操作：啟動評測、CSV 匯出（含去識別化預覽彈窗）、連結已存 eval case <span class="pill keep">保留</span></li>
+  <li><strong>Judge 校準卡</strong> <span class="pill new">新增</span>
+    <ul>
+      <li>LLM judge 與人工標註一致率、抽樣複核佇列、judge 換版漂移警示</li>
+    </ul>
+  </li>
+  <li>Eval case 詳情檢視：單筆案例的輸入、預期來源、預期行為、禁止行為、must-handoff 標記 <span class="pill new">新增</span>（現況只有列表計數）</li>
+</ul>
+
+<p class="lv">L2 · 分頁四：Badcases 失敗案例</p>
+<ul>
+  <li>列表＋狀態控制（Open／In review／Fixed）<span class="pill keep">保留</span></li>
+  <li>詳情彈窗：低分維度、trace 診斷、需調整的鏈路節點、調整方式、重測指標、預期分數變化、負責單位 <span class="pill keep">保留</span></li>
+  <li>Before／After 對照：修復後重測結果與原 badcase 並排 <span class="pill new">新增</span></li>
+  <li>來源擴充：badcase 可由 Conversations 審查、Agent Assist 標記、交接品質抽查三處流入 <span class="pill new">新增</span></li>
+</ul>
+
+<p class="lv">L2 · 分頁五：Audit 稽核</p>
+<ul>
+  <li>事件流：trace 審查、eval case 儲存、評測啟動／完成、CSV 匯出、發布決策，含 actor、實體參照、時間 <span class="pill keep">保留</span></li>
+  <li>篩選：事件類型、actor、時間區間 <span class="pill new">新增</span>（現況無篩選）</li>
+  <li>事件詳情：三問標準（發生了什麼／為什麼重要／下一步）<span class="pill keep">保留</span></li>
+</ul>
+
+<p class="lv">狀態與邊界</p>
+<ul>
+  <li>套件被門檻阻擋：Promote 按鈕不可用，明列失敗的門檻項</li>
+  <li>評測執行中：runner 狀態即時顯示，完成前不可再次啟動</li>
+  <li>Judge 一致率低於門檻：eval 結果標示「待人工複核」，不得作為發布依據</li>
+  <li>匯出僅含 run-level 指標，不含客戶識別資訊（隱私邊界聲明保留）</li>
+</ul>
+
+<p class="lv">核心情境</p>
+<ul class="scen">
+  <li>發布決策會議：看 flow diff 確認改了什麼 → 看 eval 對照 → 看退化數 → Promote 或 Block，理由入 audit</li>
+  <li>退化攔截：候選版本某維度分數下降 → 自動 Blocked → 從 badcase 找根因</li>
+  <li>KPI 異常追查：引用失敗率上升 → 穿透到對話 → 發現某文件過期 → 回 Knowledge 修復</li>
+  <li>稽核回溯：三個月前的發布決策依據什麼 eval 證據、誰核准的，五分鐘內調出完整鏈</li>
+</ul>
+
+<!-- ================= M7 ================= -->
+<h2 id="m7">7 · Settings 設定 <span class="pill new">新模組</span></h2>
+<div class="box">
+  <p><strong>頁面定位</strong>：平台組態的唯讀展示入口，呈現風險政策與治理邊界（domain pack 不在此顯示，僅為資料層模組）。</p>
+</div>
+
+<p class="lv">L2 · 區塊</p>
+<ul>
+  <li><strong>7.1 平台組態（唯讀展示）</strong> <span class="pill new">新增</span>
+    <ul>
+      <li>風險政策：哪些意圖禁止自動回答、必須交接的條件</li>
+      <li>SLA 規則、eval 門檻值、judge 版本</li>
+    </ul>
+  </li>
+  <li><strong>7.2 RBAC 角色模型（roadmap 預告，唯讀）</strong> <span class="pill new">新增</span>
+    <ul>
+      <li>Viewer／Operator／PM Admin／Compliance 四角色權限矩陣（對應 production readiness plan，展示而不實作）</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- ================= 附錄 A ================= -->
+<h2 id="data">附錄 A · 資料實體清單</h2>
+<table>
+  <tr><th>實體</th><th>用途</th><th>異動</th></tr>
+  <tr><td><code>SupportSignal</code></td><td>多通路原始訊號</td><td><span class="pill keep">保留</span></td></tr>
+  <tr><td><code>SupportScenario</code></td><td>審查場景（含預期行為）</td><td>crypto mock <span class="pill keep">保留</span></td></tr>
+  <tr><td><code>ConversationMessage</code> / <code>TraceEvent</code></td><td>對話與九節點鏈路 trace</td><td><span class="pill keep">保留</span></td></tr>
+  <tr><td><code>KnowledgeDocument</code> / <code>KnowledgeChunk</code></td><td>KB 生命週期與引用單位</td><td>crypto mock <span class="pill keep">保留</span></td></tr>
+  <tr><td><code>GapCluster</code> / <code>FaqCandidate</code></td><td>缺口簇與 FAQ 候選工作流</td><td><span class="pill new">新增</span></td></tr>
+  <tr><td><code>SopRecord</code></td><td>結構化 SOP（步驟／分支／自動化邊界）</td><td><span class="pill new">新增</span></td></tr>
+  <tr><td><code>AssistSuggestion</code></td><td>建議回覆與座席動作紀錄</td><td><span class="pill new">新增</span></td></tr>
+  <tr><td><code>EvalCase</code> / <code>EvalRun</code> / <code>EvalResult</code></td><td>評測體系（七維度）</td><td><span class="pill keep">保留</span></td></tr>
+  <tr><td><code>JudgeCalibration</code></td><td>judge 與人工一致率紀錄</td><td><span class="pill new">新增</span></td></tr>
+  <tr><td><code>Badcase</code></td><td>失敗歸因與修復迴路</td><td>來源擴充 <span class="pill mod">調整</span></td></tr>
+  <tr><td><code>ReleaseBundle</code> / <code>FlowVersionDiff</code></td><td>發布套件與版本差異</td><td>diff 新增 <span class="pill mod">調整</span></td></tr>
+  <tr><td><code>SupportTicket</code> / <code>HandoffPreview</code></td><td>bot 建單與交接包</td><td>crypto mock <span class="pill keep">保留</span></td></tr>
+  <tr><td><code>CsBotKpiMetric</code> / <code>CsBotKpiSegment</code></td><td>KPI 與分群</td><td>加語言×地區維度 <span class="pill mod">調整</span></td></tr>
+  <tr><td><code>AuditEvent</code></td><td>治理稽核流</td><td><span class="pill keep">保留</span></td></tr>
+  <tr><td><code>DomainPack</code>（資料層模組）</td><td>mock data 的模組邊界：通路／queue／標籤／場景文案收攏於 <code>packs/crypto</code>，無 UI 切換</td><td><span class="pill new">新增</span></td></tr>
+</table>
+
+<!-- ================= 附錄 B ================= -->
+<h2 id="persona">附錄 B · 角色 × 模組使用矩陣</h2>
+<table>
+  <tr><th></th><th>Dashboard</th><th>Conversations</th><th>Knowledge</th><th>Agent Assist</th><th>Tickets</th><th>Quality &amp; Release</th></tr>
+  <tr><td><strong>AI Chatbot PM</strong></td><td>每日起點</td><td>QA 審查、存 eval case</td><td>缺口決策</td><td>意圖自動化決策</td><td>容量回顧</td><td>發布決策、KPI 洞察</td></tr>
+  <tr><td><strong>Bot Ops</strong></td><td>巡檢</td><td>trace 診斷</td><td>索引維運</td><td>prompt 迭代驗證</td><td>—</td><td>跑 eval、修 badcase</td></tr>
+  <tr><td><strong>Knowledge Owner</strong></td><td>—</td><td>引用問題溯源</td><td>主要工作區</td><td>—</td><td>—</td><td>引用失敗追查</td></tr>
+  <tr><td><strong>Support Lead</strong></td><td>SLA 熱點</td><td>—</td><td>—</td><td>座席效率檢視</td><td>主要工作區</td><td>交接 KPI</td></tr>
+  <tr><td><strong>Compliance</strong></td><td>—</td><td>高風險案例抽查</td><td>政策文件審核</td><td>—</td><td>高風險 queue 檢視</td><td>高風險發布核准、audit</td></tr>
+</table>
+
+<p class="small" style="margin-top:40px">BotOps Control Plane · IA inventory v1.1 · 2026-07-06 · pack 切換器移出 UI，crypto 作為 mock data · 供確認用，尚未執行任何程式修改</p>
+
+</main>
+</body>
+</html>

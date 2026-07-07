@@ -56,7 +56,7 @@ This document defines the backend shape required for BotOps Control Plane as a p
 | `GET` | `/api/handoff-preview/{scenario_id}` | Build a human handoff package for high-risk cases. |
 | `GET` | `/api/release/bundles` | List release bundles and gate status. |
 | `POST` | `/api/release/bundles/{bundle_id}/decisions` | Record `promoted`, `blocked`, or `review_requested`. |
-| `GET` | `/api/audit-events?event_type=` | List audit events, optionally filtered by type. |
+| `GET` | `/api/audit-events?event_type=&actor=&created_from=&created_to=` | List audit events, optionally filtered by type, actor, or time range. |
 
 ## Local API
 
@@ -215,3 +215,5 @@ Supported event types:
 - Signed CSV exports should expire and be scoped to the requesting role.
 - Release decisions must require an authenticated actor.
 - High-risk account, security, or compliance cases must not be auto-resolved by the bot.
+
+Production hardening details, RBAC scope, and masking rules are tracked in `docs/production-readiness-plan.md`.
