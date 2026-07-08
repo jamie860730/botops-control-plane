@@ -416,6 +416,14 @@ p {
   margin-bottom: 16px;
 }
 
+/* Panels that render the eyebrow + title directly (without a .section-heading
+   wrapper) get the same 16px title-to-content gap as wrapped headings, so all
+   panel headers share one rhythm: 18px panel padding, 4px eyebrow gap, 16px
+   below the title. Skips a trailing title so empty states add no dead space. */
+.panel > .eyebrow + h3:not(:last-child) {
+  margin-bottom: 16px;
+}
+
 .source-tabs {
   flex-wrap: wrap;
   gap: 8px;
@@ -673,17 +681,16 @@ p {
   font-weight: 700;
 }
 
-.ticket-summary-list {
-  margin-top: 14px;
-}
-
+/* :not(.eyebrow) keeps these body-text overrides from beating the .eyebrow
+   label style on specificity when an eyebrow sits directly in a panel or
+   chunk preview (it must keep its small caps type and 4px bottom margin). */
 .signal-row p,
 .scenario-card p,
 .trace-row p,
 .badcase-row p,
 .message p,
-.chunk-preview p,
-.panel > p {
+.chunk-preview p:not(.eyebrow),
+.panel > p:not(.eyebrow) {
   margin-bottom: 0;
   color: #4d503b;
   font-size: 0.9rem;
@@ -1417,10 +1424,16 @@ button.table-row {
   font-size: 1rem;
 }
 
-.record-detail-panel p {
+.record-detail-panel p:not(.eyebrow) {
   margin: 0;
   color: #4d503b;
   font-size: 0.9rem;
+}
+
+/* Inside a record-detail sub-card the title's own 10px bottom margin sets the
+   gap to content, matching sub-cards without a .section-heading wrapper. */
+.record-detail-panel .section-heading {
+  margin-bottom: 0;
 }
 
 .compact-detail-list {
@@ -2714,7 +2727,6 @@ button.audit-row {
 .kpi-watchlist-list {
   display: grid;
   gap: 10px;
-  margin-top: 12px;
 }
 
 .kpi-watchlist-item {
