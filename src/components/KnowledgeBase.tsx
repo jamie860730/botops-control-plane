@@ -231,7 +231,7 @@ function KnowledgeInventory({
         <div className="section-heading">
           <div>
             <p className="eyebrow">{text(locale, 'Knowledge table', '知識表格')}</p>
-            <h3>{text(locale, 'Source status, query volume, and index action', '來源狀態、查詢量與索引操作')}</h3>
+            <h3>{text(locale, 'Source status, times cited, and index action', '來源狀態、被引用次數與索引操作')}</h3>
           </div>
           <button
             className="secondary-action compact-action"
@@ -248,7 +248,7 @@ function KnowledgeInventory({
             <span>{text(locale, 'Title', '標題')}</span>
             <span>{text(locale, 'Category', '分類')}</span>
             <span>{text(locale, 'Tags', '標籤')}</span>
-            <span>{text(locale, 'Queries', '查詢')}</span>
+            <span>{text(locale, 'Times cited', '被引用次數')}</span>
             <span>{text(locale, 'Status', '狀態')}</span>
             <span>{text(locale, 'Index', '索引')}</span>
             <span>{text(locale, 'Action', '操作')}</span>
@@ -271,7 +271,7 @@ function KnowledgeInventory({
                 <small>{doc.regionScope}</small>
                 <small>{formatDisplayText(locale, doc.riskClass)}</small>
               </span>
-              <span data-label={text(locale, 'Queries', '查詢')}>{doc.citationUsage}</span>
+              <span data-label={text(locale, 'Times cited', '被引用次數')}>{doc.citationUsage}</span>
               <span data-label={text(locale, 'Status', '狀態')}>{formatDisplayText(locale, doc.status)}</span>
               <span data-label={text(locale, 'Index', '索引')}>{formatDisplayText(locale, doc.indexStatus)}</span>
               <span data-label={text(locale, 'Action', '操作')} className="table-action-cell">

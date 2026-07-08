@@ -146,8 +146,8 @@ export function Intake({
                         <dd>{formatRiskLevel(locale, signal.priority)}</dd>
                       </div>
                       <div>
-                        <dt>{text(locale, 'Duplicate cluster', '重複叢集')}</dt>
-                        <dd>{signal.duplicateClusterId ?? text(locale, 'Not clustered', '未歸入叢集')}</dd>
+                        <dt>{text(locale, 'Duplicate report', '重複回報')}</dt>
+                        <dd>{signal.duplicateClusterId ?? text(locale, 'No duplicate report yet', '尚無重複回報')}</dd>
                       </div>
                       <div>
                         <dt>{text(locale, 'Region / Language / Product', '地區／語言／產品')}</dt>

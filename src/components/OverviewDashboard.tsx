@@ -67,8 +67,8 @@ export function OverviewDashboard({ data, locale, onNavigate }: OverviewDashboar
       due: text(locale, 'Today', '今日'),
       detail: text(
         locale,
-        'Policy release package v18 fails handoff safety, high-risk auto-answer, and regression gates.',
-        '政策發布套件 v18 未通過交接召回、高風險自動回覆與退化門檻。'
+        "Release package v18 failed 3 pre-release checks: high-risk cases weren't handed to a human, the bot auto-answered when it shouldn't have, and quality dropped vs the last version.",
+        '發布套件 v18 三項發布前檢查沒過：高風險案例沒轉人工、bot 不該自動回覆卻回覆了、品質比前一版退步。'
       ),
       action: text(locale, 'Review release gates', '審查發布門檻'),
       view: 'quality' as ViewKey
@@ -220,7 +220,7 @@ export function OverviewDashboard({ data, locale, onNavigate }: OverviewDashboar
             onOpen={() => onNavigate('knowledge')}
           />
           <PmMetric
-            label={text(locale, 'Bot-created tickets', 'Bot 造成工單')}
+            label={text(locale, 'Tickets from bot handoffs', 'Bot 轉人工的工單')}
             value={activeTicketCount.toString()}
             detail={text(locale, `${highRiskTicketCount} high-risk cases`, `${highRiskTicketCount} 件高風險案例`)}
             danger={highRiskTicketCount > 0}
@@ -396,9 +396,22 @@ export function OverviewDashboard({ data, locale, onNavigate }: OverviewDashboar
         </div>
         <div className="metric-grid">
           <Metric label={text(locale, 'Overall Quality', '整體品質')} value={summary.overallQualityScore.toFixed(2)} />
-          <Metric label={text(locale, 'Citation Support', '引用支撐率')} value={summary.citationSupportRate.toFixed(2)} />
-          <Metric label={text(locale, 'Handoff Safety Recall', '交接召回率')} value={summary.handoffSafetyRecall.toFixed(2)} />
-          <Metric label={text(locale, 'High-risk Auto-answer', '高風險自動回覆')} value={summary.highRiskAutoAnswerRate.toFixed(2)} danger />
+          <Metric
+            label={text(locale, 'Answers with a source', '回答有附來源的比例')}
+            title={text(locale, 'Share of answers that cite a valid source; higher is better.', '回答有附上有效引用來源的比例，越高越好')}
+            value={summary.citationSupportRate.toFixed(2)}
+          />
+          <Metric
+            label={text(locale, 'High-risk sent to a human', '高風險轉人工的比例')}
+            title={text(locale, 'Share of high-risk cases handed to a human; closer to 1 is better.', '高風險案例有轉給真人的比例，越接近 1 越好')}
+            value={summary.handoffSafetyRecall.toFixed(2)}
+          />
+          <Metric
+            label={text(locale, 'High-risk answered by bot', '高風險被 bot 直接回的比例')}
+            title={text(locale, 'Share of high-risk cases the bot answered directly without a handoff; closer to 0 is better.', '高風險案例被 bot 直接回掉、沒轉人工的比例，越接近 0 越好')}
+            value={summary.highRiskAutoAnswerRate.toFixed(2)}
+            danger
+          />
         </div>
       </div>
       <div className="panel overview-source">
@@ -489,12 +502,12 @@ export function OverviewDashboard({ data, locale, onNavigate }: OverviewDashboar
         <div className="section-heading">
           <div>
             <p className="eyebrow">{text(locale, 'Top user cases', '高量用戶案例')}</p>
-            <h3>{text(locale, 'Case clusters affecting KPI movement', '影響 KPI 的案例群')}</h3>
+            <h3>{text(locale, 'Case types affecting KPIs', '影響 KPI 的案例類型')}</h3>
           </div>
         </div>
         <div className="data-table">
           <div className="table-row table-head overview-case-row">
-            <span>{text(locale, 'Case cluster', '案例群')}</span>
+            <span>{text(locale, 'Case type', '案例類型')}</span>
             <span>{text(locale, 'Volume', '量體')}</span>
             <span>{text(locale, 'Repeat contact', '重複進線')}</span>
             <span>{text(locale, 'SLA risk', 'SLA 風險')}</span>
@@ -502,7 +515,7 @@ export function OverviewDashboard({ data, locale, onNavigate }: OverviewDashboar
           </div>
           {topSegments.map((segment) => (
             <div className="table-row overview-case-row" key={segment.id}>
-              <span data-label={text(locale, 'Case cluster', '案例群')}>{formatDisplayText(locale, segment.segment)}</span>
+              <span data-label={text(locale, 'Case type', '案例類型')}>{formatDisplayText(locale, segment.segment)}</span>
               <span data-label={text(locale, 'Volume', '量體')}>{segment.volume}</span>
               <span data-label={text(locale, 'Repeat contact', '重複進線')}>{Math.round(segment.repeatContactRate * 100)}%</span>
               <span data-label={text(locale, 'SLA risk', 'SLA 風險')}>{segment.slaRiskCount}</span>
@@ -579,10 +592,20 @@ function EconField({
   );
 }
 
-function Metric({ label, value, danger = false }: { label: string; value: string; danger?: boolean }) {
+function Metric({
+  label,
+  value,
+  danger = false,
+  title
+}: {
+  label: string;
+  value: string;
+  danger?: boolean;
+  title?: string;
+}) {
   return (
     <div className={danger ? 'metric-tile danger' : 'metric-tile'}>
-      <span>{label}</span>
+      <span title={title}>{label}</span>
       <strong>{value}</strong>
     </div>
   );

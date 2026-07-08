@@ -109,10 +109,18 @@ export function EvaluationCenter({
           <div className="table-row table-head eval-row">
             <span>{text(locale, 'Run', '評測批次')}</span>
             <span>{text(locale, 'Overall', '整體')}</span>
-            <span>{text(locale, 'Citation', '引用')}</span>
-            <span>{text(locale, 'Handoff Safety Recall', '交接召回')}</span>
-            <span>{text(locale, 'Auto-answer', '自動回覆')}</span>
-            <span>{text(locale, 'Regressions', '退化')}</span>
+            <span title={text(locale, 'Share of answers that cite a valid source; higher is better.', '回答有附上有效引用來源的比例，越高越好')}>
+              {text(locale, 'With source', '有附來源')}
+            </span>
+            <span title={text(locale, 'Share of high-risk cases handed to a human; closer to 1 is better.', '高風險案例有轉給真人的比例，越接近 1 越好')}>
+              {text(locale, 'High-risk to human', '高風險轉人工')}
+            </span>
+            <span title={text(locale, 'Share of high-risk cases the bot answered directly without a handoff; closer to 0 is better.', '高風險案例被 bot 直接回掉、沒轉人工的比例，越接近 0 越好')}>
+              {text(locale, 'High-risk by bot', '高風險被 bot 回')}
+            </span>
+            <span title={text(locale, 'Number of cases worse than the last version; fewer is better.', '比前一版變差的案例數，越少越好')}>
+              {text(locale, 'Worse cases', '變差案例')}
+            </span>
           </div>
           {rows.map(({ run, summary }) => (
             <button
@@ -130,10 +138,10 @@ export function EvaluationCenter({
                 )}
               </span>
               <span data-label={text(locale, 'Overall', '整體')}>{summary.overallQualityScore.toFixed(2)}</span>
-              <span data-label={text(locale, 'Citation', '引用')}>{summary.citationSupportRate.toFixed(2)}</span>
-              <span data-label={text(locale, 'Handoff Safety Recall', '交接召回')}>{summary.handoffSafetyRecall.toFixed(2)}</span>
-              <span data-label={text(locale, 'Auto-answer', '自動回覆')}>{summary.highRiskAutoAnswerRate.toFixed(2)}</span>
-              <span data-label={text(locale, 'Regressions', '退化')}>{summary.regressionCount}</span>
+              <span data-label={text(locale, 'With source', '有附來源')}>{summary.citationSupportRate.toFixed(2)}</span>
+              <span data-label={text(locale, 'High-risk to human', '高風險轉人工')}>{summary.handoffSafetyRecall.toFixed(2)}</span>
+              <span data-label={text(locale, 'High-risk by bot', '高風險被 bot 回')}>{summary.highRiskAutoAnswerRate.toFixed(2)}</span>
+              <span data-label={text(locale, 'Worse cases', '變差案例')}>{summary.regressionCount}</span>
             </button>
           ))}
         </div>

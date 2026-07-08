@@ -396,11 +396,11 @@ export function App() {
                 </span>
                 <span>
                   {candidateRegressionCount === 0
-                    ? text(locale, `0 regressions in ${candidateVersionLabel}`, `${candidateVersionLabel} 無退化`)
+                    ? text(locale, `0 regressions in ${candidateVersionLabel}`, `${candidateVersionLabel} 沒有變差的案例`)
                     : text(
                         locale,
                         `${candidateRegressionCount} regressions in ${candidateVersionLabel}`,
-                        `${candidateVersionLabel} 有 ${candidateRegressionCount} 項退化`
+                        `${candidateVersionLabel} 有 ${candidateRegressionCount} 項比前一版變差`
                       )}
                 </span>
               </div>
@@ -515,22 +515,22 @@ function faqReviewTitleZh(decision: FaqReviewDecision) {
 
 function faqReviewDetail(clusterLabel: string, decision: FaqReviewDecision) {
   if (decision === 'adopted') {
-    return `FAQ candidate for cluster "${clusterLabel}" was adopted into the knowledge base; deflection tracking is now active.`;
+    return `FAQ candidate for recurring question "${clusterLabel}" was adopted into the knowledge base; deflection tracking is now active.`;
   }
   if (decision === 'returned') {
-    return `FAQ candidate for cluster "${clusterLabel}" was returned for rewrite with the review note.`;
+    return `FAQ candidate for recurring question "${clusterLabel}" was returned for rewrite with the review note.`;
   }
-  return `Cluster "${clusterLabel}" was marked as not automatable and stays routed to human support.`;
+  return `Recurring question "${clusterLabel}" was marked as not automatable and stays routed to human support.`;
 }
 
 function faqReviewDetailZh(clusterLabel: string, decision: FaqReviewDecision) {
   if (decision === 'adopted') {
-    return `案例群「${clusterLabel}」的 FAQ 候選已採納入知識庫，deflection 追蹤已啟用。`;
+    return `重複問題「${clusterLabel}」的 FAQ 候選已採納入知識庫，deflection 追蹤已啟用。`;
   }
   if (decision === 'returned') {
-    return `案例群「${clusterLabel}」的 FAQ 候選已附審核註記退回重寫。`;
+    return `重複問題「${clusterLabel}」的 FAQ 候選已附審核註記退回重寫。`;
   }
-  return `案例群「${clusterLabel}」已標記為不適合自動化，維持轉由人工客服處理。`;
+  return `重複問題「${clusterLabel}」已標記為不適合自動化，維持轉由人工客服處理。`;
 }
 
 function releaseDecisionTitle(decision: ReleaseDecision) {

@@ -40,7 +40,7 @@ export function GapMining({ clusters, candidates, locale, onCandidateReview }: G
   const adoptedCount = clusters.filter((cluster) => clusterDisplayStatus(cluster) === 'Adopted').length;
 
   const labels = {
-    cluster: text(locale, 'Cluster', '問題簇'),
+    cluster: text(locale, 'Recurring questions', '重複問題'),
     volume: text(locale, 'Volume', '量體'),
     trend: text(locale, 'Weekly trend', '週趨勢'),
     samples: text(locale, 'Sample utterances', '樣本語句'),
@@ -99,14 +99,14 @@ export function GapMining({ clusters, candidates, locale, onCandidateReview }: G
             <h3>
               {text(
                 locale,
-                'Emerging question clusters from unresolved and handed-off conversations',
-                '從未解決與交接對話長出的新興問題簇'
+                'Recurring questions from unresolved and handed-off conversations',
+                '從未解決與交接對話中反覆出現的問題'
               )}
             </h3>
           </div>
           <span className="count-pill">
             {locale === 'zh-TW'
-              ? `${pendingCount} 筆候選待審 · ${adoptedCount} 簇已採納`
+              ? `${pendingCount} 筆候選待審 · ${adoptedCount} 類問題已採納`
               : `${pendingCount} pending review · ${adoptedCount} adopted`}
           </span>
         </div>
@@ -160,7 +160,7 @@ export function GapMining({ clusters, candidates, locale, onCandidateReview }: G
       </div>
 
       <Drawer
-        eyebrow={text(locale, 'Cluster detail', '問題簇詳情')}
+        eyebrow={text(locale, 'Recurring questions detail', '重複問題詳情')}
         footer={
           selectedCandidate && (
             <>
@@ -261,8 +261,8 @@ export function GapMining({ clusters, candidates, locale, onCandidateReview }: G
                 <p>
                   {text(
                     locale,
-                    'Sample volume is below the drafting threshold. The cluster stays in observation and no FAQ draft is generated yet.',
-                    '樣本數低於起草門檻，此簇維持觀察中，暫不產生 FAQ 草稿。'
+                    'Sample volume is below the drafting threshold. This question type stays in observation and no FAQ draft is generated yet.',
+                    '樣本數低於起草門檻，這類問題維持觀察中，暫不產生 FAQ 草稿。'
                   )}
                 </p>
               </div>
@@ -284,8 +284,8 @@ export function GapMining({ clusters, candidates, locale, onCandidateReview }: G
                 <p>
                   {text(
                     locale,
-                    'Share of cluster contacts resolved by the bot without human handoff.',
-                    '此簇進線由 bot 解決、無需人工交接的比例。'
+                    'Share of these contacts resolved by the bot without human handoff.',
+                    '這類問題由 bot 解決、不用轉人工的比例。'
                   )}
                 </p>
               </div>
@@ -303,8 +303,8 @@ export function GapMining({ clusters, candidates, locale, onCandidateReview }: G
             <dd>
               {text(
                 locale,
-                'Unresolved and handed-off conversations are clustered by the existing duplicate-cluster key.',
-                '未解決與交接對話沿用既有 duplicate cluster 鍵自動聚類。'
+                'Unresolved and handed-off conversations are automatically grouped by similarity.',
+                '系統把未解決與轉人工的對話，依相似度自動歸成同一類。'
               )}
             </dd>
           </div>
@@ -313,8 +313,8 @@ export function GapMining({ clusters, candidates, locale, onCandidateReview }: G
             <dd>
               {text(
                 locale,
-                'Clusters above the sample threshold get an AI-drafted FAQ candidate with citations.',
-                '樣本數達門檻的簇會產生附引用的 AI FAQ 候選草稿。'
+                'Question types above the sample threshold get an AI-drafted FAQ candidate with citations.',
+                '樣本數達門檻的這類問題會產生附引用的 AI FAQ 候選草稿。'
               )}
             </dd>
           </div>
@@ -333,8 +333,8 @@ export function GapMining({ clusters, candidates, locale, onCandidateReview }: G
             <dd>
               {text(
                 locale,
-                'Adopted clusters report deflection before and after the FAQ went live.',
-                '已採納的簇會追蹤 FAQ 上線前後的 deflection 對照。'
+                'Adopted question types report deflection before and after the FAQ went live.',
+                '已採納的這類問題會追蹤 FAQ 上線前後的 deflection 對照。'
               )}
             </dd>
           </div>
@@ -372,8 +372,8 @@ function reviewFeedback(locale: Locale, decision: FaqReviewDecision) {
   if (decision === 'adopted') {
     return text(
       locale,
-      'Candidate adopted into the knowledge base. Deflection tracking starts for this cluster.',
-      '候選已採納入庫，開始追蹤此簇的 deflection 成效。'
+      'Candidate adopted into the knowledge base. Deflection tracking starts for this question type.',
+      '候選已採納入庫，開始追蹤這類問題的 deflection 成效。'
     );
   }
   if (decision === 'returned') {
@@ -385,8 +385,8 @@ function reviewFeedback(locale: Locale, decision: FaqReviewDecision) {
   }
   return text(
     locale,
-    'Cluster marked as not automatable. Contacts keep routing to human support.',
-    '已標記為不適合自動化，此簇維持人工處理。'
+    'Marked as not automatable. Contacts keep routing to human support.',
+    '已標記為不適合自動化，這類問題維持人工處理。'
   );
 }
 

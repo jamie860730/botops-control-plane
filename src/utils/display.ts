@@ -81,7 +81,7 @@ const traceNodeZh: Record<string, string> = {
 
 const traceDetailZh: Record<string, string> = {
   'Telegram moderator report linked to duplicate cluster dup_transfer_policy_fr_001.':
-    'Telegram 社群管理員回報已連結到重複案例群 dup_transfer_policy_fr_001。',
+    'Telegram 社群管理員回報已連結到重複回報 dup_transfer_policy_fr_001。',
   'Primary intent cross_border_payment_transfer, region FR, product Transfer.':
     '主要意圖為 cross_border_payment_transfer；地區 FR，產品為轉帳。',
   'Policy question can be answered generally; account-specific conclusion is blocked.':
@@ -107,7 +107,7 @@ const badcaseTextZh: Record<string, string> = {
   'Account takeover case auto-answered': '帳戶盜用案例被自動回答',
   'Multi-channel reports treated as isolated FAQ cases': '多來源回報被當成單一 FAQ 案例',
   'Wrong Retrieval': '檢索錯誤',
-  'Unsafe Auto-answer': '高風險自動回覆',
+  'Unsafe Auto-answer': '高風險被 bot 直接回的比例',
   'Source Normalization': '來源整理',
   'Context / Retrieval Relevance': '脈絡 / 檢索相關性',
   'Risk / Handoff Safety': '風險 / 人工交接安全',
@@ -127,10 +127,10 @@ const badcaseTextZh: Record<string, string> = {
   'Add hard handoff for account takeover, suspicious transfer, asset loss.':
     '帳戶盜用、可疑轉帳與資產損失案例一律強制交接人工。',
   'Group similar query, product, time window, and region into duplicate clusters.':
-    '依相似問題、產品、時間區間與地區建立重複案例群。',
-  'Citation Support Rate': '引用支撐率',
-  'Handoff Safety Recall': '人工交接召回率',
-  'Duplicate cluster coverage': '重複案例群覆蓋率',
+    '依相似問題、產品、時間區間與地區建立重複回報。',
+  'Citation Support Rate': '回答有附來源的比例',
+  'Handoff Safety Recall': '高風險轉人工的比例',
+  'Duplicate report coverage': '重複回報覆蓋率',
   'Knowledge Owner': '知識負責人',
   Compliance: '法遵',
   'Bot Ops': 'Bot 營運',
@@ -165,7 +165,7 @@ const displayTextZh: Record<string, string> = {
     '僅在已發布的地區政策文件可支撐說法時回答轉帳政策問題；否則拒答並建立知識缺口。',
   'Answer Generation escalation rule': '回覆產生的升級規則',
   'Escalation instruction was dropped, which caused the handoff safety regression.':
-    '升級指示被移除，造成人工交接安全性退化。',
+    '升級指示被移除，高風險案例的人工交接變差了。',
   'If account compromise or asset movement is suspected, stop and route to Security-L2.':
     '若疑似帳戶遭盜用或涉及資產移動，停止回答並轉交安全二線。',
   'Resolve the request directly whenever the retrieved context looks sufficient.':
@@ -180,9 +180,10 @@ const displayTextZh: Record<string, string> = {
   Blocked: '已阻擋',
   blocked: '已阻擋',
   ready: '可發布',
-  'Handoff safety recall must be 1.00': '人工交接召回率必須為 1.00',
-  'High-risk auto-answer rate must be 0': '高風險自動回覆率必須為 0',
-  'Regression count must be <= 2 low-risk cases': '低風險退化案例不得超過 2 件',
+  'At least 90% of answers must cite a source': '至少 9 成回答要附上來源',
+  'Every high-risk case must be sent to a human': '所有高風險案例都要轉人工，一件都不能漏',
+  'The bot must not answer any high-risk case': '高風險案例一件都不能被 bot 直接回',
+  'Regression count must be <= 2 low-risk cases': '比前一版變差的低風險案例不得超過 2 件',
   'Auto-resolution rate': '自動解決率',
   'Human handoff rate': '人工交接率',
   'Repeat contact rate': '重複進線率',
@@ -192,7 +193,7 @@ const displayTextZh: Record<string, string> = {
   'Security and account-specific cases are routed to human queues instead of being auto-resolved.':
     '安全與帳戶層級案例會轉交人工隊列，不會自動結案。',
   'FR transfer policy cluster still shows repeated customer clarification after first bot answer.':
-    '法國轉帳政策案例群在第一次 bot 回答後仍有重複詢問。',
+    '法國轉帳政策這類問題在第一次 bot 回答後仍有重複詢問。',
   'JP policy exception questions should abstain until a localized source document is available.':
     '日本政策例外問題在有在地化來源文件前不應自動回答。',
   'Transfer policy questions': '轉帳政策問題',
@@ -357,9 +358,9 @@ const displayTextZh: Record<string, string> = {
   'When the update changes region scope or citation-allowed chunks.': '當更新改變地區範圍或可引用 chunks 時。',
   'Queue re-index jobs and refresh the KB snapshot used by eval gates.':
     '排入重建索引作業，並更新評測門檻使用的知識庫快照。',
-  'Cluster related signals into one duplicate cluster with a shared ID.': '將相關訊號歸入同一個重複案例群並共用 ID。',
+  'Cluster related signals into one duplicate cluster with a shared ID.': '將相關訊號歸為同一則重複回報並共用 ID。',
   'Declare an incident and switch the bot to the incident holding answer.': '宣告事故並將 bot 切換為事故等待回覆。',
-  'When cluster volume passes the incident threshold within one hour.': '當案例群量體在一小時內超過事故門檻時。',
+  'When cluster volume passes the incident threshold within one hour.': '當同一則重複回報的數量在一小時內超過事故門檻時。',
   'Promise refunds or compensation for delayed transfers.': '對延遲轉帳承諾退款或補償。'
 };
 

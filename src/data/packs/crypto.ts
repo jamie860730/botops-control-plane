@@ -609,7 +609,7 @@ const badcases: Badcase[] = [
     traceDiagnosis: 'No duplicate_cluster_id was assigned.',
     chainNodeToChange: 'Source Normalization',
     modification: 'Group similar query, product, time window, and region into duplicate clusters.',
-    retestMetric: 'Duplicate cluster coverage',
+    retestMetric: 'Duplicate report coverage',
     expectedScoreMovement: '0.52 -> 0.82',
     owner: 'Bot Ops',
     status: 'In review'

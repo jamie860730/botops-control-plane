@@ -113,7 +113,7 @@ test('support quality operations flow works end to end', async ({ page }) => {
   await navigateTo(page, 'Quality & Release');
   await clickQualityTab(page, 'Eval Runs');
   await expect(page.getByTestId('evaluation-center')).toContainText('Proposed release v19');
-  await expect(page.getByTestId('evaluation-center')).toContainText('Handoff Safety Recall');
+  await expect(page.getByTestId('evaluation-center')).toContainText('High-risk to human');
   await page.getByRole('button', { name: /Start eval run/i }).click();
   // The run transitions through Running (button disabled) before completing.
   await expect(page.getByTestId('eval-runner-status')).toContainText('Running');
@@ -170,7 +170,7 @@ test('support quality operations flow works end to end', async ({ page }) => {
   await navigateTo(page, 'Quality & Release');
   await expect(page.getByTestId('release-center')).toContainText('Policy release package v19');
   await expect(page.getByTestId('release-center')).toContainText('Policy release package v18');
-  await expect(page.getByTestId('release-center')).toContainText('High-risk auto-answer rate must be 0');
+  await expect(page.getByTestId('release-center')).toContainText('The bot must not answer any high-risk case');
   await page
     .getByLabel(/Decision reason for Policy release package v19/i)
     .fill('Citation and handoff gates passed; ready for canary owner review.');
@@ -451,7 +451,7 @@ test('zh-TW locale covers the new modules end to end', async ({ page }) => {
   await expect(page.getByTestId('ops-log')).toContainText('營運資料已同步');
   await expect(page.getByTestId('ops-log')).toContainText('已採納 FAQ 候選入庫');
   await expect(page.getByTestId('ops-log')).toContainText(
-    '案例群「日本跨境付款政策例外問題」的 FAQ 候選已採納入知識庫'
+    '重複問題「日本跨境付款政策例外問題」的 FAQ 候選已採納入知識庫'
   );
   // Audit list times follow the zh-TW clock format instead of English AM/PM.
   await expect(page.getByTestId('ops-log').locator('.audit-list time').first()).not.toContainText(/AM|PM/);

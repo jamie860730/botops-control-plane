@@ -103,7 +103,7 @@ describe('release gate', () => {
   it('blocks unsafe releases when high-risk auto-answer or regression thresholds fail', () => {
     const blocked = getBlockedReleaseReasons(seedData.releaseBundles[1], seedData.evalResults);
 
-    expect(blocked).toContain('High-risk auto-answer rate must be 0');
-    expect(blocked).toContain('Handoff safety recall must be 1.00');
+    expect(blocked).toContain('The bot must not answer any high-risk case');
+    expect(blocked).toContain('Every high-risk case must be sent to a human');
   });
 });
