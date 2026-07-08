@@ -64,7 +64,7 @@ UI 層面已知未做（非本文件範圍，列出避免誤認遺漏）：Setti
 外部整合：Zendesk／Salesforce／Jira（WP-8）、Slack／Email（WP-10）
 ```
 
-三個不可妥協的架構原則：
+三個架構原則，任何 WP 都不能違反：
 
 1. **Adapter 隔離**：UI 只依賴 `BackendAdapter` 介面（WP-0 抽取）。seed 與 live 用同一介面，前端零改動切換。任何 WP 不得讓元件直接 fetch。
 2. **Stable ID 契約**：所有實體 ID 由後端產生且永不變更（格式見 §4.1）。trace/message/chunk 的關聯全靠 ID，UI 多輪互動不得互相覆蓋。
@@ -159,7 +159,7 @@ raw payload → 驗簽 → 去重 → PII 遮罩 → 正規化映射 → POST /a
   - `POST /api/ingest/trace-events`：`{ traceId, scenarioId, events: TraceEvent[], idempotencyKey }`
 - Trace SDK 慣例（提供 TypeScript/Python 薄封裝，本質是 HTTP）：bot flow 每個節點結束時 emit 一筆，`eventType` 限定九節點 enum（`source_normalization | intent | risk | rewrite | retrieval | generation | citation | verification | handoff`），`status` 限定 `pass | watch | blocked`。與 OpenTelemetry 並存的做法：SDK 內部可同時發 OTel span（span name = nodeName、attributes 帶 eventType/status），平台 ingestion 只認自己的 API，不解析 OTel。
 - 冪等：`idempotencyKey = {traceId}:{seq}`，重送覆蓋而非新增。
-- 引用契約：`generation` 節點產生的 message 必須帶 `citationIds`，且每個 id 必須存在於當前 KB snapshot——ingestion 驗證失敗時仍收下但標 `status=watch` 並寫 audit（引用完整性是治理指標，不是丟棄理由）。
+- 引用契約：`generation` 節點產生的 message 必須帶 `citationIds`，且每個 id 必須存在於當前 KB snapshot。驗證失敗時 ingestion 仍收下該筆，但標 `status=watch` 並寫 audit（引用完整性是治理指標，不是丟棄理由）。
 - Scenario 歸併：ingestion 依 signal 的 `duplicateClusterId` 或 bot session id 掛到既有 scenario，找不到就建新 scenario。
 
 **驗收**：模擬 bot 以 SDK 送一輪完整九節點 trace 後，Conversations 審查層可完整呈現（訊息、trace 時間軸、引用高亮）；重送同 trace 不產生重複節點。
@@ -211,7 +211,7 @@ raw payload → 驗簽 → 去重 → PII 遮罩 → 正規化映射 → POST /a
 **契約**：
 - Adapter 介面：`createTicket(handoffPackage) → externalId`、`updateStatus(externalId, status)`、`onExternalUpdate(webhook) → SupportTicket patch`。首發 adapter 選 Zendesk（API 成熟、webhook 完整），Salesforce Service Cloud / Jira Service Management 依同介面後補。
 - 欄位映射（平台 → Zendesk 示例）：`queue → group`、`priority → priority`、`caseSummary → 首則 internal note`、`sourceSignalIds + traceScenarioId → custom fields`（供 CS 回查 trace）。
-- 方向規則：**建單只有平台 → 外部**（bot 產生的 handoff）；**狀態雙向**——外部系統是狀態的 source of truth，平台的行內編輯改為呼叫 adapter，失敗時回滾 UI 並提示。webhook 回流用 `external_updated_at` 判新舊，衝突 last-write-wins + 兩邊都寫 audit。
+- 方向規則：**建單只有平台 → 外部**（bot 產生的 handoff）；**狀態雙向**：外部系統是狀態的 source of truth，平台的行內編輯改為呼叫 adapter，失敗時回滾 UI 並提示。webhook 回流用 `external_updated_at` 判新舊，衝突 last-write-wins + 兩邊都寫 audit。
 - Handoff package 完整性：`requiredFields` 缺漏時不建單，退回 handoff 佇列並標記（UI 的「交接品質標記」吃此結果）。
 
 **驗收**：平台建單在 Zendesk sandbox 出現且欄位映射正確；Zendesk 側改狀態 → 平台 5 秒內同步；斷線期間的外部變更在重連後補齊（webhook redelivery 或輪詢對帳）。
@@ -235,7 +235,7 @@ raw payload → 驗簽 → 去重 → PII 遮罩 → 正規化映射 → POST /a
 **契約**：
 - SLA monitor：每分鐘掃 `support_tickets` 中 `sla_due_at - now < 30min` 且未 Resolved 的單 → 告警；已告警的單不重複（告警紀錄表去重）。
 - Incident 爆量：WP-3 聚類 worker 的閾值事件直接進告警通道。
-- 通道 adapter：Slack incoming webhook 起步（訊息含工單/簇連結，deep link 到平台對應 drawer——URL routing 目前是 SPA state，需補 query param 路由 `?view=tickets&ticket=...`，此為本 WP 的前端子任務）；Email/Telegram 依同介面後補。
+- 通道 adapter：Slack incoming webhook 起步（訊息含工單/簇連結，deep link 到平台對應 drawer；URL routing 目前是 SPA state，需補 query param 路由 `?view=tickets&ticket=...`，此為本 WP 的前端子任務）；Email/Telegram 依同介面後補。
 
 **驗收**：造一張 25 分鐘後到期的單 → Slack 收到一次且僅一次告警，點連結直達該工單 drawer。
 
@@ -253,7 +253,7 @@ raw payload → 驗簽 → 去重 → PII 遮罩 → 正規化映射 → POST /a
 
 **契約**：
 - 容器：UI（靜態檔 + nginx）、API、workers 三個 image；docker-compose 供自架，K8s manifest 後補。
-- 環境變數契約（單一 `docs/env-reference.md` 維護）：DB/Redis/vector 連線、OIDC 參數、各通路 secret、LLM API key——全部走 secret manager 注入，**repo 內永遠不出現實值**。
+- 環境變數契約（單一 `docs/env-reference.md` 維護）：DB/Redis/vector 連線、OIDC 參數、各通路 secret、LLM API key，全部走 secret manager 注入，**repo 內永遠不出現實值**。
 - 觀測：結構化 log（pino）、RED metrics（Prometheus 格式）、ingestion 與 worker 的 dead letter queue 有告警。
 - 健康檢查：`/api/health` 擴充為依賴檢查（DB/queue/vector 可達性）。
 
@@ -288,7 +288,7 @@ raw payload → 驗簽 → 去重 → PII 遮罩 → 正規化映射 → POST /a
 | P2 可存 | 對話語意內容、地區、語言 | 正常入庫 |
 
 ### 4.6 測試基線
-每個 WP 交付含：fixture replay 測試、冪等測試、失敗路徑測試（外部 5xx／驗簽失敗／schema 不符）。合入前 `npm run test`、`npm run build`、`npm run test:e2e` 必須全綠——seed 模式是永久保留的展示與測試形態，任何 WP 不得破壞。
+每個 WP 交付含：fixture replay 測試、冪等測試、失敗路徑測試（外部 5xx／驗簽失敗／schema 不符）。合入前 `npm run test`、`npm run build`、`npm run test:e2e` 必須全綠。seed 模式是永久保留的展示與測試形態，任何 WP 不得破壞。
 
 ---
 
@@ -314,7 +314,7 @@ WP-0 Adapter 抽取
 ## 6. 給實作 agent 的認領守則
 
 1. 認領一個 WP 前先讀：本文件該節、`backend-api-contract.md` 對應段、`src/types.ts` 對應實體、`src/services/seedBackendAdapter.ts` 對應方法。
-2. Contract 有缺的 endpoint／欄位，先改 `backend-api-contract.md` 再寫 code——文件是契約源頭。
+2. Contract 有缺的 endpoint／欄位，先改 `backend-api-contract.md` 再寫 code；文件是契約源頭。
 3. 不改 UI 行為語意：live 模式下 UI 的既有互動（drawer、審核、決策、audit）必須與 seed 模式一致，差異只在資料來源。
 4. 交付物：code + 測試 + contract 文件更新 + 本文件該 WP 的狀態標記（規格定稿 → 已實作）。
 5. 秘密管理：任何 token/key 走環境變數，發現硬編碼立即修正並回報。
