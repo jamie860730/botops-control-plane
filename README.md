@@ -69,6 +69,7 @@ npm run test:e2e
 - [Admin user manual](docs/admin-user-manual.md)
 - [Usability review](docs/usability-review.md)
 - [Backend API contract](docs/backend-api-contract.md)
+- [System integration spec](docs/system-integration-spec.md) — gap inventory and work packages for wiring channels, bot runtime, and company systems
 - [Production readiness plan](docs/production-readiness-plan.md)
 - [PRD improvement plan](docs/prd-improvement-plan.md)
 - [Product demo script](docs/product-demo-script.md)
